@@ -1,0 +1,40 @@
+45x30
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+WATER:w
+SPAWN:s
+
+g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g s s g g g g g g g g g g g g g g g g g g g g g g g g 
+g g r r r r g g g g g g g g g g g g g s s g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g r r r g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g w w w w w w w g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g w w w w w w w w w w w w w w g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g w w w w w w w w g w w w w w w w w g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g w w w g g g g g w w w g w w g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g w w w w g g g w w g w w w w w g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g w w w w w w w w g g g g g g w w w g g g g g g g g g 
+g g g g g r g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g r r r g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g r r r r r g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g r r r g g g g g g g g g g g g g g g g g g g g g r r r r r r r r r r r r r r r r r 
+g g g g g r g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g w w w g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g w w w w w w g g g g g g g g r g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g w w w w w w w w w w g g g g g r r g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g w w w w w w w g g g g g g r r r r g g g g g g g g g g g g g g 
+g g g g w w w w w g g g g g g g g w w w g g g g g g g g r r r g g g g g g r g g g g g g g 
+g g g g w w w g g g g g g g g g g g w w g g g g g g g g g r g g g g g g g r g g g g g g g 
+g g g w w w w w g g g g g g g g g g g g g g g g g g g g g g g g g g g g g r g g g g g g g 
+g g g g g w w w w g g g g g g g g g g g g g g g g g g g g g g r r r r r g r g g g g g g g 
+g g g g g g w w g g g g g g g g g g g g g g g g g g g g g g g g g g g g g r g g g g g g g 
+g g g g g g g w g g g g g g g g r r r r r g g g g g g g g g g g g g g g g r g r r r r r r 
+g g g g g g g g g g g g g g g g g r r r g g g g g g g g g g g g g g g g g g g g g g g g g 
+g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g r r r g g g
+g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g r r g g g g
+
+com.github.TheDwoon.robots.game.items.Star 44 29

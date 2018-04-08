@@ -1,0 +1,11 @@
+3x3
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+WATER:w
+SPAWN:s
+
+g r g
+t s w
+g v g

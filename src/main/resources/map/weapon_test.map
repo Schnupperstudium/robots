@@ -1,0 +1,29 @@
+15x7
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+WATER:w
+SPAWN:s
+
+g g g g g g g t g g g g g g g
+g g g g g g g g g g g g g g g
+g g g g g g g g g g g g g g g
+g g g s g g g g g g g s g g g
+g g g g g g g g g g g g g g g
+g g g g g g g g g g g g g g g
+g g g g g g g t g g g g g g g
+
+com.github.TheDwoon.robots.game.items.Gun 0 3
+com.github.TheDwoon.robots.game.items.Gun 1 3
+com.github.TheDwoon.robots.game.items.Gun 2 3
+com.github.TheDwoon.robots.game.items.Gun 4 3
+com.github.TheDwoon.robots.game.items.Gun 5 3
+com.github.TheDwoon.robots.game.items.Gun 6 3
+com.github.TheDwoon.robots.game.items.Gun 7 3
+com.github.TheDwoon.robots.game.items.Gun 8 3
+com.github.TheDwoon.robots.game.items.Gun 9 3
+com.github.TheDwoon.robots.game.items.Gun 10 3
+com.github.TheDwoon.robots.game.items.Gun 12 3
+com.github.TheDwoon.robots.game.items.Gun 13 3
+com.github.TheDwoon.robots.game.items.Gun 14 3

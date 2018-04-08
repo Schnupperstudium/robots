@@ -1,0 +1,20 @@
+15x10
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+WATER:w
+SPAWN:s
+
+g g g g g g g g g g g v v v v
+g s s g g g t g g g g g v v v
+g s s g g g g g g g t g g v v
+g g g g w w w w g g g g g g v
+g g g w w w w w w g g g g g g
+g g g g w w w w w g g g t g g
+g t g g g w w w w g g g g g g
+g g g g g g w w g g s s g g g
+g g t t g g g g g g s s g g r
+r g g g g g g g g g g g g r r
+
+com.github.TheDwoon.robots.game.items.Star 1 8
