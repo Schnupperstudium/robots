@@ -1,12 +1,12 @@
 package com.github.schnupperstudium.robots.events.item;
 
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.events.AbstractEvent;
+import com.github.schnupperstudium.robots.events.AbstractGameEvent;
 import com.github.schnupperstudium.robots.world.World;
 
-public abstract class ItemEvent extends AbstractEvent {
-	private final World world;
-	private final Item item;
+public abstract class ItemEvent extends AbstractGameEvent {
+	protected final World world;
+	protected final Item item;
 	
 	public ItemEvent(World world, Item item) {
 		this.world = world;

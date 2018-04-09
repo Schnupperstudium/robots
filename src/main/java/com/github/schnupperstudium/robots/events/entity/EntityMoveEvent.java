@@ -1,11 +1,21 @@
 package com.github.schnupperstudium.robots.events.entity;
 
 import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.Facing;
+import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public class EntityMoveEvent extends EntityEvent {
 	private final int nextX;
 	private final int nextY;
+	
+	public EntityMoveEvent(World world, Entity entity, Facing facing, int steps) {
+		super(world, entity);
+		
+		nextX = entity.getX() + facing.dx * steps;
+		nextY = entity.getY() + facing.dy * steps;
+	}
 	
 	public EntityMoveEvent(World world, Entity entity, int nextX, int nextY) {
 		super(world, entity);
@@ -20,5 +30,17 @@ public class EntityMoveEvent extends EntityEvent {
 	
 	public int getNextY() {
 		return nextY;
+	}
+
+	@Override
+	public boolean apply(GameManager manager) {
+		Tile currentField = entity.getTile(world);
+		Tile nextField = world.getField(nextX, nextY);
+		if (!nextField.canVisit())
+			return false;
+		
+		currentField.setVisitor(null);
+		nextField.setVisitor(entity);
+		return true;
 	}
 }

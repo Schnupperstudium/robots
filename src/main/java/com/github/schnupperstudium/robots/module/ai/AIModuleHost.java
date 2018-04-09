@@ -7,7 +7,7 @@ import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.module.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.server.GameManager;
 import com.github.schnupperstudium.robots.server.Module;
-import com.github.schnupperstudium.robots.world.Field;
+import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public class AIModuleHost implements Module, AIServerModule {
@@ -66,7 +66,7 @@ public class AIModuleHost implements Module, AIServerModule {
 		
 		private void updateVision() {			
 			final World world = manager.getWorld();
-			final List<Field> visibleFields = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
+			final List<Tile> visibleFields = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
 			final int robotX = robot.getX();
 			final int robotY = robot.getY();
 			for (int x = robotX - ROBOT_VISION; x < robotX + ROBOT_VISION; x++) {

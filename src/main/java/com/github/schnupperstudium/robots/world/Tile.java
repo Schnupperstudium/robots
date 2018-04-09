@@ -3,7 +3,7 @@ package com.github.schnupperstudium.robots.world;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
 
-public class Field {
+public class Tile {
 	private final int x;
 	private final int y;
 		
@@ -11,11 +11,11 @@ public class Field {
 	private Entity visitor;
 	private Item item;
 
-	public Field(int x, int y) {
+	public Tile(int x, int y) {
 		this(x, y, Material.VOID);
 	}
 	
-	public Field(int x, int y, Material material) {
+	public Tile(int x, int y, Material material) {
 		this.x = x;
 		this.y = y;
 		this.material = material;
