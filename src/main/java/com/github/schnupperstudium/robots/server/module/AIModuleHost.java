@@ -1,13 +1,15 @@
-package com.github.schnupperstudium.robots.module.ai;
+package com.github.schnupperstudium.robots.server.module;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.module.ai.AIClientModule;
+import com.github.schnupperstudium.robots.module.ai.AIServerModule;
 import com.github.schnupperstudium.robots.module.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.server.GameManager;
 import com.github.schnupperstudium.robots.server.Module;
-import com.github.schnupperstudium.robots.world.Field;
+import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public class AIModuleHost implements Module, AIServerModule {
@@ -66,7 +68,7 @@ public class AIModuleHost implements Module, AIServerModule {
 		
 		private void updateVision() {			
 			final World world = manager.getWorld();
-			final List<Field> visibleFields = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
+			final List<Tile> visibleTiles = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
 			final int robotX = robot.getX();
 			final int robotY = robot.getY();
 			for (int x = robotX - ROBOT_VISION; x < robotX + ROBOT_VISION; x++) {
@@ -77,11 +79,11 @@ public class AIModuleHost implements Module, AIServerModule {
 					if (y < 0 || y >= world.getHeight())
 						continue;
 					
-					visibleFields.add(world.getField(x, y));
+					visibleTiles.add(world.getTile(x, y));
 				}
 			}
 			
-			client.updateVisableFields(robot.getUUID(), visibleFields);
+			client.updateVisableTiles(robot.getUUID(), visibleTiles);
 		}
 	}
 }

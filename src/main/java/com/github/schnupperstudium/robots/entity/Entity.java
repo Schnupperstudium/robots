@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.schnupperstudium.robots.UUIDGenerator;
-import com.github.schnupperstudium.robots.world.Field;
+import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public abstract class Entity {
@@ -52,8 +52,8 @@ public abstract class Entity {
 		}
 	}
 	
-	public Field getField(World world) {
-		return world.getField(x, y);
+	public Tile getTile(World world) {
+		return world.getTile(x, y);
 	}
 	
 	public String getName() {
