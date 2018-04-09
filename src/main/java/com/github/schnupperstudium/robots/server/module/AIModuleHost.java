@@ -1,9 +1,11 @@
-package com.github.schnupperstudium.robots.module.ai;
+package com.github.schnupperstudium.robots.server.module;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.module.ai.AIClientModule;
+import com.github.schnupperstudium.robots.module.ai.AIServerModule;
 import com.github.schnupperstudium.robots.module.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.server.GameManager;
 import com.github.schnupperstudium.robots.server.Module;
