@@ -16,7 +16,7 @@ public abstract class AbstractGameEvent implements Event {
 		return canceled;
 	}
 	
-	public void cancel() {
+	public void cancel() {		
 		canceled = true;
 	}
 	
@@ -31,8 +31,13 @@ public abstract class AbstractGameEvent implements Event {
 	public synchronized void executeEvent(GameManager manager) {
 		if (done)
 			return;
+		else
+			done = true;
 		
-		done = true;
+		// mark it as done before we cancel. May be important for some.
+		if (canceled)
+			return;
+		
 		successful = apply(manager);
 	}
 	

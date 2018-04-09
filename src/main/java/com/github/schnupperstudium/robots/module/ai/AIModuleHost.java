@@ -66,7 +66,7 @@ public class AIModuleHost implements Module, AIServerModule {
 		
 		private void updateVision() {			
 			final World world = manager.getWorld();
-			final List<Tile> visibleFields = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
+			final List<Tile> visibleTiles = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
 			final int robotX = robot.getX();
 			final int robotY = robot.getY();
 			for (int x = robotX - ROBOT_VISION; x < robotX + ROBOT_VISION; x++) {
@@ -77,11 +77,11 @@ public class AIModuleHost implements Module, AIServerModule {
 					if (y < 0 || y >= world.getHeight())
 						continue;
 					
-					visibleFields.add(world.getField(x, y));
+					visibleTiles.add(world.getTile(x, y));
 				}
 			}
 			
-			client.updateVisableFields(robot.getUUID(), visibleFields);
+			client.updateVisableTiles(robot.getUUID(), visibleTiles);
 		}
 	}
 }

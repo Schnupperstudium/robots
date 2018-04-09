@@ -53,7 +53,7 @@ public abstract class Entity {
 	}
 	
 	public Tile getTile(World world) {
-		return world.getField(x, y);
+		return world.getTile(x, y);
 	}
 	
 	public String getName() {

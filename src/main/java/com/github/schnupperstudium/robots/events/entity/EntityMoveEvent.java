@@ -34,13 +34,13 @@ public class EntityMoveEvent extends EntityEvent {
 
 	@Override
 	public boolean apply(GameManager manager) {
-		Tile currentField = entity.getTile(world);
-		Tile nextField = world.getField(nextX, nextY);
-		if (!nextField.canVisit())
+		Tile currentTile = entity.getTile(world);
+		Tile nextTile = world.getTile(nextX, nextY);
+		if (!nextTile.canVisit())
 			return false;
 		
-		currentField.setVisitor(null);
-		nextField.setVisitor(entity);
+		currentTile.setVisitor(null);
+		nextTile.setVisitor(entity);
 		return true;
 	}
 }

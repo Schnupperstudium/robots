@@ -8,6 +8,6 @@ import com.github.schnupperstudium.robots.world.Tile;
 
 public interface AIClientModule {
 	void updateEntity(long uuid, Entity entity);
-	void updateVisableFields(long uuid, List<Tile> fields);
+	void updateVisableTiles(long uuid, List<Tile> tiles);
 	EntityAction makeTurn(long uuid);
 }
