@@ -8,11 +8,13 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
+import com.github.schnupperstudium.robots.world.World;
+import com.google.gson.Gson;
 
 public class RobotsServer implements Runnable {
 	public static final int DEFAULT_PORT = 15681;
 	
-	private final List<String> levels = new ArrayList<>();
+	private final List<Game> games = new ArrayList<>();
 	private final Server server;
 	private final int port;	
 
@@ -31,7 +33,16 @@ public class RobotsServer implements Runnable {
 		server.start();
 		
 		// scan for levels
-		levels.add("<level>/<auth>");
+		
+	}
+
+	private static Level loadLevel(String path) {
+		Gson gson = new Gson();
+		return null;
+	}
+	
+	private static World loadWorld(String path) {
+		return null;
 	}
 	
 	@Override
@@ -50,10 +61,12 @@ public class RobotsServer implements Runnable {
 	}
 	
 	private class ServerListener extends Listener {
+		private final ObjectSpace objectSpace = new ObjectSpace();
+		
 		@Override
 		public void connected(Connection connection) {
-			final ObjectSpace space = new ObjectSpace(connection);
-			space.register(RobotsServerInterface.NETWORK_ID, new RobotsServerInterface() {
+			objectSpace.addConnection(connection);
+			objectSpace.register(RobotsServerInterface.NETWORK_ID, new RobotsServerInterface() {
 
 				@Override
 				public long joinGame(String name, String level, String auth) {
@@ -84,7 +97,7 @@ public class RobotsServer implements Runnable {
 		
 		@Override
 		public void disconnected(Connection connection) {
-			
+			objectSpace.removeConnection(connection);
 		}
 	}
 }

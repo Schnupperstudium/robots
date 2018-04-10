@@ -12,6 +12,16 @@ public class Tile {
 	private Entity visitor;
 	private Item item;
 
+	public Tile(World world, Tile other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.world = world;
+		
+		setMaterial(other.material);
+		setVisitor(other.visitor);
+		setItem(other.item);
+	}
+	
 	public Tile(World world, int x, int y) {
 		this(world, x, y, Material.VOID);
 	}
@@ -20,7 +30,7 @@ public class Tile {
 		this.world = world;
 		this.x = x;
 		this.y = y;
-		this.material = material;
+		setMaterial(material);
 	}
 	
 	public int getX() {
@@ -64,5 +74,10 @@ public class Tile {
 	
 	public boolean canVisit() {
 		return material.isVisitable() && visitor == null;
+	}
+
+	@Override
+	public String toString() {
+		return "Tile [x=" + x + ", y=" + y + ", material=" + material + ", visitor=" + visitor + ", item=" + item + "]";
 	}
 }

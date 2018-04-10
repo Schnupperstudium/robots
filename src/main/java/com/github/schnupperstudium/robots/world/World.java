@@ -1,6 +1,7 @@
 package com.github.schnupperstudium.robots.world;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,25 @@ public class World {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				tiles[x][y] = new Tile(this, x, y, Material.VOID);
+			}
+		}
+	}
+	
+	public World(int width, int height, Collection<Tile> tileCollection) {
+		this.width = width;
+		this.height = height;
+		this.tiles = new Tile[width][height];
+		
+		// use given tiles
+		for (Tile tile : tileCollection) {
+			tiles[tile.getX()][tile.getY()] = new Tile(this, tile);
+		}
+		
+		// fill missing ones
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (tiles[x][y] == null)
+					tiles[x][y] = new Tile(this, x, y, Material.VOID);
 			}
 		}
 	}
