@@ -1,11 +1,13 @@
 package com.github.schnupperstudium.robots.world;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class World {
 	private final Tile[][] tiles;
-	private final List<Tile> spawns = new ArrayList<>();
+	private transient final Set<Tile> spawns = new HashSet<>();
 	private final int width;
 	private final int height;
 	
@@ -15,14 +17,14 @@ public class World {
 		this.tiles = new Tile[width][height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				tiles[x][y] = new Tile(x, y, Material.VOID);
+				tiles[x][y] = new Tile(this, x, y, Material.VOID);
 			}
 		}
 	}
 	
 	public Tile getTile(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) 
-			return new Tile(x, y, Material.VOID);
+			return new Tile(this, x, y, Material.VOID);
 		
 		return tiles[x][y];
 	}
@@ -32,9 +34,23 @@ public class World {
 	}
 	
 	public List<Tile> getSpawns() {
-		return spawns;
+		synchronized (spawns) {
+			return new ArrayList<>(spawns);
+		}
 	}
 
+	protected void addSpawn(Tile tile) {
+		synchronized (spawns) {
+			spawns.add(tile);
+		}
+	}
+	
+	protected void removeSpawn(Tile tile) {
+		synchronized (spawns) {
+			spawns.remove(tile);
+		}
+	}
+	
 	public int getWidth() {
 		return width;
 	}

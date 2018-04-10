@@ -4,6 +4,7 @@ import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
 
 public class Tile {
+	private transient final World world;
 	private final int x;
 	private final int y;
 		
@@ -11,11 +12,12 @@ public class Tile {
 	private Entity visitor;
 	private Item item;
 
-	public Tile(int x, int y) {
-		this(x, y, Material.VOID);
+	public Tile(World world, int x, int y) {
+		this(world, x, y, Material.VOID);
 	}
 	
-	public Tile(int x, int y, Material material) {
+	public Tile(World world, int x, int y, Material material) {
+		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.material = material;
@@ -34,6 +36,13 @@ public class Tile {
 	}
 	
 	public void setMaterial(Material material) {
+		if (world != null && this.material != material) {
+			if (material == Material.SPAWN)
+				world.addSpawn(this);
+			else if (this.material == Material.SPAWN)
+				world.removeSpawn(this);
+		}
+		
 		this.material = material;
 	}
 	
@@ -54,6 +63,6 @@ public class Tile {
 	}
 	
 	public boolean canVisit() {
-		return material.isVisitable() && visitor != null;
+		return material.isVisitable() && visitor == null;
 	}
 }

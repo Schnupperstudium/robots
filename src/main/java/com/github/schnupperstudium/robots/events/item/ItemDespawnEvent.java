@@ -1,7 +1,7 @@
 package com.github.schnupperstudium.robots.events.item;
 
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -18,7 +18,7 @@ public class ItemDespawnEvent extends ItemEvent {
 	}
 
 	@Override
-	protected boolean apply(GameManager manager) {
+	protected boolean apply(Game manager) {
 		Tile tile = item.getTile(world);
 		if (tile.getItem() != item)
 			return false;

@@ -3,6 +3,7 @@ package com.github.schnupperstudium.robots.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.schnupperstudium.robots.UUIDGenerator;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Item;
@@ -16,47 +17,48 @@ import com.github.schnupperstudium.robots.events.item.UseItemEvent;
 import com.github.schnupperstudium.robots.world.World;
 import com.github.thedwoon.event.EventDispatcher;
 import com.github.thedwoon.event.EventListener;
+import com.github.thedwoon.event.EventPriority;
 import com.github.thedwoon.event.SynchronizedEventDispatcher;
 
-public class GameManager implements Runnable, EventListener {
+public class Game implements Runnable, EventListener {
 	private static final long TURN_DURATION = 500;
 	
+	private final long uuid = UUIDGenerator.obtain();
 	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
-	private final List<Module> modules = new ArrayList<>();
+	private final List<Tickable> tickables = new ArrayList<>();
 	private final World world;
 	
 	private boolean running = true;
 	
-	public GameManager(World world) {
+	public Game(World world) {
 		this.world = world;
 		
-		eventDispatcher.registerListener(AbstractGameEvent.class, this::executeEvent);
+		eventDispatcher.registerListener(AbstractGameEvent.class, this::executeEvent, EventPriority.MONITOR, true);
 	}
 
 	@Override
 	public void run() {
 		while (running) {
 			try {
+				final long start = System.currentTimeMillis();
 				makeTurn();
-				modules.forEach(module -> module.updateModule());
+				final long end = System.currentTimeMillis();
+				final long timeToWait = TURN_DURATION - (end - start);
+				if (timeToWait > 0) {
+					Thread.sleep(timeToWait);
+				} else {
+					System.out.printf("Server is behind: %d ms\n", timeToWait);
+				}
 			} catch (InterruptedException e) {
 				running = false;
 			}
 		}
-		
-		modules.forEach(module -> module.unload());
-		modules.clear();
 	}
 
-	protected void makeTurn() throws InterruptedException {
-		final long start = System.currentTimeMillis();
-		modules.forEach(module -> module.updateModule());
-		final long end = System.currentTimeMillis();
-		final long timeToWait = TURN_DURATION - (end - start);
-		if (timeToWait > 0) {
-			Thread.sleep(timeToWait);
-		} else {
-			System.out.printf("Server is behind: %d ms\n", timeToWait);
+	protected void makeTurn() {
+		List<Tickable> tickables = new ArrayList<>(this.tickables);
+		for (Tickable tickable : tickables) {
+			tickable.update(this);
 		}
 	}
 	
@@ -110,9 +112,13 @@ public class GameManager implements Runnable, EventListener {
 		UseItemEvent event = new UseItemEvent(world, user, item);
 		eventDispatcher.dispatchEvent(event);		
 	}
+
+	public void addTickable(Tickable tickable) {
+		tickables.add(tickable);
+	}
 	
-	public synchronized void addModule(Module module) {
-		module.load(this);
+	public void removeTickable(Tickable tickable) {
+		tickables.remove(tickable);
 	}
 	
 	public synchronized void restartGame() {
@@ -129,5 +135,14 @@ public class GameManager implements Runnable, EventListener {
 	
 	public World getWorld() {
 		return world;
+	}
+	
+	public long getUUID() {
+		return uuid;
+	}
+	
+	public GameInfo getGameInfo() {
+		// TODO: implement
+		return new GameInfo(uuid, null, false);
 	}
 }

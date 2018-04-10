@@ -1,7 +1,7 @@
 package com.github.schnupperstudium.robots.events.entity;
 
 import com.github.schnupperstudium.robots.entity.Entity;
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -11,7 +11,7 @@ public class EntityDespawnEvent extends EntityEvent {
 	}
 
 	@Override
-	public boolean apply(GameManager manager) {
+	public boolean apply(Game manager) {
 		Tile tile = entity.getTile(world);
 		if (tile.getVisitor() != entity)
 			return false;

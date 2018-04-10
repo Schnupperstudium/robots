@@ -1,6 +1,6 @@
 package com.github.schnupperstudium.robots.events;
 
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.thedwoon.event.Event;
 
 public abstract class AbstractGameEvent implements Event {
@@ -28,7 +28,7 @@ public abstract class AbstractGameEvent implements Event {
 		return successful;
 	}
 	
-	public synchronized void executeEvent(GameManager manager) {
+	public synchronized void executeEvent(Game manager) {
 		if (done)
 			return;
 		else
@@ -41,5 +41,5 @@ public abstract class AbstractGameEvent implements Event {
 		successful = apply(manager);
 	}
 	
-	protected abstract boolean apply(GameManager manager);
+	protected abstract boolean apply(Game game);
 }

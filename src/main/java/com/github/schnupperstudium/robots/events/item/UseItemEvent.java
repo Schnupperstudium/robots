@@ -2,7 +2,7 @@ package com.github.schnupperstudium.robots.events.item;
 
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.World;
 
 public class UseItemEvent extends ItemEvent {
@@ -19,7 +19,7 @@ public class UseItemEvent extends ItemEvent {
 	}
 
 	@Override
-	public boolean apply(GameManager manager) {
+	public boolean apply(Game manager) {
 		item.use(manager, entity);
 		return true;
 	}

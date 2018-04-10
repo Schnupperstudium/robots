@@ -1,8 +1,8 @@
-package com.github.schnupperstudium.robots.module.ai.action;
+package com.github.schnupperstudium.robots.ai.action;
 
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Robot;
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 
 public class TurnRightAction extends EntityAction {
 
@@ -11,7 +11,7 @@ public class TurnRightAction extends EntityAction {
 	}
 
 	@Override
-	public void apply(GameManager manager, Entity e) {
+	public void apply(Game manager, Entity e) {
 		if (e instanceof Robot) {
 			Robot robot = (Robot) e;
 			robot.setFacing(robot.getFacing().right());

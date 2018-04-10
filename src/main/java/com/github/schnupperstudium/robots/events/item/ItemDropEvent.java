@@ -4,7 +4,7 @@ import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -22,7 +22,7 @@ public class ItemDropEvent extends ItemEvent {
 	}
 
 	@Override
-	public boolean apply(GameManager manager) {
+	public boolean apply(Game manager) {
 		Tile tile = entity.getTile(world);
 		if (tile.getItem() != null)
 			return false;

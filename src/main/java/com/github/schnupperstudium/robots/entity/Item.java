@@ -1,6 +1,6 @@
 package com.github.schnupperstudium.robots.entity;
 
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 
 public abstract class Item extends Entity {
 
@@ -12,5 +12,5 @@ public abstract class Item extends Entity {
 		super(name);		
 	}
 	
-	public abstract void use(GameManager manager, Entity user);
+	public abstract void use(Game manager, Entity user);
 }

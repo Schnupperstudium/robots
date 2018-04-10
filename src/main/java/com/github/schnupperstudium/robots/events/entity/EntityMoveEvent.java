@@ -2,7 +2,7 @@ package com.github.schnupperstudium.robots.events.entity;
 
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
-import com.github.schnupperstudium.robots.server.GameManager;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -33,7 +33,7 @@ public class EntityMoveEvent extends EntityEvent {
 	}
 
 	@Override
-	public boolean apply(GameManager manager) {
+	public boolean apply(Game manager) {
 		Tile currentTile = entity.getTile(world);
 		Tile nextTile = world.getTile(nextX, nextY);
 		if (!nextTile.canVisit())
