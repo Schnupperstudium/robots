@@ -51,4 +51,34 @@ public abstract class LivingEntity extends Entity {
 	public boolean isDead() {
 		return currentHealth <= 0;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + currentHealth;
+		result = prime * result + maxHealth;
+		return result + super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!super.equals(obj) || !(obj instanceof LivingEntity))
+			return false;
+		
+		LivingEntity other = (LivingEntity) obj;
+		if (currentHealth != other.currentHealth)
+			return false;
+		if (maxHealth != other.maxHealth)
+			return false;
+		
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "LivingEntity [maxHealth=" + maxHealth + ", currentHealth=" + currentHealth + ", getUUID()=" + getUUID()
+				+ ", getName()=" + getName() + ", getX()=" + getX() + ", getY()=" + getY() + ", getClass()="
+				+ getClass() + "]";
+	}
 }

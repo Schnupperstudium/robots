@@ -78,4 +78,22 @@ public class World {
 	public int getHeight() {
 		return height;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("([");
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if (x != 0 || y != 0)
+					sb.append(", ");
+				
+				Tile tile = getTile(x, y);
+				sb.append(tile);
+			}
+		}
+		
+		sb.append("]");
+		return "World [tiles=" + sb.toString() + ", width=" + width + ", height=" + height + "]";
+	}
 }

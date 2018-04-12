@@ -1,5 +1,8 @@
 package com.github.schnupperstudium.robots;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.stream.JsonReader;
 
 public final class WorldParser {
 	private static final String WIDTH = "width";
@@ -48,6 +52,11 @@ public final class WorldParser {
 	
 	public static World fromJson(String json) {
 		return gson.fromJson(json, World.class);
+	}
+	
+	public static World fromFile(File file) throws FileNotFoundException {
+		JsonReader reader = gson.newJsonReader(new FileReader(file));
+		return gson.fromJson(reader, World.class); 
 	}
 	
 	public static void main(String[] args) {

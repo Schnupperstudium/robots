@@ -84,4 +84,47 @@ public abstract class Entity {
 		setX(x);
 		setY(y);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((effects == null) ? 0 : effects.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + (int) (uuid ^ (uuid >>> 32));
+		result = prime * result + x;
+		result = prime * result + y;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		
+		if (!(obj instanceof Entity))
+			return false;
+
+		Entity other = (Entity) obj;
+		if (effects == null) {
+			if (other.effects != null)
+				return false;
+		} else if (!effects.equals(other.effects))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (uuid != other.uuid)
+			return false;
+		if (x != other.x)
+			return false;
+		if (y != other.y)
+			return false;
+		
+		return true;
+	}
 }
