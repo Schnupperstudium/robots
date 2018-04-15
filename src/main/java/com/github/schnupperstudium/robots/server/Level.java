@@ -1,5 +1,13 @@
 package com.github.schnupperstudium.robots.server;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import com.github.schnupperstudium.robots.WorldParser;
+import com.github.schnupperstudium.robots.world.World;
+
 public class Level {
 	private final String name;
 	private final String gameClass;
@@ -29,6 +37,15 @@ public class Level {
 		return desc;
 	}
 
+	public World loadWorld() throws FileNotFoundException, URISyntaxException {
+		URL url = Level.class.getResource(mapLocation);
+		if (url == null)
+			throw new FileNotFoundException("file was not found at: " + mapLocation);
+		
+		World world = WorldParser.fromFile(new File(url.toURI()));
+		return world;
+	}
+	
 	@Override
 	public String toString() {
 		return "Level [name=" + name + ", gameClass=" + gameClass + ", mapLocation=" + mapLocation + ", desc=" + desc

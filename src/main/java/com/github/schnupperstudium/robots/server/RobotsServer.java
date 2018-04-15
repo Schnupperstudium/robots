@@ -8,8 +8,6 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
-import com.github.schnupperstudium.robots.world.World;
-import com.google.gson.Gson;
 
 public class RobotsServer implements Runnable {
 	public static final int DEFAULT_PORT = 15681;
@@ -34,15 +32,6 @@ public class RobotsServer implements Runnable {
 		
 		// scan for levels
 		
-	}
-
-	private static Level loadLevel(String path) {
-		Gson gson = new Gson();
-		return null;
-	}
-	
-	private static World loadWorld(String path) {
-		return null;
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package com.github.schnupperstudium.robots.server;
 
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +28,24 @@ public class Game implements Runnable, EventListener {
 	private final long uuid = UUIDGenerator.obtain();
 	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
 	private final List<Tickable> tickables = new ArrayList<>();
+	private final String password;
+	private final Level level;
 	private final World world;
 	
 	private boolean running = true;
 	
-	public Game(World world) {
+	public Game(Level level) throws FileNotFoundException, URISyntaxException {
+		this(level, level.loadWorld());
+	}
+	
+	public Game(Level level, World world) {
+		this(level, world, null);
+	}
+	
+	public Game(Level level, World world, String password) {
+		this.level = level;
 		this.world = world;
+		this.password = password;
 		
 		eventDispatcher.registerListener(AbstractGameEvent.class, this::executeEvent, EventPriority.MONITOR, true);
 	}
@@ -110,7 +124,7 @@ public class Game implements Runnable, EventListener {
 	
 	public synchronized void useItem(Entity user, Item item) {
 		UseItemEvent event = new UseItemEvent(world, user, item);
-		eventDispatcher.dispatchEvent(event);		
+		eventDispatcher.dispatchEvent(event);	
 	}
 
 	public void addTickable(Tickable tickable) {
@@ -122,7 +136,7 @@ public class Game implements Runnable, EventListener {
 	}
 	
 	public synchronized void restartGame() {
-		
+		// TODO: implement
 	}
 	
 	public synchronized void endGame() {
@@ -141,8 +155,19 @@ public class Game implements Runnable, EventListener {
 		return uuid;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+	
+	public boolean hasPassword() {
+		return password != null;
+	}
+	
+	public Level getLevel() {
+		return level;
+	}
+	
 	public GameInfo getGameInfo() {
-		// TODO: implement
-		return new GameInfo(uuid, null, false);
+		return new GameInfo(uuid, level, hasPassword());
 	}
 }
