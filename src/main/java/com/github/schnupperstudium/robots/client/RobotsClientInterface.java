@@ -8,8 +8,35 @@ import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public interface RobotsClientInterface {
+	public static final int NETWORK_ID = 1001;
+	
+	/**
+	 * Notifies the client to update the entity with the provided uuid with the data provided.
+	 * 
+	 * @param uuid entity id
+	 * @param entity updated entity instance
+	 */
 	void updateEntity(long uuid, Entity entity);
+	/**
+	 * 
+	 * 
+	 * @param uuid
+	 * @param tiles
+	 */
 	void updateVisableTiles(long uuid, List<Tile> tiles);
+	/**
+	 * Compute the turn for the entity with the provided id.
+	 * 
+	 * @param uuid uuid of the entity
+	 * @return the action the entity takes
+	 */
 	EntityAction makeTurn(long uuid);
+	
+	/**
+	 * Update to the world within the given game.
+	 * 
+	 * @param uuid game id
+	 * @param world updated world instance
+	 */
 	void updateWorld(long uuid, World world);
 }

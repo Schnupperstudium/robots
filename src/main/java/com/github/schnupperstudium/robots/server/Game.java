@@ -28,21 +28,23 @@ public class Game implements Runnable, EventListener {
 	private final long uuid = UUIDGenerator.obtain();
 	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
 	private final List<Tickable> tickables = new ArrayList<>();
+	private final String name;
 	private final String password;
 	private final Level level;
 	private final World world;
 	
 	private boolean running = true;
 	
-	public Game(Level level) throws FileNotFoundException, URISyntaxException {
-		this(level, level.loadWorld());
+	public Game(String name, Level level) throws FileNotFoundException, URISyntaxException {
+		this(name, level, level.loadWorld());
 	}
 	
-	public Game(Level level, World world) {
-		this(level, world, null);
+	public Game(String name, Level level, World world) {
+		this(name, level, world, null);
 	}
 	
-	public Game(Level level, World world, String password) {
+	public Game(String name, Level level, World world, String password) {
+		this.name = name;
 		this.level = level;
 		this.world = world;
 		this.password = password;
@@ -54,6 +56,11 @@ public class Game implements Runnable, EventListener {
 	public void run() {
 		while (running) {
 			try {
+				if (tickables.isEmpty()) {
+					Thread.sleep(TURN_DURATION);
+					continue;
+				}
+					
 				final long start = System.currentTimeMillis();
 				makeTurn();
 				final long end = System.currentTimeMillis();
@@ -167,7 +174,11 @@ public class Game implements Runnable, EventListener {
 		return level;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public GameInfo getGameInfo() {
-		return new GameInfo(uuid, level, hasPassword());
+		return new GameInfo(uuid, name, level, hasPassword());
 	}
 }
