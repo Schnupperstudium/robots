@@ -1,8 +1,10 @@
 package com.github.schnupperstudium.robots.server;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +13,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
+import com.github.schnupperstudium.robots.LevelParser;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.events.entity.AISpawnEvent;
@@ -39,8 +42,37 @@ public class RobotsServer implements Runnable {
 		server.bind(port);
 		server.start();
 		
-		// scan for levels
-		// TODO: actually scan for levels
+		loadLevels();
+	}
+	
+	public static void main(String[] args) throws IOException {
+		RobotsServer server = new RobotsServer();
+		server.run();
+	}
+	
+	private void loadLevels() throws IOException {
+		availableLevels.clear();
+		
+		URL url = RobotsServer.class.getResource("/level/");
+		if (url == null) {
+			System.out.println("Failed to load levels");
+			return;
+		}
+		
+		File levelDir = null;
+		try {
+			levelDir = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			throw new IOException(e);
+		}
+		File[] levels = levelDir.listFiles((dir, name) -> name.endsWith(".level"));
+		for (File level : levels) {
+			Level l = LevelParser.loadLevel(level);
+			if (l != null)
+				availableLevels.add(l);
+		}
+		
+		System.out.println("Loaded " + availableLevels.size() + " levels");
 	}
 	
 	@Override
