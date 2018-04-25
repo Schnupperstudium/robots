@@ -40,7 +40,7 @@ public interface RobotsServerInterface {
 	 * @param auth authentication token for the game or <code>null</code>.
 	 * @return robots id
 	 */
-	long spawnRobot(long gameId, String name, String auth);
+	long spawnEntity(long gameId, String name, String auth);
 	
 	/**
 	 * Attempts start observing the game. 

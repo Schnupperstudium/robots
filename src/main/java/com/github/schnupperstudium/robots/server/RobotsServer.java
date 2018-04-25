@@ -147,7 +147,7 @@ public class RobotsServer implements Runnable {
 				}
 				
 				@Override
-				public long spawnRobot(long gameId, String name, String auth) {
+				public long spawnEntity(long gameId, String name, String auth) {
 					if (name == null || name.isEmpty())
 						return -1;
 					
