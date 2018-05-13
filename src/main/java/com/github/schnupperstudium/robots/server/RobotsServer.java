@@ -123,8 +123,6 @@ public class RobotsServer implements Runnable {
 						return -1;
 					else if (levelName == null || levelName.isEmpty())
 						return -2;
-					else if (auth == null || auth.isEmpty())
-						return -3;
 					
 					Level level = findLevel(levelName);
 					if (level == null)
@@ -132,7 +130,7 @@ public class RobotsServer implements Runnable {
 					
 					Game game = null;
 					try {
-						game = new Game(name, level);
+						game = new Game(name, level, auth);
 					} catch (FileNotFoundException e) {
 						return -5;
 					} catch (URISyntaxException e) {

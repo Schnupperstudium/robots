@@ -39,6 +39,10 @@ public class Game implements Runnable, EventListener {
 		this(name, level, level.loadWorld());
 	}
 	
+	public Game(String name, Level level, String auth) throws FileNotFoundException, URISyntaxException {
+		this(name, level, level.loadWorld(), auth);
+	}
+	
 	public Game(String name, Level level, World world) {
 		this(name, level, world, null);
 	}
@@ -56,11 +60,6 @@ public class Game implements Runnable, EventListener {
 	public void run() {
 		while (running) {
 			try {
-				if (tickables.isEmpty()) {
-					Thread.sleep(TURN_DURATION);
-					continue;
-				}
-					
 				final long start = System.currentTimeMillis();
 				makeTurn();
 				final long end = System.currentTimeMillis();
