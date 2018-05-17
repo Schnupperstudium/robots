@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import com.github.schnupperstudium.robots.WorldParser;
+import com.github.schnupperstudium.robots.io.WorldParser;
 import com.github.schnupperstudium.robots.world.World;
 
 public class Level {

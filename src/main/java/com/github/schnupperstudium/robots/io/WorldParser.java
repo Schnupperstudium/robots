@@ -1,8 +1,11 @@
-package com.github.schnupperstudium.robots;
+package com.github.schnupperstudium.robots.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +16,7 @@ import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
+import com.github.schnupperstudium.robots.world.WorldLoader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -25,7 +29,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.stream.JsonReader;
 
-public final class WorldParser {
+public final class WorldParser implements WorldLoader {
 	private static final String WIDTH = "width";
 	private static final String HEIGHT = "height";
 	private static final String TILES = "tiles";
@@ -46,6 +50,16 @@ public final class WorldParser {
 		gson = builder.create();
 	}
 	
+	public WorldParser() {
+		
+	}
+	
+	@Override
+	public World loadWorld(InputStream is) throws IOException {
+		JsonReader reader = gson.newJsonReader(new InputStreamReader(is));
+		return gson.fromJson(reader, World.class);
+	}
+
 	public static String toJson(World world) {
 		return gson.toJson(world);
 	}

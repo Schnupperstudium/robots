@@ -1,4 +1,4 @@
-package com.github.schnupperstudium.robots;
+package com.github.schnupperstudium.robots.io;
 
 import java.io.File;
 import java.io.FileReader;

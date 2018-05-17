@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.schnupperstudium.robots.LevelParser;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.events.entity.AISpawnEvent;
 import com.github.schnupperstudium.robots.events.game.ObserverJoinEvent;
+import com.github.schnupperstudium.robots.io.LevelParser;
 import com.github.schnupperstudium.robots.world.Tile;
 
 public abstract class RobotsServer implements Runnable {

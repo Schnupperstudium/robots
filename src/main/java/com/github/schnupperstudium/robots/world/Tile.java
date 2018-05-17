@@ -62,6 +62,8 @@ public class Tile {
 	
 	public void setItem(Item item) {
 		this.item = item;
+		if (item != null)
+			item.setPosition(x, y);
 	}
 	
 	public Entity getVisitor() {
