@@ -42,7 +42,7 @@ public final class LevelParser {
 	}
 	
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		System.out.println(gson.toJson(new Level("default", "game", "map", "desc")));
+		System.out.println(gson.toJson(new Level("default", "map", "desc")));
 		
 		URL url = LevelParser.class.getResource("/level/default.level");		
 		System.out.println(loadLevel(new File(url.toURI())));
@@ -50,7 +50,8 @@ public final class LevelParser {
 	
 	private static class LevelAdapter implements JsonDeserializer<Level>, JsonSerializer<Level> {
 		private static final String NAME = "name";
-		private static final String GAME_CLASS = "gameClass";
+		private static final String GAME_LOADER = "gameLoader";
+		private static final String MAP_LOADER = "mapLoader";
 		private static final String MAP_LOCATION = "mapLocation";
 		private static final String DESC = "desc";
 		
@@ -58,7 +59,8 @@ public final class LevelParser {
 		public JsonElement serialize(Level src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonObject obj = new JsonObject();
 			obj.addProperty(NAME, src.getName());
-			obj.addProperty(GAME_CLASS, src.getGameClass());
+			obj.addProperty(GAME_LOADER, src.getGameLoader());
+			obj.addProperty(MAP_LOADER, src.getMapLoader());
 			obj.addProperty(MAP_LOCATION, src.getMapLocation());
 			obj.addProperty(DESC, src.getDesc());
 			
@@ -73,20 +75,24 @@ public final class LevelParser {
 			
 			JsonObject obj = json.getAsJsonObject();
 			
-			final String name = getElement(obj, NAME).getAsString();
-			final String mapLocation = getElement(obj, MAP_LOCATION).getAsString();
-			final String gameClass = getElement(obj, GAME_CLASS).getAsString();
-			final String desc = getElement(obj, DESC).getAsString();
+			final String name = getStringOrNull(obj, NAME);
+			final String mapLoader = getStringOrNull(obj, MAP_LOADER);
+			final String mapLocation = getStringOrNull(obj, MAP_LOCATION);
+			final String gameLoader = getStringOrNull(obj, GAME_LOADER);
+			final String desc = getStringOrNull(obj, DESC);
 			
-			return new Level(name, gameClass, mapLocation, desc);
+			return new Level(name, gameLoader, mapLoader, mapLocation, desc);
 		}
 		
-		private JsonElement getElement(JsonObject obj, String name) {
+		private String getStringOrNull(JsonObject obj, String name) {
 			JsonElement element = obj.get(name);
 			if (element == null)
 				throw new JsonParseException("expected an element with name: " + name);
 			
-			return element;
+			if (element.isJsonNull())
+				return null;
+			else
+				return element.getAsString();
 		}
 	}
 }

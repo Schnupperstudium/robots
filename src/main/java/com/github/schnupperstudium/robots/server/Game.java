@@ -1,7 +1,6 @@
 package com.github.schnupperstudium.robots.server;
 
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +34,11 @@ public class Game implements Runnable, EventListener {
 	
 	private boolean running = true;
 	
-	public Game(String name, Level level) throws FileNotFoundException, URISyntaxException {
+	public Game(String name, Level level) throws IOException {
 		this(name, level, level.loadWorld());
 	}
 	
-	public Game(String name, Level level, String auth) throws FileNotFoundException, URISyntaxException {
+	public Game(String name, Level level, String auth) throws IOException {
 		this(name, level, level.loadWorld(), auth);
 	}
 	

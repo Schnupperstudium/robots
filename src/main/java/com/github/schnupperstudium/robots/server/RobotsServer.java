@@ -1,7 +1,6 @@
 package com.github.schnupperstudium.robots.server;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -99,11 +98,9 @@ public abstract class RobotsServer implements Runnable {
 		Game game = null;
 		try {
 			game = new Game(name, level, auth);
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			return -5;
-		} catch (URISyntaxException e) {
-			return -6;
-		}
+		} 
 		
 		synchronized (games) {
 			games.add(game);
