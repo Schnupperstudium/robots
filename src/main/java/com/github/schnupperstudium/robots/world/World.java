@@ -79,6 +79,19 @@ public class World {
 		return height;
 	}
 
+	public String toPrettyMapString() {
+		StringBuilder sb = new StringBuilder();
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				sb.append(getTile(x, y).getMaterial().name().charAt(0) + " ");
+			}
+			
+			sb.append('\n');
+		}
+		
+		return sb.toString();
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

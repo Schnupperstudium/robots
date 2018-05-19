@@ -3,6 +3,8 @@ package com.github.schnupperstudium.robots.io;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -34,6 +36,11 @@ public final class LevelParser {
 	
 	public static Level loadLevel(String path) throws IOException {
 		return loadLevel(new File(path));
+	}
+	
+	public static Level loadLevel(InputStream is) {
+		JsonReader reader = gson.newJsonReader(new InputStreamReader(is));
+		return gson.fromJson(reader, Level.class);
 	}
 	
 	public static Level loadLevel(File file) throws IOException {
