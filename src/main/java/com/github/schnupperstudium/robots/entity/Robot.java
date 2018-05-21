@@ -6,7 +6,11 @@ public class Robot extends LivingEntity implements InventoryHolder {
 	
 	private final Inventory inventory = new Inventory(INVENTORY_SIZE);
 	
-	private Facing facing = Facing.NORTH;	
+	@Deprecated
+	protected Robot() {
+		// constructor for kryo
+		super();
+	}
 	
 	public Robot(String name) {
 		super(name, ROBOT_HEALTH);
@@ -20,20 +24,11 @@ public class Robot extends LivingEntity implements InventoryHolder {
 	public Inventory getInventory() {
 		return inventory;
 	}
-	
-	public Facing getFacing() {
-		return facing;
-	}
-	
-	public void setFacing(Facing facing) {
-		this.facing = facing;
-	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((facing == null) ? 0 : facing.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		return result + super.hashCode();
 	}
@@ -44,8 +39,6 @@ public class Robot extends LivingEntity implements InventoryHolder {
 			return false;
 		
 		Robot other = (Robot) obj;
-		if (facing != other.facing)
-			return false;
 		if (inventory == null) {
 			if (other.inventory != null)
 				return false;
@@ -56,7 +49,7 @@ public class Robot extends LivingEntity implements InventoryHolder {
 
 	@Override
 	public String toString() {
-		return "Robot [inventory=" + inventory + ", facing=" + facing + ", getMaxHealth()=" + getMaxHealth()
+		return "Robot [inventory=" + inventory + ", facing=" + getFacing() + ", getMaxHealth()=" + getMaxHealth()
 				+ ", getCurrentHealth()=" + getCurrentHealth() + ", isAlive()=" + isAlive() + ", getUUID()=" + getUUID()
 				+ ", getName()=" + getName() + ", getX()=" + getX() + ", getY()=" + getY() + ", getClass()="
 				+ getClass() + "]";

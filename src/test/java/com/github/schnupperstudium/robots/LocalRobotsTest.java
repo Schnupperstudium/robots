@@ -7,7 +7,7 @@ import com.github.schnupperstudium.robots.client.RobotsClient;
 import com.github.schnupperstudium.robots.server.LocalRobotsServer;
 import com.github.schnupperstudium.robots.server.RobotsServer;
 
-public class LocalRobotsTest extends RobotsTest {
+public final class LocalRobotsTest extends RobotsTest {
 
 	@Override
 	protected RobotsServer setupServer() throws IOException {

@@ -3,10 +3,16 @@ package com.github.schnupperstudium.robots.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryonet.Serialization;
+
 public class Inventory {
 	private final int size;
 	private final List<Item> items;
-	
+		
 	public Inventory(int size) {
 		this.size = size;
 		this.items = new ArrayList<>(size);
@@ -75,5 +81,36 @@ public class Inventory {
 	@Override
 	public String toString() {
 		return "Inventory [size=" + size + ", items=" + items + "]";
+	}
+	
+	public static final class InventorySerializer extends Serializer<Inventory> {
+
+		public InventorySerializer() {
+
+		}
+		
+		@Override
+		public void write(Kryo kryo, Output output, Inventory inventory) {
+			kryo.writeObject(output, inventory.size);
+			kryo.writeObject(output, inventory.items.size());
+			for (int i = 0; i < inventory.items.size(); i++) {
+				kryo.writeClassAndObject(output, inventory.items.get(i));
+			}
+		}
+
+		@Override
+		public Inventory read(Kryo kryo, Input input, Class<Inventory> type) {
+			int size = kryo.readObject(input, int.class);
+			int containedItems = kryo.readObject(input, int.class);
+
+			Inventory inventory = new Inventory(size);
+			for (int i = 0; i < containedItems; i++) {
+				Item item = (Item) kryo.readClassAndObject(input);
+				inventory.addItem(item);
+			}
+			
+			return inventory;
+		}
+		
 	}
 }

@@ -20,7 +20,6 @@ import com.github.schnupperstudium.robots.world.Tile;
 
 public abstract class RobotsServer implements Runnable {
 	private static final Logger LOG = LogManager.getLogger();
-	public static final int DEFAULT_PORT = 15681;
 	
 	protected final List<Game> games = new ArrayList<>();
 	protected final List<Level> availableLevels = new ArrayList<>();
@@ -30,9 +29,7 @@ public abstract class RobotsServer implements Runnable {
 	public RobotsServer() throws IOException {
 		loadLevels();
 	}
-			
-	public abstract RobotsServerInterface createServerInterface(RobotsClientInterface clientInterface);
-	
+		
 	private void loadLevels() throws IOException {
 		availableLevels.clear();
 		

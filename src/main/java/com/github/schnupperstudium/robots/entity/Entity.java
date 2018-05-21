@@ -11,9 +11,16 @@ public abstract class Entity {
 	private final long uuid;
 	private final List<Effect> effects = new ArrayList<>();
 	
-	private String name;
+	private String name;	
+	private Facing facing;	
 	private int x;
 	private int y;
+	
+	@Deprecated
+	protected Entity() {
+		uuid = 0;
+		// constructor for kryo
+	}
 	
 	public Entity(String name) {
 		this(UUIDGenerator.obtain(), name);
@@ -22,6 +29,7 @@ public abstract class Entity {
 	public Entity(long uuid, String name) {
 		this.uuid = uuid;
 		this.name = name;
+		this.facing = Facing.NORTH;
 	}
 	
 	public final long getUUID() {
@@ -62,6 +70,14 @@ public abstract class Entity {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Facing getFacing() {
+		return facing;
+	}
+	
+	public void setFacing(Facing facing) {
+		this.facing = facing;
 	}
 	
 	public int getX() {

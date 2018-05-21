@@ -11,7 +11,6 @@ public class LocalRobotsServer extends RobotsServer {
 		super();
 	}
 	
-	@Override
 	public RobotsServerInterface createServerInterface(RobotsClientInterface clientInterface) {
 		return new RobotsServerInterface() {
 			@Override

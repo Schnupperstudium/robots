@@ -12,11 +12,15 @@ import com.github.schnupperstudium.robots.world.WorldLoader;
 public class Level {
 	private static final WorldLoader DEFAULT_LOADER = new MapFileParser();
 	
-	private final String name;
-	private final String gameLoader;
-	private final String mapLoader;
-	private final String mapLocation;
-	private final String desc;
+	private String name;
+	private String gameLoader;
+	private String mapLoader;
+	private String mapLocation;
+	private  String desc;
+	
+	protected Level() {
+		// constructor for kryo
+	}
 	
 	public Level(String name, String mapLocation, String desc) {
 		this(name, null, null, mapLocation, desc);

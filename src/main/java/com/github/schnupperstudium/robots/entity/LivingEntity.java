@@ -4,6 +4,12 @@ public abstract class LivingEntity extends Entity {
 	private int maxHealth;
 	private int currentHealth;
 	
+	@Deprecated
+	protected LivingEntity() {
+		// construtor for kryo
+		super();
+	}
+	
 	public LivingEntity(String name, int health) {
 		super(name);
 		

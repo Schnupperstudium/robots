@@ -1,10 +1,14 @@
 package com.github.schnupperstudium.robots.server;
 
 public class GameInfo {
-	private final long uuid;
-	private final String name;
-	private final Level level;
-	private final boolean password;
+	private long uuid;
+	private String name;
+	private Level level;
+	private boolean password;
+	
+	protected GameInfo() {
+		// constructor for kryo
+	}
 	
 	public GameInfo(long uuid, String name, Level level, boolean password) {
 		this.uuid = uuid;

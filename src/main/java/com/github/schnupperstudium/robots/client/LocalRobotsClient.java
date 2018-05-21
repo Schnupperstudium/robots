@@ -21,7 +21,6 @@ public final class LocalRobotsClient extends RobotsClient {
 		return robotsClient;
 	}
 	
-	@Override
 	public RobotsClientInterface createClientInterface() {
 		return new ClientInterface();
 	}

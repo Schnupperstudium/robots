@@ -32,8 +32,6 @@ public abstract class RobotsClient {
 
 	}
 	
-	public abstract RobotsClientInterface createClientInterface();
-	
 	public List<GameInfo> listGames() {
 		return serverInterface.listGames();
 	}
