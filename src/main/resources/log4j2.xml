@@ -35,8 +35,8 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Root level="debug">
-			<AppenderRef ref="Console" level="INFO" />
+		<Root level="ALL">
+			<AppenderRef ref="Console" level="DEBUG" />
 			<AppenderRef ref="RobotsLog" level="ALL"/>
 			<AppenderRef ref="ErrorLog" level="ERROR" />
 			<!--<AppenderRef ref="DebugLog" level="DEBUG" />-->

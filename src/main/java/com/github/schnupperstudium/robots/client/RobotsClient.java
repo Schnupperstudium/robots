@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.entity.Entity;
@@ -18,6 +21,8 @@ import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public abstract class RobotsClient {	
+	private static final Logger LOG = LogManager.getLogger();
+	
 	protected final Map<Long, AbstractAI> ais = new HashMap<>();
 	protected final Map<Long, IWorldObserver> observers = new HashMap<>();
 	
@@ -42,12 +47,12 @@ public abstract class RobotsClient {
 					return constructor.newInstance(uuid);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
-					System.out.println("Failed to create instance from " + aiClass.getName() + ": " + e.getMessage());
+					LOG.error("Failed to create instance from " + aiClass.getName() + ": " + e.getMessage());
 					return null;
 				}
 			});
 		} catch (NoSuchMethodException | SecurityException e) {
-			System.out.println("No valid constructor found for (long): " + aiClass.getName() + " -- " + e.getMessage());
+			LOG.error("No valid constructor found for (long): " + aiClass.getName() + " -- " + e.getMessage());
 			return false;
 		}
 	}
@@ -55,13 +60,13 @@ public abstract class RobotsClient {
 	public boolean spawnAI(long gameId, String aiName, String auth, AIFactory aiFactory) {
 		final long uuid = serverInterface.spawnEntity(gameId, aiName, auth);
 		if (uuid < 0) {
-			System.out.println("AI spawn failed with code: " + uuid);
+			LOG.error("AI spawn failed with code: " + uuid);
 			return false;
 		}
 		
 		AbstractAI ai = aiFactory.createAI(uuid);
 		if (ai == null) {
-			System.out.println("Failed to create ai with uuid: " + uuid);
+			LOG.error("Failed to create ai with uuid: " + uuid);
 			return false;
 		}
 		
@@ -69,18 +74,25 @@ public abstract class RobotsClient {
 			ais.put(uuid, ai);		
 		}
 		
+		LOG.info("spawned AI '{}' in game {} using auth '{}'", aiName, gameId, auth);
 		return true;
 	}
 	
-	public boolean spawnObserver(long gameId, String auth, IWorldObserver observer) {		
-		boolean observable = serverInterface.observerWorld(gameId, auth);
-		if (!observable)
+	public boolean spawnObserver(long gameId, String auth, IWorldObserver observer) {
+		if (observer == null)
 			return false;
+
+		boolean observable = serverInterface.observerWorld(gameId, auth);
+		if (!observable) {
+			LOG.warn("Failed to observer game '{}' with auth '{}'", gameId, auth);
+			return false;
+		}
 		
 		synchronized (observers) {
 			observers.put(gameId, Objects.requireNonNull(observer));
 		}
 		
+		LOG.info("Observing game '{}' with auth '{}'", gameId, auth);
 		return true;
 	}
 	
@@ -89,35 +101,45 @@ public abstract class RobotsClient {
 	}
 	
 	protected EntityAction makeTurn(long uuid) {
+		LOG.trace("compute action for {}", uuid);
 		AbstractAI ai = ais.get(uuid);
 		
-		// ai not found
-		if (ai == null)
+		if (ai == null) {
+			LOG.warn("AI not found: {}", uuid);
 			return NoAction.INSTANCE;
+		}
 		
 		EntityAction action = ai.makeTurn();
-		if (action == null)
+		if (action == null) {
+			LOG.warn("AI returned null action: {}", uuid);
 			return NoAction.INSTANCE;
-		else
+		} else {
 			return action;
+		}
 	}
 	
 	protected void updateVision(long uuid, List<Tile> vision) {
 		AbstractAI ai = ais.get(uuid);
-		if (ai != null) 
+		if (ai != null) {
+			LOG.trace("vision update {}: {}", uuid, vision);
 			ai.updateVision(vision);
+		}
 	}
 	
 	protected void updateEntity(long uuid, Entity entity) {
 		AbstractAI ai = ais.get(uuid);
-		if (ai != null) 
+		if (ai != null) { 
+			LOG.trace("update entity {}: {}", uuid, entity);
 			ai.updateEntity(entity);
+		}
 	}
 	
 	protected void updateObserver(long gameId, World world) {
 		IWorldObserver observer = observers.get(gameId);
-		if (observer != null)
+		if (observer != null) {
+			LOG.trace("update observer {}: {}", gameId, world);
 			observer.updateWorld(gameId, world);
+		}
 	}
 	
 	public RobotsServerInterface getServerInterface() {

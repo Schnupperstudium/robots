@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.schnupperstudium.robots.UUIDGenerator;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
@@ -22,6 +25,7 @@ import com.github.thedwoon.event.EventPriority;
 import com.github.thedwoon.event.SynchronizedEventDispatcher;
 
 public class Game implements Runnable, EventListener {
+	private static final Logger LOG = LogManager.getLogger();
 	private static final long TURN_DURATION = 500;
 	
 	private final long uuid = UUIDGenerator.obtain();
@@ -69,7 +73,7 @@ public class Game implements Runnable, EventListener {
 				if (timeToWait > 0) {
 					Thread.sleep(timeToWait);
 				} else {
-					System.out.printf("Server is behind: %d ms\n", timeToWait);
+					LOG.warn("Server is behind: {} ms", timeToWait);
 				}
 			} catch (InterruptedException e) {
 				running = false;

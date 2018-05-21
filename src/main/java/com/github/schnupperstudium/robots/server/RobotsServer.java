@@ -103,6 +103,7 @@ public abstract class RobotsServer implements Runnable {
 		try {
 			game = new Game(name, level, auth);
 		} catch (IOException e) {
+			LOG.warn("failed to start game '{}', '{}': {}", name, level, e.getMessage());
 			return -5;
 		} 		
 		
@@ -110,6 +111,8 @@ public abstract class RobotsServer implements Runnable {
 			games.add(game);			
 		}
 		
+		LOG.info("started game [id: {}, name: {}, level: {}, map: {}]", 
+				game.getUUID(), name, levelName, game.getLevel().getMapLocation());
 		return game.getUUID();
 	}
 	
@@ -139,10 +142,13 @@ public abstract class RobotsServer implements Runnable {
 		robot.setPosition(spawnTile.getX(), spawnTile.getY());
 		AISpawnEvent event = new AISpawnEvent(game.getWorld(), robot, clientInterface);
 		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful())
+		if (event.isSuccessful()) {
+			LOG.info("spawned AI '{}' in game {}", name, gameId);
 			return robot.getUUID();
-		else
+		} else {
+			LOG.warn("failed to spawn AI '{}' in game {} using auth '{}'", name, gameId, auth);
 			return -5;
+		}
 	}
 	
 	public boolean observerWorld(long gameId, String auth, RobotsClientInterface clientInterface) {
@@ -154,7 +160,12 @@ public abstract class RobotsServer implements Runnable {
 			return false;
 		
 		ObserverJoinEvent event = new ObserverJoinEvent(clientInterface);
-		game.getEventDispatcher().dispatchEvent(event);					
+		game.getEventDispatcher().dispatchEvent(event);
+		if (event.isSuccessful())
+			LOG.info("added observer for game {}", gameId);
+		else
+			LOG.warn("failed to add observer for game {} with auth '{}'", game, auth);
+		
 		return event.isSuccessful();
 	}
 	
@@ -176,5 +187,7 @@ public abstract class RobotsServer implements Runnable {
 		synchronized (games) {
 			games.forEach(game -> game.endGame());
 		}
+		
+		LOG.info("server closed");
 	}
 }
