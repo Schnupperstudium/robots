@@ -18,10 +18,10 @@ public interface RobotsClientInterface {
 	 */
 	void updateEntity(long uuid, Entity entity);
 	/**
+	 * Notifies the client to update the entities vision with the provided uuid with the data provided.
 	 * 
-	 * 
-	 * @param uuid
-	 * @param tiles
+	 * @param uuid entity uuid
+	 * @param tiles visible tiles
 	 */
 	void updateVisableTiles(long uuid, List<Tile> tiles);
 	/**

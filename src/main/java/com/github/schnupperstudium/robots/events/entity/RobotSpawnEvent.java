@@ -11,4 +11,8 @@ public class RobotSpawnEvent extends EntitySpawnEvent {
 		
 		this.robot = robot;
 	}
+	
+	public Robot getRobot() {
+		return robot;
+	}
 }
