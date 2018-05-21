@@ -2,8 +2,18 @@
 <Configuration status="WARN">
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT" ignoreExceptions="false">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%p{lowerCase=true}] %c{1} - %msg%n" />
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%p] [%t] %c{1} - %msg%n" />
 		</Console>
+		<RollingFile name="RobotsLog" fileName="logs/robots.log"
+			filePattern="logs/robot.log.%i">
+			<PatternLayout pattern="%d %p [%t] %c - %msg%n" />
+			<Policies>
+				<OnStartupTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="5 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="4" />
+		</RollingFile>
+		<!-- 
 		<RollingFile name="DebugLog" fileName="logs/robots_debug.log"
 			filePattern="logs/robots_debug.log.%i">
 			<PatternLayout pattern="%d %p [%t] %c - %msg%n" />
@@ -13,6 +23,7 @@
 			</Policies>
 			<DefaultRolloverStrategy max="4" />
 		</RollingFile>
+		 -->
 		<RollingFile name="ErrorLog" fileName="logs/robots_error.log"
 			filePattern="logs/robots_error.log.%i">
 			<PatternLayout pattern="%d %p [%t] %c - %msg%n" />
@@ -26,8 +37,9 @@
 	<Loggers>
 		<Root level="debug">
 			<AppenderRef ref="Console" level="INFO" />
+			<AppenderRef ref="RobotsLog" level="ALL"/>
+			<AppenderRef ref="ErrorLog" level="ERROR" />
 			<!--<AppenderRef ref="DebugLog" level="DEBUG" />-->
-			<!--<AppenderRef ref="ErrorLog" level="ERROR" />-->
 		</Root>
 	</Loggers>
 </Configuration>

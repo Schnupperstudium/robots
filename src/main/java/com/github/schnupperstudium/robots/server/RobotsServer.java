@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.events.entity.AISpawnEvent;
@@ -16,6 +19,7 @@ import com.github.schnupperstudium.robots.io.LevelParser;
 import com.github.schnupperstudium.robots.world.Tile;
 
 public abstract class RobotsServer implements Runnable {
+	private static final Logger LOG = LogManager.getLogger();
 	public static final int DEFAULT_PORT = 15681;
 	
 	protected final List<Game> games = new ArrayList<>();
@@ -34,7 +38,7 @@ public abstract class RobotsServer implements Runnable {
 		
 		URL url = RobotsServer.class.getResource("/level/");
 		if (url == null) {
-			System.out.println("Failed to load levels");
+			LOG.error("Failed to load levels");
 			return;
 		}
 		
@@ -51,7 +55,7 @@ public abstract class RobotsServer implements Runnable {
 				availableLevels.add(l);
 		}
 		
-		System.out.println("Loaded " + availableLevels.size() + " levels");
+		LOG.info("Loaded " + availableLevels.size() + " levels");
 	}
 	
 	@Override
