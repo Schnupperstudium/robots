@@ -5,7 +5,8 @@ import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.server.Game;
 
 public class MoveForwardAction extends EntityAction {
-
+	public static final MoveForwardAction INSTANCE = new MoveForwardAction();
+	
 	public MoveForwardAction() {
 		
 	}

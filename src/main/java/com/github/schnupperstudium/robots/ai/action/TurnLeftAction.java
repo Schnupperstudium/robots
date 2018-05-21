@@ -5,7 +5,8 @@ import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.server.Game;
 
 public class TurnLeftAction extends EntityAction {
-
+	public static final TurnLeftAction INSTANCE = new TurnLeftAction();
+	
 	public TurnLeftAction() {
 		
 	}

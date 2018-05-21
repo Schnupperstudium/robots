@@ -1,5 +1,6 @@
 package com.github.schnupperstudium.robots.client;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.server.GameInfo;
+import com.github.schnupperstudium.robots.server.Level;
 import com.github.schnupperstudium.robots.server.RobotsServerInterface;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
@@ -82,6 +84,10 @@ public abstract class RobotsClient {
 		return true;
 	}
 	
+	public List<Level> listLevels() {
+		return serverInterface.listLevels();
+	}
+	
 	protected EntityAction makeTurn(long uuid) {
 		AbstractAI ai = ais.get(uuid);
 		
@@ -112,5 +118,13 @@ public abstract class RobotsClient {
 		IWorldObserver observer = observers.get(gameId);
 		if (observer != null)
 			observer.updateWorld(gameId, world);
+	}
+	
+	public RobotsServerInterface getServerInterface() {
+		return serverInterface;
+	}
+	
+	public void close() throws IOException {
+		// TODO: think about things to do :D
 	}
 }

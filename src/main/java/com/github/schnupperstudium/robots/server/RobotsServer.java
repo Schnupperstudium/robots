@@ -65,7 +65,7 @@ public abstract class RobotsServer implements Runnable {
 		}
 	}
 	
-	protected Level findLevel(String levelName) {
+	public Level findLevel(String levelName) {
 		for (Level level : availableLevels) {
 			if (level.getName().equals(levelName))
 				return level;
@@ -74,7 +74,7 @@ public abstract class RobotsServer implements Runnable {
 		return null;
 	}
 	
-	protected Game findGame(long uuid) {
+	public Game findGame(long uuid) {
 		synchronized (games) {
 			for (Game game : games) {
 				if (game.getUUID() == uuid)
@@ -100,10 +100,10 @@ public abstract class RobotsServer implements Runnable {
 			game = new Game(name, level, auth);
 		} catch (IOException e) {
 			return -5;
-		} 
+		} 		
 		
 		synchronized (games) {
-			games.add(game);
+			games.add(game);			
 		}
 		
 		return game.getUUID();
@@ -165,5 +165,12 @@ public abstract class RobotsServer implements Runnable {
 		}
 
 		return gameInfos;
+	}
+	
+	public void close() throws IOException {
+		run = false;
+		synchronized (games) {
+			games.forEach(game -> game.endGame());
+		}
 	}
 }

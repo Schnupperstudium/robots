@@ -77,6 +77,10 @@ public abstract class RobotAI extends AbstractAI {
 		return getTileByFacing(getEntity().getFacing().opposite());
 	}
 	
+	public Facing getFacing() {
+		return getEntity().getFacing();
+	}
+	
 	@Override
 	public Robot getEntity() {		
 		return (Robot) super.getEntity();

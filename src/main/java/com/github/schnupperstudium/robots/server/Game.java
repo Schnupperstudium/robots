@@ -27,6 +27,7 @@ public class Game implements Runnable, EventListener {
 	private final long uuid = UUIDGenerator.obtain();
 	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
 	private final List<Tickable> tickables = new ArrayList<>();
+	private final Thread thread;
 	private final String name;
 	private final String password;
 	private final Level level;
@@ -51,6 +52,8 @@ public class Game implements Runnable, EventListener {
 		this.level = level;
 		this.world = world;
 		this.password = password;
+		this.thread = new Thread(this::run, "GameThread: (" + uuid + ", " + name + ")");
+		this.thread.start();
 		
 		eventDispatcher.registerListener(AbstractGameEvent.class, this::executeEvent, EventPriority.MONITOR, true);
 	}
@@ -72,6 +75,8 @@ public class Game implements Runnable, EventListener {
 				running = false;
 			}
 		}
+		
+		// TODO: notify others
 	}
 
 	protected void makeTurn() {

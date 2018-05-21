@@ -59,6 +59,14 @@ public abstract class AbstractAI {
 		return vision;
 	}
 
+	public int getX() {
+		return entity.getX();
+	}
+	
+	public int getY() {
+		return entity.getY();		
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

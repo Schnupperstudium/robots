@@ -72,6 +72,8 @@ public class Tile {
 	
 	public void setVisitor(Entity visitor) {
 		this.visitor = visitor;
+		if (visitor != null)
+			visitor.setPosition(x, y);
 	}
 	
 	public boolean canVisit() {
