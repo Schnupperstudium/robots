@@ -14,13 +14,16 @@ public class PickUpItemAction extends EntityAction {
 	}
 	
 	@Override
-	public void apply(Game manager, Entity entity) {		
+	public boolean apply(Game manager, Entity entity) {		
 		if (entity instanceof InventoryHolder) {
 			Inventory inventory = ((InventoryHolder) entity).getInventory();
 			Item item = manager.pickUpItem(entity);
-			if (item != null)
+			if (item != null) {
 				inventory.addItem(item);
+				return true;
+			}
 		}
+		
+		return false;
 	}
-
 }

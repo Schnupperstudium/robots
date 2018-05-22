@@ -3,6 +3,9 @@ package com.github.schnupperstudium.robots.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
@@ -11,6 +14,7 @@ import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public class AI implements Tickable {
+	private static final Logger LOG = LogManager.getLogger();
 	private static final int ROBOT_VISION = 3;
 	
 	private final RobotsClientInterface client;		
@@ -26,12 +30,22 @@ public class AI implements Tickable {
 		updateEntity();
 		updateVision(game);
 		EntityAction action = makeTurn();
-		action.apply(game, robot);
+		boolean success = action.apply(game, robot);
+		if (success)
+			LOG.debug("AI {}:{} made action {}", robot.getName(), robot.getUUID(), action);
+		else
+			LOG.warn("AI {}:{} failed action {}", robot.getName(), robot.getUUID(), action);
+		LOG.trace("ai location ({}, {})", robot.getX(), robot.getY());
 	}
 
 	public EntityAction makeTurn() {
 		if (robot.isAlive()) {
-			return client.makeTurn(robot.getUUID());
+			EntityAction action = client.makeTurn(robot.getUUID());
+			if (action == null)
+				action = NoAction.INSTANCE;
+			
+			LOG.debug("AI {} performs action {}", robot.getUUID(), action);
+			return action;
 		} else {
 			return NoAction.INSTANCE;
 		}

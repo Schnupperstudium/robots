@@ -4,27 +4,36 @@ public class Robot extends LivingEntity implements InventoryHolder {
 	private static final int ROBOT_HEALTH = 100;
 	private static final int INVENTORY_SIZE = 8;
 	
-	private final Inventory inventory = new Inventory(INVENTORY_SIZE);
-	
-	@Deprecated
-	protected Robot() {
-		// constructor for kryo
-		super();
-	}
+	private final Inventory inventory;
 	
 	public Robot(String name) {
 		super(name, ROBOT_HEALTH);
+		
+		this.inventory = new Inventory(INVENTORY_SIZE);
 	}
 
 	public Robot(long uuid, String name) {
 		super(uuid, name, ROBOT_HEALTH);
+		
+		this.inventory = new Inventory(INVENTORY_SIZE);
 	}
  
+	public Robot(long uuid, String name, Facing facing, int x, int y, int currentHealth, int maxHealth, Inventory inventory) {
+		super(uuid, name, facing, x, y, currentHealth, maxHealth);
+		
+		this.inventory = inventory;
+	}
+	
 	@Override
 	public Inventory getInventory() {
 		return inventory;
 	}
 
+	@Override
+	public Robot clone() throws CloneNotSupportedException {
+		return new Robot(getUUID(), getName(), getFacing(), getX(), getY(), getCurrentHealth(), getMaxHealth(), getInventory().clone());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

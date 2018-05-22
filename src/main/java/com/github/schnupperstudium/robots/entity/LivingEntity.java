@@ -3,13 +3,7 @@ package com.github.schnupperstudium.robots.entity;
 public abstract class LivingEntity extends Entity {
 	private int maxHealth;
 	private int currentHealth;
-	
-	@Deprecated
-	protected LivingEntity() {
-		// construtor for kryo
-		super();
-	}
-	
+		
 	public LivingEntity(String name, int health) {
 		super(name);
 		
@@ -22,6 +16,13 @@ public abstract class LivingEntity extends Entity {
 		
 		this.maxHealth = health;
 		this.currentHealth = health;
+	}
+	
+	public LivingEntity(long uuid, String name, Facing facing, int x, int y, int currentHealth, int maxHealth) {
+		super(uuid, name, facing, x, y);
+		
+		this.currentHealth = currentHealth;
+		this.maxHealth = maxHealth;
 	}
 	
 	public void heal(int heal) {

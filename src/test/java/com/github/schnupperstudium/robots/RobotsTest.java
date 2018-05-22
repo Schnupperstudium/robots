@@ -1,8 +1,10 @@
 package com.github.schnupperstudium.robots;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,11 +20,13 @@ import com.github.schnupperstudium.robots.client.IWorldObserver;
 import com.github.schnupperstudium.robots.client.RobotAI;
 import com.github.schnupperstudium.robots.client.RobotsClient;
 import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.GameInfo;
 import com.github.schnupperstudium.robots.server.Level;
 import com.github.schnupperstudium.robots.server.RobotsServer;
 import com.github.schnupperstudium.robots.world.Material;
+import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 import junit.framework.Assert;
@@ -111,6 +115,8 @@ public abstract class RobotsTest {
 		Assert.assertNotNull(game);
 		World world = game.getWorld();
 		Assert.assertNotNull(world);
+		Assert.assertEquals(15, world.getWidth());
+		Assert.assertEquals(10, world.getHeight());
 		for (int y = 0; y < world.getHeight(); y++) {
 			for (int x = 0; x < world.getWidth(); x++) {
 				if ((x + y) % 2 == 0) {
@@ -124,7 +130,7 @@ public abstract class RobotsTest {
 
 	@Test (timeout = 1000)
 	public void observeWorld() throws Exception {
-		final long gameId = startWaterPondLevel("TestLevel", null);
+		final long gameId = startGame("TestLevel2", "LoadWorldTest", null);
 		SimpleObserver observer = new SimpleObserver();
 		boolean observable = robotsClient.spawnObserver(gameId, null, observer);
 		Assert.assertTrue(observable);
@@ -138,53 +144,69 @@ public abstract class RobotsTest {
 		Assert.assertNotNull(world);
 		Assert.assertEquals(15, world.getWidth());
 		Assert.assertEquals(10, world.getHeight());
+		for (int y = 0; y < world.getHeight(); y++) {
+			for (int x = 0; x < world.getWidth(); x++) {
+				if ((x + y) % 2 == 0) {
+					Assert.assertEquals(Material.ROCK, world.getTile(x, y).getMaterial());
+				} else {
+					Assert.assertEquals(Material.GRASS, world.getTile(x, y).getMaterial());
+				}
+			}
+		}
 	}
 	
 	@Test (timeout = 10000) 
 	public void spawnAI() throws Exception {
+		final List<EntityLocation> locations = new LinkedList<>();
+		Consumer<SimpleAI> checks = new Consumer<RobotsTest.SimpleAI>() {
+			@Override
+			public void accept(SimpleAI ai) {
+				locations.add(new EntityLocation(ai.getX(), ai.getY(), ai.getFacing()));
+			}
+		};
 		long gameId = startWaterPondLevel("TestLevel", null);
-		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, DRIVE_CIRCLE_ACTIONS));
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, DRIVE_CIRCLE_ACTIONS, checks));
 		final boolean spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
 		Assert.assertTrue(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
 		Assert.assertNotNull(ai);
 		
-		// tick zero with NO_ACTION is to initialize everything without having to write fancy code
-		int tick = 0;
-		while (tick <= DRIVE_CIRCLE_ACTIONS.length) {
-			while (tick != ai.tickCounter)
-				Thread.sleep(10);
-			
-			if (tick != 0) {				
-				Assert.assertEquals(DRIVE_CIRCLE_DELTA_X[tick - 1], ai.getEntity().getX() - ai.spawnX);
-				Assert.assertEquals(DRIVE_CIRCLE_DELTA_Y[tick - 1], ai.getEntity().getY() - ai.spawnY);
-			}
-			tick++;
+		while (ai.tickCounter < DRIVE_CIRCLE_ACTIONS.length)
+			Thread.sleep(10);
+		
+		for (int i = 0; i < locations.size(); i++) {
+			EntityLocation location = locations.get(i);	
+			Assert.assertEquals(DRIVE_CIRCLE_DELTA_X[i], location.x - ai.spawnX);
+			Assert.assertEquals(DRIVE_CIRCLE_DELTA_Y[i], location.y - ai.spawnY);
 		}
 	}
 	
 	@Test (timeout = 5000)
 	public void testFacing() throws Exception {
+		List<EntityVisinity> visinities = new LinkedList<>();
+		Consumer<SimpleAI> checks = new Consumer<RobotsTest.SimpleAI>() {
+			@Override
+			public void accept(SimpleAI ai) {
+				visinities.add(new EntityVisinity(ai.getLeftTile(), ai.getRightTile(), ai.getFrontTile(), ai.getBackTile()));
+			}
+		};
+		
 		final long gameId = startGame("TestLevel", "FacingTest", null);
-		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, SPIN_ACTIONS));
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, SPIN_ACTIONS, checks));
 		final boolean spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
 		Assert.assertTrue(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
 		Assert.assertNotNull(ai);
 		
-		// tick zero with NO_ACTION is to initialize everything without having to write fancy code
-		int tick = 0;
-		while (tick <= SPIN_ACTIONS.length) {
-			while (tick != ai.tickCounter)
-				Thread.sleep(10);
-			
-			if (tick != 0) {
-				Assert.assertEquals(SPIN_MATERIALS[(0 + tick - 1) % SPIN_MATERIALS.length], ai.getFrontTile().getMaterial());
-				Assert.assertEquals(SPIN_MATERIALS[(1 + tick - 1) % SPIN_MATERIALS.length], ai.getRightTile().getMaterial());
-				Assert.assertEquals(SPIN_MATERIALS[(2 + tick - 1) % SPIN_MATERIALS.length], ai.getBackTile().getMaterial());
-				Assert.assertEquals(SPIN_MATERIALS[(3 + tick - 1) % SPIN_MATERIALS.length], ai.getLeftTile().getMaterial());
-			}
-			tick++;
+		while (visinities.size() < SPIN_ACTIONS.length)
+			Thread.sleep(10);		
+		
+		for (int i = 0; i < visinities.size(); i++) {
+			EntityVisinity visinity = visinities.get(i);
+			Assert.assertEquals(SPIN_MATERIALS[(0 + i) % SPIN_MATERIALS.length], visinity.front.getMaterial());
+			Assert.assertEquals(SPIN_MATERIALS[(1 + i) % SPIN_MATERIALS.length], visinity.right.getMaterial());
+			Assert.assertEquals(SPIN_MATERIALS[(2 + i) % SPIN_MATERIALS.length], visinity.back.getMaterial());
+			Assert.assertEquals(SPIN_MATERIALS[(3 + i) % SPIN_MATERIALS.length], visinity.left.getMaterial());
 		}
 	}
 	
@@ -248,19 +270,28 @@ public abstract class RobotsTest {
 	
 	private final class SimpleAI extends RobotAI {
 		private final EntityAction[] actions;
-		private volatile int tickCounter = 0;
+		private final Consumer<SimpleAI> update;
+		private volatile int tickCounter = -1;
 		private int spawnX = 0;
 		private int spawnY = 0;
 		
-		public SimpleAI(long entityUUID, EntityAction[] actions) {
+		public SimpleAI(long entityUUID, EntityAction[] actions, Consumer<SimpleAI> update) {
 			super(entityUUID);
 			
 			this.actions = actions;
+			this.update = update;
 		}
 
 		@Override
-		public EntityAction makeTurn() {		
-			return actions[tickCounter++ % actions.length];
+		public EntityAction makeTurn() {
+			EntityAction action = null;
+			if (tickCounter == -1) {
+				action = NoAction.INSTANCE;
+			} else {
+				action = actions[tickCounter % actions.length];				
+			}
+			tickCounter++;
+			return action;
 		}
 
 		@Override
@@ -268,9 +299,46 @@ public abstract class RobotsTest {
 			if (getEntity() == null && entity != null) {
 				spawnX = entity.getX();
 				spawnY = entity.getY();
-			}
+			} else if (tickCounter > 1)
+				update.accept(this);
 			
-			super.updateEntity(entity);
+			super.updateEntity(entity);			
+		}
+	}
+	
+	private static final class EntityLocation {
+		public final int x;
+		public final int y;
+		public final Facing facing;
+		
+		private EntityLocation(int x, int y, Facing facing) {
+			this.x = x;
+			this.y = y;
+			this.facing = facing;
+		}
+
+		@Override
+		public String toString() {
+			return "EntityLocation [x=" + x + ", y=" + y + ", facing=" + facing + "]";
+		}
+	}
+	
+	private static final class EntityVisinity {
+		public final Tile left;
+		public final Tile right;
+		public final Tile front;
+		public final Tile back;
+		
+		private EntityVisinity(Tile left, Tile right, Tile front, Tile back) {
+			this.left = left;
+			this.right = right;
+			this.front = front;
+			this.back = back;
+		}
+
+		@Override
+		public String toString() {
+			return "EntityVisinity [left=" + left + ", right=" + right + ", front=" + front + ", back=" + back + "]";
 		}
 	}
 }

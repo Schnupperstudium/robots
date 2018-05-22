@@ -33,7 +33,6 @@ public class NetworkRobotsServer extends RobotsServer {
 		
 		this.port = port;
 		this.server = new Server();
-		
 		KryoRegistry.registerClasses(server.getKryo());
 		server.addListener(new ServerListener());
 		server.bind(port);
@@ -54,7 +53,7 @@ public class NetworkRobotsServer extends RobotsServer {
 	
 	private class ServerListener extends Listener {
 		@Override
-		public void connected(Connection connection) {
+		public void connected(Connection connection) {			
 			final ObjectSpace objectSpace = new ObjectSpace(connection);
 			final RobotsClientInterface clientInterface = ObjectSpace.getRemoteObject(connection, RobotsClientInterface.NETWORK_ID, RobotsClientInterface.class);
 			objectSpace.register(RobotsServerInterface.NETWORK_ID, createServerInterface(clientInterface));

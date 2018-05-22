@@ -3,12 +3,6 @@ package com.github.schnupperstudium.robots.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryonet.Serialization;
-
 public class Inventory {
 	private final int size;
 	private final List<Item> items;
@@ -16,6 +10,16 @@ public class Inventory {
 	public Inventory(int size) {
 		this.size = size;
 		this.items = new ArrayList<>(size);
+	}
+	
+	public Inventory(int size, List<Item> items) {
+		if (items == null)
+			throw new IllegalArgumentException("items was null");
+		if (items.size() > size)
+			throw new IllegalArgumentException("list contains more items than allowed by inventory size");
+		
+		this.size = size;
+		this.items = new ArrayList<>(items);
 	}
 	
 	public boolean addItem(Item item) {
@@ -34,6 +38,10 @@ public class Inventory {
 		return null;
 	}
 	
+	public List<Item> getItems() {
+		return new ArrayList<>(items);
+	}
+	
 	public boolean removeItem(Item item) {
 		return items.remove(item);
 	}
@@ -50,6 +58,15 @@ public class Inventory {
 		return items.size();
 	}
 
+	@Override
+	public Inventory clone() throws CloneNotSupportedException {
+		List<Item> itemsClone = new ArrayList<>(size);
+		for (Item item : items) 
+			itemsClone.add(item.clone());
+		
+		return new Inventory(size, itemsClone);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -81,36 +98,5 @@ public class Inventory {
 	@Override
 	public String toString() {
 		return "Inventory [size=" + size + ", items=" + items + "]";
-	}
-	
-	public static final class InventorySerializer extends Serializer<Inventory> {
-
-		public InventorySerializer() {
-
-		}
-		
-		@Override
-		public void write(Kryo kryo, Output output, Inventory inventory) {
-			kryo.writeObject(output, inventory.size);
-			kryo.writeObject(output, inventory.items.size());
-			for (int i = 0; i < inventory.items.size(); i++) {
-				kryo.writeClassAndObject(output, inventory.items.get(i));
-			}
-		}
-
-		@Override
-		public Inventory read(Kryo kryo, Input input, Class<Inventory> type) {
-			int size = kryo.readObject(input, int.class);
-			int containedItems = kryo.readObject(input, int.class);
-
-			Inventory inventory = new Inventory(size);
-			for (int i = 0; i < containedItems; i++) {
-				Item item = (Item) kryo.readClassAndObject(input);
-				inventory.addItem(item);
-			}
-			
-			return inventory;
-		}
-		
 	}
 }

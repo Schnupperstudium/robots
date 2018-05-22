@@ -11,8 +11,9 @@ public final class NoAction extends EntityAction {
 	}
 	
 	@Override
-	public void apply(Game manager, Entity entity) {
+	public boolean apply(Game manager, Entity entity) {
 		// yeah. So much to do here.
+		return true;
 	}
 
 }

@@ -6,11 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-
 public class World {
 	private final Tile[][] tiles;
 	private transient final Set<Tile> spawns = new HashSet<>();
@@ -84,6 +79,18 @@ public class World {
 		return height;
 	}
 
+	@Override
+	public World clone() throws CloneNotSupportedException {
+		List<Tile> tiles = new ArrayList<>(width * height);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				tiles.add(getTile(x, y).clone());
+			}
+		}
+		
+		return new World(width, height, tiles);
+	}
+	
 	public String toPrettyMapString() {
 		StringBuilder sb = new StringBuilder();
 		for (int y = 0; y < getHeight(); y++) {
@@ -113,37 +120,5 @@ public class World {
 		
 		sb.append("]");
 		return "World [tiles=" + sb.toString() + ", width=" + width + ", height=" + height + "]";
-	}
-	
-	public static final class WorldSerializer extends Serializer<World> {
-		
-		public WorldSerializer() {
-
-		}
-		
-		@Override
-		public void write(Kryo kryo, Output output, World world) {
-			kryo.writeObject(output, world.width);
-			kryo.writeObject(output, world.height);
-			kryo.writeObject(output, world.width * world.height);
-			for (int x = 0; x < world.width; x++) {
-				for (int y = 0; y < world.height; y++) {
-					kryo.writeObject(output, world.tiles[x][y]);
-				}
-			}
-		}
-
-		@Override
-		public World read(Kryo kryo, Input input, Class<World> type) {
-			int width = kryo.readObject(input, int.class);
-			int height = kryo.readObject(input, int.class);
-			int tileCount = kryo.readObject(input, int.class);
-			List<Tile> tiles = new ArrayList<>(width * height);
-			for (int i = 0; i < tileCount; i++) {
-				tiles.add(kryo.readObject(input, Tile.class));
-			}
-			
-			return new World(width, height, tiles);
-		}
 	}
 }

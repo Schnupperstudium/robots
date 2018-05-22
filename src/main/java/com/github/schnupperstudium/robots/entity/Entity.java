@@ -8,6 +8,8 @@ import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 public abstract class Entity {
+	private static final Facing DEFAULT_FACING = Facing.NORTH;
+	
 	private final long uuid;
 	private final List<Effect> effects = new ArrayList<>();
 	
@@ -15,21 +17,21 @@ public abstract class Entity {
 	private Facing facing;	
 	private int x;
 	private int y;
-	
-	@Deprecated
-	protected Entity() {
-		uuid = 0;
-		// constructor for kryo
-	}
-	
+		
 	public Entity(String name) {
 		this(UUIDGenerator.obtain(), name);
 	}
 	
 	public Entity(long uuid, String name) {
+		this(uuid, name, DEFAULT_FACING, 0, 0);
+	}
+	
+	public Entity(long uuid, String name, Facing facing, int x, int y) {
 		this.uuid = uuid;
 		this.name = name;
-		this.facing = Facing.NORTH;
+		this.facing = facing;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public final long getUUID() {
@@ -101,6 +103,9 @@ public abstract class Entity {
 		setY(y);
 	}
 
+	@Override
+	public abstract Entity clone() throws CloneNotSupportedException;
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

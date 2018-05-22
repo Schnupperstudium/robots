@@ -27,8 +27,8 @@ public final class NetworkRobotsClient extends RobotsClient {
 		super();
 		
 		client = new Client();
-		objectSpace = new ObjectSpace(client);
 		KryoRegistry.registerClasses(client.getKryo());
+		objectSpace = new ObjectSpace(client);
 	}
 	
 	public static NetworkRobotsClient connect(String host) throws IOException {

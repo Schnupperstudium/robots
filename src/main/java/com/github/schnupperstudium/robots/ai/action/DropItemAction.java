@@ -14,14 +14,21 @@ public class DropItemAction extends EntityAction {
 	}
 	
 	@Override
-	public void apply(Game manager, Entity entity) {
+	public boolean apply(Game manager, Entity entity) {
 		if (entity instanceof InventoryHolder) {
 			InventoryHolder holder = (InventoryHolder) entity;
 			Inventory inventory = holder.getInventory();
 			Item item = inventory.findItem(uuid);
-			if (item != null && manager.dropItem(entity, item)) 
+			if (item != null && manager.dropItem(entity, item)) {
 				inventory.removeItem(item);
+				return true;
+			}			
 		}
+		
+		return false;
 	}
 
+	public long getUUID() {
+		return uuid;
+	}
 }

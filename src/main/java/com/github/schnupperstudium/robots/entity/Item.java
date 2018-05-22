@@ -13,4 +13,7 @@ public abstract class Item extends Entity {
 	}
 	
 	public abstract void use(Game manager, Entity user);
+	
+	@Override
+	public abstract Item clone() throws CloneNotSupportedException;
 }
