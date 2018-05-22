@@ -1,4 +1,4 @@
-package com.github.schnupperstudium.robots.test.entity;
+package com.github.schnupperstudium.robots.entity;
 
 import com.github.schnupperstudium.robots.entity.Facing;
 import org.junit.Assert;
