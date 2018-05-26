@@ -65,6 +65,10 @@ public class Tile {
 		this.material = material;
 	}
 	
+	public boolean hasItem() {
+		return item != null;
+	}
+	
 	public Item getItem() {
 		return item;
 	}
@@ -73,6 +77,10 @@ public class Tile {
 		this.item = item;
 		if (item != null)
 			item.setPosition(x, y);
+	}
+	
+	public boolean hasVisitor() {
+		return visitor != null;
 	}
 	
 	public Entity getVisitor() {

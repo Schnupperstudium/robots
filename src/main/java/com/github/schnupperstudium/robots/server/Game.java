@@ -18,6 +18,8 @@ import com.github.schnupperstudium.robots.events.entity.EntitySpawnEvent;
 import com.github.schnupperstudium.robots.events.item.ItemDropEvent;
 import com.github.schnupperstudium.robots.events.item.ItemPickUpEvent;
 import com.github.schnupperstudium.robots.events.item.UseItemEvent;
+import com.github.schnupperstudium.robots.events.server.GameStopEvent;
+import com.github.schnupperstudium.robots.events.server.RoundCompleteEvent;
 import com.github.schnupperstudium.robots.world.World;
 import com.github.thedwoon.event.EventDispatcher;
 import com.github.thedwoon.event.EventListener;
@@ -31,6 +33,7 @@ public class Game implements Runnable, EventListener {
 	private final long uuid = UUIDGenerator.obtain();
 	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
 	private final List<Tickable> tickables = new ArrayList<>();
+	private final RobotsServer server;
 	private final Thread thread;
 	private final String name;
 	private final String password;
@@ -39,24 +42,25 @@ public class Game implements Runnable, EventListener {
 	
 	private boolean running = true;
 	
-	public Game(String name, Level level) throws IOException {
-		this(name, level, level.loadWorld());
+	public Game(RobotsServer server, String name, Level level) throws IOException {
+		this(server, name, level, level.loadWorld());
 	}
 	
-	public Game(String name, Level level, String auth) throws IOException {
-		this(name, level, level.loadWorld(), auth);
+	public Game(RobotsServer server, String name, Level level, String auth) throws IOException {
+		this(server, name, level, level.loadWorld(), auth);
 	}
 	
-	public Game(String name, Level level, World world) {
-		this(name, level, world, null);
+	public Game(RobotsServer server, String name, Level level, World world) {
+		this(server, name, level, world, null);
 	}
 	
-	public Game(String name, Level level, World world, String password) {
+	public Game(RobotsServer server, String name, Level level, World world, String password) {
+		this.server = server;
 		this.name = name;
 		this.level = level;
 		this.world = world;
 		this.password = password;
-		this.thread = new Thread(this::run, "GameThread: (" + uuid + ", " + name + ")");
+		this.thread = new Thread(this::run, "GameThread: (" + name + ":" + uuid + ")");
 		this.thread.start();
 		
 		eventDispatcher.registerListener(AbstractGameEvent.class, this::executeEvent, EventPriority.MONITOR, true);
@@ -80,7 +84,9 @@ public class Game implements Runnable, EventListener {
 			}
 		}
 		
-		// TODO: notify others
+		GameStopEvent event = new GameStopEvent(this);
+		eventDispatcher.dispatchEvent(event);
+		server.eventDispatcher.dispatchEvent(event);
 	}
 
 	protected void makeTurn() {
@@ -88,6 +94,7 @@ public class Game implements Runnable, EventListener {
 		for (Tickable tickable : tickables) {
 			tickable.update(this);
 		}
+		eventDispatcher.dispatchEvent(new RoundCompleteEvent(this));
 	}
 	
 	private void executeEvent(AbstractGameEvent event) {
@@ -140,7 +147,7 @@ public class Game implements Runnable, EventListener {
 		UseItemEvent event = new UseItemEvent(world, user, item);
 		eventDispatcher.dispatchEvent(event);	
 	}
-
+	
 	public void addTickable(Tickable tickable) {
 		tickables.add(tickable);
 	}
@@ -159,6 +166,10 @@ public class Game implements Runnable, EventListener {
 	
 	public EventDispatcher getEventDispatcher() {
 		return eventDispatcher;
+	}
+	
+	public RobotsServer getServer() {
+		return server;
 	}
 	
 	public World getWorld() {

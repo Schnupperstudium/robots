@@ -47,6 +47,10 @@ public class Texture {
 		}
 	}
 	
+	private Texture() {
+		// private constructor
+	}
+	
 	public static Image getTexture(Entity entity) {
 		if (entity == null)
 			return ERROR_TEXTURE;

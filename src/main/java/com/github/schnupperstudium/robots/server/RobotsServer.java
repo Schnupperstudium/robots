@@ -110,7 +110,7 @@ public abstract class RobotsServer implements Runnable {
 		
 		Game game = null;
 		try {
-			game = new Game(name, level, auth);
+			game = new Game(this, name, level, auth);
 		} catch (IOException e) {
 			LOG.warn("failed to start game '{}', '{}': {}", name, level, e.getMessage());
 			return -5;
@@ -218,5 +218,9 @@ public abstract class RobotsServer implements Runnable {
 		}
 		
 		LOG.info("server closed");
+	}
+	
+	public EventDispatcher getEventDispatcher() {
+		return eventDispatcher;
 	}
 }

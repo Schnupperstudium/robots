@@ -3,12 +3,17 @@ package com.github.schnupperstudium.robots.events;
 import com.github.thedwoon.event.Event;
 
 public abstract class AbstractExecutableEvent<T> implements Event {
+	private final boolean canCancel;
 	private volatile boolean canceled = false;
 	private volatile boolean done = false;
 	private volatile boolean successful = false;
 	
 	public AbstractExecutableEvent() {
-		
+		this(true);
+	}
+	
+	public AbstractExecutableEvent(boolean canCancel) {
+		this.canCancel = canCancel;
 	}
 	
 	public boolean isCanceled() {
@@ -16,7 +21,7 @@ public abstract class AbstractExecutableEvent<T> implements Event {
 	}
 	
 	public void cancel() {		
-		canceled = true;
+		canceled = canCancel;
 	}
 	
 	public boolean isDone() {

@@ -33,8 +33,6 @@ import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
-import junit.framework.AssertionFailedError;
-
 public class KryoRegistry {
 
 	/**
@@ -50,7 +48,7 @@ public class KryoRegistry {
 		
 		// Java
 		kryo.register(Throwable.class, new ThrowableSerializer());
-		kryo.register(AssertionFailedError.class, new ThrowableSerializer());
+//		kryo.register(AssertionFailedError.class, new ThrowableSerializer());
 		kryo.register(NullPointerException.class, new ThrowableSerializer());
 		kryo.register(LinkedList.class);
 		kryo.register(ArrayList.class);

@@ -6,4 +6,8 @@ public abstract class AbstractServerEvent extends AbstractExecutableEvent<Robots
 	public AbstractServerEvent() {
 
 	}
+	
+	public AbstractServerEvent(boolean canCancel) {
+		super(canCancel);
+	}
 }
