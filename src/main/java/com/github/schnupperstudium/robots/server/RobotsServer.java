@@ -13,23 +13,35 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.events.AbstractServerEvent;
 import com.github.schnupperstudium.robots.events.entity.AISpawnEvent;
 import com.github.schnupperstudium.robots.events.game.ObserverJoinEvent;
+import com.github.schnupperstudium.robots.events.server.GameStartEvent;
 import com.github.schnupperstudium.robots.io.LevelParser;
 import com.github.schnupperstudium.robots.world.Tile;
+import com.github.thedwoon.event.EventDispatcher;
+import com.github.thedwoon.event.EventPriority;
+import com.github.thedwoon.event.SynchronizedEventDispatcher;
 
 public abstract class RobotsServer implements Runnable {
 	private static final Logger LOG = LogManager.getLogger();
 	
+	protected final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
 	protected final List<Game> games = new ArrayList<>();
 	protected final List<Level> availableLevels = new ArrayList<>();
 
 	private boolean run = true;
 	
 	public RobotsServer() throws IOException {
+		eventDispatcher.registerListener(AbstractServerEvent.class, this::executeEvent, EventPriority.MONITOR, true);
+		
 		loadLevels();
 	}
 		
+	private void executeEvent(AbstractServerEvent event) {
+		event.executeEvent(this);
+	}
+	
 	private void loadLevels() throws IOException {
 		availableLevels.clear();
 		
@@ -102,10 +114,12 @@ public abstract class RobotsServer implements Runnable {
 		} catch (IOException e) {
 			LOG.warn("failed to start game '{}', '{}': {}", name, level, e.getMessage());
 			return -5;
-		} 		
+		}
 		
-		synchronized (games) {
-			games.add(game);			
+		GameStartEvent event = new GameStartEvent(game);
+		eventDispatcher.dispatchEvent(event);
+		if (!event.isSuccessful()) {
+			return -6;
 		}
 		
 		LOG.info("started game [id: {}, name: {}, level: {}, map: {}]", 
@@ -164,6 +178,24 @@ public abstract class RobotsServer implements Runnable {
 			LOG.warn("failed to add observer for game {} with auth '{}'", game, auth);
 		
 		return event.isSuccessful();
+	}
+	
+	public void addGame(Game game) {
+		if (game == null)
+			return;
+		
+		synchronized (games) {
+			games.add(game);
+		}
+	}
+	
+	public void removeGame(Game game) {
+		if (game == null)
+			return;
+		
+		synchronized (games) {
+			games.remove(game);
+		}
 	}
 	
 	public List<Level> listLevels() {
