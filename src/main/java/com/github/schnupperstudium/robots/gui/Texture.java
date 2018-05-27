@@ -14,6 +14,9 @@ import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.world.Material;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
 public class Texture {
 	private static Logger LOG = LogManager.getLogger();
@@ -39,7 +42,11 @@ public class Texture {
 					Image image = new Image(is);
 					
 					LOG.debug("Loading texture: {} [{} x {}]", name, (int) image.getWidth(), (int) image.getHeight());
-					TEXTURES.put(name, image);
+					for (int w = 0; w < 360; w += 90) {
+						TEXTURES.put(name + ":" + w, image);
+						
+						image = rotateImageRight(image);
+					}
 				}
 			} catch (Exception e) {
 				LOG.catching(e);
@@ -51,25 +58,52 @@ public class Texture {
 		// private constructor
 	}
 	
+	private static Image rotateImageRight(Image input) {
+		final int iWidth = (int) input.getWidth();
+		final int iHeight = (int) input.getHeight();
+		
+		WritableImage output = new WritableImage(iHeight, iWidth);
+		
+		PixelReader reader = input.getPixelReader();
+		PixelWriter writer = output.getPixelWriter();
+		
+		for (int iy = 0; iy < iHeight; iy++) {
+			for (int ix = 0; ix < iWidth; ix++) {
+				final int argb = reader.getArgb(ix, iy);
+				writer.setArgb(iy, iHeight - ix - 1, argb);
+			}
+		}
+		
+		return output;
+	}
+	
 	public static Image getTexture(Entity entity) {
+		return getTexture(entity, 0);
+	}
+	
+	public static Image getTexture(Entity entity, int rotation) {
 		if (entity == null)
 			return ERROR_TEXTURE;
 		
 		final String name = "entity_" + entity.getClass().getSimpleName().toLowerCase();
-		return getTexture(name);
+		return getTexture(name, rotation);
 	}
 	
 	public static Image getTexture(Material material) {
+		return getTexture(material, 0);
+	}
+	
+	public static Image getTexture(Material material, int rotation) {
 		if (material == null)
 			return ERROR_TEXTURE;
 		
 		final String name = "material_" + material.name().toLowerCase();
-		return getTexture(name);
+		return getTexture(name, rotation);
 		
 	}
 	
-	public static Image getTexture(String textureName) {
-		Image texture = TEXTURES.get(textureName);
+	public static Image getTexture(String textureName, int rotation) {
+		Image texture = TEXTURES.get(textureName + ":" + rotation);
 		if (texture == null)
 			return ERROR_TEXTURE;
 		else

@@ -2,6 +2,8 @@ package com.github.schnupperstudium.robots.gui;
 
 import java.util.Collection;
 
+import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -9,7 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public final class SimpleRenderer {
-	public static int TILE_SIZE = 50;
+	public static int TILE_SIZE = 32;
 	
 	private SimpleRenderer() {
 		
@@ -59,14 +61,35 @@ public final class SimpleRenderer {
 		
 		// draw item
 		if (tile.hasItem()) {
-			Image itemTexutre = Texture.getTexture(tile.getItem());
-			gc.drawImage(itemTexutre, renderX, renderY, tileSize, tileSize);
+			renderEntity(gc, tile.getItem(), renderX, renderY, tileSize, tile.getItem().getFacing());
 		}
 		
 		// draw entity
 		if (tile.hasVisitor()) {
-			Image visitorTexture = Texture.getTexture(tile.getVisitor());
-			gc.drawImage(visitorTexture, renderX, renderY, tileSize, tileSize);
+			renderEntity(gc, tile.getVisitor(), renderX, renderY, tileSize, tile.getVisitor().getFacing());
 		}
+	}
+	
+	private static void renderEntity(GraphicsContext gc, Entity entity, int renderX, int renderY, int tileSize, Facing facing) {
+		int rotation = 0;
+		switch (facing) {
+		case NORTH:
+			rotation = 0;
+			break;
+		case EAST:
+			rotation = 90;
+			break;
+		case SOUTH:
+			rotation = 180;
+			break;
+		case WEST:
+			rotation = 270;
+			break;
+		default:
+			throw new IllegalArgumentException("unkown facing:" + facing);
+		}
+		
+		Image texture = Texture.getTexture(entity, rotation);
+		gc.drawImage(texture, renderX, renderY, tileSize, tileSize);
 	}
 }
