@@ -49,6 +49,7 @@ public class KryoRegistry {
 		// Java
 		kryo.register(Throwable.class, new ThrowableSerializer());
 //		kryo.register(AssertionFailedError.class, new ThrowableSerializer());
+		kryo.register(IllegalStateException.class, new ThrowableSerializer());
 		kryo.register(NullPointerException.class, new ThrowableSerializer());
 		kryo.register(LinkedList.class);
 		kryo.register(ArrayList.class);

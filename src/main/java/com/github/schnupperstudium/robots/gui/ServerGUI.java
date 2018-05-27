@@ -12,10 +12,13 @@ import com.github.schnupperstudium.robots.server.NetworkRobotsServer;
 import com.github.schnupperstudium.robots.server.RobotsServer;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public final class ServerGUI extends Application {
 	private static final Logger LOG = LogManager.getLogger();
@@ -70,15 +73,23 @@ public final class ServerGUI extends Application {
 	}
 	
 	private void onGameStartEvent(GameStartEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
-			ObserverViewController controller = new ObserverViewController(event.getGame());
-			loader.setController(controller);
-			Parent root = loader.load();
-			// TODO: open window :D
-		} catch (IOException e) {
-			LOG.catching(e);
-		}
+		Platform.runLater(() -> {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
+				ObserverViewController controller = new ObserverViewController(event.getGame());
+				loader.setController(controller);
+				Parent root = loader.load();
+				
+				Stage stage = new Stage();
+				stage.initModality(Modality.NONE);
+				stage.initStyle(StageStyle.DECORATED);
+				stage.setTitle("GameObserver");
+				stage.setScene(new Scene(root, 800, 600));
+				stage.show();
+			} catch (IOException e) {
+				LOG.catching(e);
+			}
+		});
 	}
 	
 	private void onGameStopEvent(GameStopEvent event) {

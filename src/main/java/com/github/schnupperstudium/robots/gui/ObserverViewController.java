@@ -7,17 +7,28 @@ import com.github.schnupperstudium.robots.world.World;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.AnchorPane;
 
 public class ObserverViewController {
 	private final long gameId;
 	
-	@FXML
+	@FXML 
+	private AnchorPane worldCanvasAnchor;
+	
 	private Canvas worldCanvas;
 	
 	public ObserverViewController(Game game) {
-		this.gameId = game.getUUID();
+		this.gameId = game.getUUID();		
 		
 		game.getEventDispatcher().registerListener(RoundCompleteEvent.class, this::roundCompleteEvent);
+	}
+	
+	@FXML
+	public void initialize() {
+		worldCanvas = new Canvas();
+		worldCanvas.widthProperty().bind(worldCanvasAnchor.widthProperty());
+		worldCanvas.heightProperty().bind(worldCanvasAnchor.heightProperty());
+		worldCanvasAnchor.getChildren().add(worldCanvas);
 	}
 	
 	private void updateWorld(World world) {

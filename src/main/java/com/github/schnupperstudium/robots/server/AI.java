@@ -44,7 +44,6 @@ public class AI implements Tickable {
 			if (action == null)
 				action = NoAction.INSTANCE;
 			
-			LOG.debug("AI {} performs action {}", robot.getUUID(), action);
 			return action;
 		} else {
 			return NoAction.INSTANCE;
