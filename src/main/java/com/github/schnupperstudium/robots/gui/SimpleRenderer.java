@@ -2,6 +2,9 @@ package com.github.schnupperstudium.robots.gui;
 
 import java.util.Collection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.world.Tile;
@@ -12,6 +15,8 @@ import javafx.scene.image.Image;
 
 public final class SimpleRenderer {
 	public static int TILE_SIZE = 32;
+
+	private static final Logger LOG = LogManager.getLogger(); 
 	
 	private SimpleRenderer() {
 		
@@ -25,6 +30,7 @@ public final class SimpleRenderer {
 		if (tiles == null || tiles.isEmpty())
 			return;
 		
+		final long start = System.nanoTime();
 		final int minX = tiles.stream().map(t -> t.getX()).min(Integer::compareTo).get();
 		final int minY = tiles.stream().map(t -> t.getY()).min(Integer::compareTo).get();
 		
@@ -34,6 +40,9 @@ public final class SimpleRenderer {
 			
 			renderTile(gc, tile, renderX, renderY, tileSize);
 		}
+		
+		final long end = System.nanoTime();
+		LOG.trace("renderTilesCompact took {}ms", ((end - start) / 1000) / 1000.0);
 	}
 	
 	public static void renderWorld(GraphicsContext gc, World world) {
@@ -41,6 +50,7 @@ public final class SimpleRenderer {
 	}
 	
 	public static void renderWorld(GraphicsContext gc, World world, int tileSize) {
+		final long start = System.nanoTime();
 		final int width = world.getWidth();
 		final int height = world.getHeight();
 		for (int x = 0; x < width; x++) {
@@ -52,6 +62,8 @@ public final class SimpleRenderer {
 				renderTile(gc, tile, renderX, renderY, tileSize);
 			}
 		}
+		final long end = System.nanoTime();
+		LOG.trace("renderWorld took {}ms", ((end - start) / 1000) / 1000.0);
 	}
 	
 	public static void renderTile(GraphicsContext gc, Tile tile, int renderX, int renderY, int tileSize) {

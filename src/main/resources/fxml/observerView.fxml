@@ -6,12 +6,12 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.8010033444816054" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.8007518796992481" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <items>
-    <AnchorPane fx:id="worldCanvasAnchor" minHeight="600.0" minWidth="600.0" />
-    <AnchorPane minHeight="600.0" minWidth="200.0">
+    <AnchorPane fx:id="worldCanvasAnchor" style="-fx-background-color: RED;" />
+    <AnchorPane>
          <children>
-            <VBox prefHeight="600.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <VBox AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
   </items>
 </SplitPane>
