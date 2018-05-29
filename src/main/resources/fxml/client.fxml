@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-style: solid;">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin>
+         <children>
+            <Label layoutX="14.0" layoutY="6.0" text="Ein Spiel einleiten" />
+            <ListView fx:id="levelView" layoutX="14.0" layoutY="23.0" prefHeight="247.0" prefWidth="163.0" />
+            <TextField fx:id="gameName" layoutX="14.0" layoutY="280.0" prefHeight="25.0" prefWidth="163.0" promptText="Name des Spiels" />
+            <PasswordField fx:id="gamePassword" layoutX="14.0" layoutY="315.0" prefHeight="25.0" prefWidth="163.0" promptText="Passwort (Optional)" />
+            <Button layoutX="14.0" layoutY="351.0" mnemonicParsing="false" onAction="#startGameClicked" prefHeight="25.0" prefWidth="163.0" text="Starten" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </Pane>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-style: solid;">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <children>
+            <Label layoutX="14.0" layoutY="6.0" text="Einem Spiel beitreten" />
+            <ListView fx:id="gameView" layoutX="14.0" layoutY="23.0" prefHeight="214.0" prefWidth="163.0" />
+            <TextField fx:id="aiName" layoutX="14.0" layoutY="280.0" prefHeight="25.0" prefWidth="163.0" promptText="Name der KI" />
+            <PasswordField fx:id="aiPassword" layoutX="14.0" layoutY="315.0" prefHeight="25.0" prefWidth="163.0" promptText="Passwort (Optional)" />
+            <ComboBox fx:id="aiDropdown" layoutX="14.0" layoutY="245.0" prefHeight="25.0" prefWidth="163.0" />
+            <Button layoutX="14.0" layoutY="351.0" mnemonicParsing="false" onAction="#connectAIClicked" prefHeight="25.0" prefWidth="163.0" text="Verbinden" />
+         </children>
+      </Pane>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-style: solid;">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <children>
+            <Label layoutX="14.0" layoutY="6.0" text="Ein Spiel beobachten" />
+            <ListView fx:id="observeView" layoutX="14.0" layoutY="23.0" prefHeight="318.0" prefWidth="163.0" />
+            <Button layoutX="14.0" layoutY="351.0" mnemonicParsing="false" onAction="#observeGameClicked" prefHeight="25.0" prefWidth="163.0" text="Beobachten" />
+         </children>
+      </Pane>
+   </children>
+</HBox>
