@@ -40,6 +40,12 @@ public class NetworkRobotsServer extends RobotsServer {
 		LOG.info("bound server to port {}", port);
 	}
 
+	public static void main(String[] args) throws IOException, InterruptedException {
+		NetworkRobotsServer server = new NetworkRobotsServer();
+		while (true)
+			Thread.sleep(100);
+	}
+	
 	public int getPort() {
 		return port;
 	}
@@ -58,7 +64,7 @@ public class NetworkRobotsServer extends RobotsServer {
 			final RobotsClientInterface clientInterface = ObjectSpace.getRemoteObject(connection, RobotsClientInterface.NETWORK_ID, RobotsClientInterface.class);
 			objectSpace.register(RobotsServerInterface.NETWORK_ID, createServerInterface(clientInterface));
 			connectedClients.put(connection, clientInterface);
-			LOG.info("client disconnected '{}'", connection.getRemoteAddressTCP().getAddress());
+			LOG.info("client connected '{}'", connection.getRemoteAddressTCP().getAddress());
 		}
 		
 		@Override

@@ -35,7 +35,7 @@
             <ListView fx:id="gameView" layoutX="14.0" layoutY="23.0" prefHeight="214.0" prefWidth="163.0" />
             <TextField fx:id="aiName" layoutX="14.0" layoutY="280.0" prefHeight="25.0" prefWidth="163.0" promptText="Name der KI" />
             <PasswordField fx:id="aiPassword" layoutX="14.0" layoutY="315.0" prefHeight="25.0" prefWidth="163.0" promptText="Passwort (Optional)" />
-            <ComboBox fx:id="aiDropdown" layoutX="14.0" layoutY="245.0" prefHeight="25.0" prefWidth="163.0" />
+            <ComboBox fx:id="aiDropdown" layoutX="14.0" layoutY="245.0" prefHeight="25.0" prefWidth="163.0" promptText="KI auswählen" />
             <Button layoutX="14.0" layoutY="351.0" mnemonicParsing="false" onAction="#connectAIClicked" prefHeight="25.0" prefWidth="163.0" text="Verbinden" />
          </children>
       </Pane>
