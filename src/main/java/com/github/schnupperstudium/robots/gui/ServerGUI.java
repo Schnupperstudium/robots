@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.schnupperstudium.robots.events.server.GameStartEvent;
 import com.github.schnupperstudium.robots.events.server.GameStopEvent;
+import com.github.schnupperstudium.robots.gui.server.ServerWorldObserverController;
 import com.github.schnupperstudium.robots.server.NetworkRobotsServer;
 import com.github.schnupperstudium.robots.server.RobotsServer;
 
@@ -76,7 +77,7 @@ public final class ServerGUI extends Application {
 		Platform.runLater(() -> {
 			try {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
-				ObserverViewController controller = new ObserverViewController(event.getGame());
+				ObserverViewController controller = new ServerWorldObserverController(event.getGame());
 				loader.setController(controller);
 				Parent root = loader.load();
 				
