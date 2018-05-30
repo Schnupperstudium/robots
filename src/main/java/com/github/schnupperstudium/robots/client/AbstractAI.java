@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.world.Tile;
 
 /**
@@ -15,20 +16,44 @@ import com.github.schnupperstudium.robots.world.Tile;
  */
 public abstract class AbstractAI {
 	private final long entityUUID;
+	private final List<EntityObserver> entityObservers = new ArrayList<>();
+	private final List<VisionObserver> visionObservers = new ArrayList<>();
 	
 	private Entity entity;
 	private List<Tile> vision;
 
+	
 	public AbstractAI(long entityUUID) {
 		this.entityUUID = entityUUID;
 	}
 	
 	public void updateEntity(Entity entity) {
+		if (this.entity == null && entity != null)
+			onEntitySpawn(entity);
+		else if (this.entity != null && entity == null)
+			onEntityDespawn(this.entity);
+		else if (this.entity != null && entity != null && entity instanceof LivingEntity && this.entity instanceof LivingEntity) {
+			LivingEntity currentEntity = (LivingEntity) this.entity;
+			LivingEntity updatedEntity = (LivingEntity) entity;
+			if (currentEntity.getCurrentHealth() <= 0 && updatedEntity.getCurrentHealth() > 0)
+				onEntityRevive(updatedEntity);
+			else if (currentEntity.getCurrentHealth() > 0 && updatedEntity.getCurrentHealth() <= 0)
+				onEntityDeath(currentEntity);
+		}
+			
 		this.entity = entity;
+		
+		synchronized (entityObservers) {
+			entityObservers.forEach(o -> o.onEntityUpdate(this, entity));
+		}
 	}
 	
 	public void updateVision(List<Tile> tiles) {
 		this.vision = new ArrayList<>(tiles);
+		
+		synchronized (visionObservers) {
+			visionObservers.forEach(o -> o.onVisionUpdate(this, new ArrayList<>(tiles)));
+		}
 	}
 	
 	/**
@@ -65,6 +90,90 @@ public abstract class AbstractAI {
 	
 	public int getY() {
 		return entity.getY();		
+	}
+	
+	/**
+	 * Called when the entity spawns.
+	 * 
+	 * @param entity spawned entity
+	 */
+	protected void onEntitySpawn(Entity entity) {
+		// may be overwritten by AI
+	}
+	
+	/**
+	 * Called when the ai despawns.
+	 * 
+	 * @param entity despawning entity
+	 */
+	protected void onEntityDespawn(Entity entity) {
+		// may be overwritten by AI
+	}
+	
+	/**
+	 * Called when the entities hp go from below zero to above zero
+	 * 
+	 * @param entity entity
+	 */
+	protected void onEntityRevive(Entity entity) {
+		// may be overwritten by AI
+	}
+	
+	/**
+	 * Called when the entities hp go from above zero to zero or below.
+	 * 
+	 * @param entity entity
+	 */
+	protected void onEntityDeath(Entity entity) {
+		// may be overwritten by AI
+	}
+	
+	public void addEntityUpdateObserver(EntityObserver entityObserver) {
+		if (entityObserver == null)
+			return;
+		
+		synchronized (entityObservers) {
+			entityObservers.add(entityObserver);
+		}
+	}
+	
+	public void removeEntityUpdateObserver(EntityObserver entityObserver) {
+		if (entityObserver == null)
+			return;
+		
+		synchronized (entityObservers) {
+			entityObservers.remove(entityObserver);
+		}
+	}
+	
+	public void clearEntityObservers() {
+		synchronized (entityObservers) {
+			entityObservers.clear();
+		}
+	}
+	
+	public void addVisionObserver(VisionObserver visionObserver) {
+		if (visionObserver == null)
+			return;
+		
+		synchronized (visionObservers) {
+			visionObservers.add(visionObserver);
+		}
+	}
+	
+	public void removeVisionObserver(VisionObserver visionObserver) {
+		if (visionObserver == null)
+			return;
+		
+		synchronized (visionObservers) {
+			visionObservers.remove(visionObserver);
+		}
+	}
+	
+	public void clearVisionObservers() {
+		synchronized (visionObservers) {
+			visionObservers.clear();
+		}
 	}
 	
 	@Override

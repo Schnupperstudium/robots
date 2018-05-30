@@ -9,10 +9,10 @@ import com.github.schnupperstudium.robots.world.World;
 public class AISpawnEvent extends RobotSpawnEvent {
 	private final AI ai;
 	
-	public AISpawnEvent(World world, Robot robot, RobotsClientInterface clientInterface) {
+	public AISpawnEvent(Game game, World world, Robot robot, RobotsClientInterface clientInterface) {
 		super(world, robot);
 		
-		this.ai = new AI(clientInterface, robot);
+		this.ai = new AI(game, clientInterface, robot);
 	}
 	
 	public AI getAi() {

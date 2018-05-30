@@ -151,7 +151,7 @@ public abstract class RobotsServer implements Runnable {
 		
 		Robot robot = new Robot(name);
 		robot.setPosition(spawnTile.getX(), spawnTile.getY());
-		AISpawnEvent event = new AISpawnEvent(game.getWorld(), robot, clientInterface);
+		AISpawnEvent event = new AISpawnEvent(game, game.getWorld(), robot, clientInterface);
 		game.getEventDispatcher().dispatchEvent(event);
 		if (event.isSuccessful()) {
 			LOG.info("spawned AI '{}' in game {}", name, gameId);

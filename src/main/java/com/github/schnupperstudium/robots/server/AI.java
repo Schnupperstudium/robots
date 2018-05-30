@@ -17,10 +17,12 @@ public class AI implements Tickable {
 	private static final Logger LOG = LogManager.getLogger();
 	private static final int ROBOT_VISION = 3;
 	
+	private final Game game;
 	private final RobotsClientInterface client;		
 	private final Robot robot;
 	
-	public AI(RobotsClientInterface client, Robot robot) {
+	public AI(Game game, RobotsClientInterface client, Robot robot) {
+		this.game = game;
 		this.client = client;
 		this.robot = robot;
 	}
@@ -40,7 +42,18 @@ public class AI implements Tickable {
 
 	public EntityAction makeTurn() {
 		if (robot.isAlive()) {
-			EntityAction action = client.makeTurn(robot.getUUID());
+			EntityAction action = null;
+			try {
+				action = client.makeTurn(robot.getUUID());
+			} catch (Exception e) {
+				// catch any exception a client may cause
+				String name = robot != null ? robot.getName() : "<none>";
+				long uuid = robot != null ? robot.getUUID() : -1;
+				LOG.warn("{}:{} got kicked from {}:{} (Reason: {})", name, uuid, game.getName(), game.getUUID(), e.getMessage());
+				game.removeTickable(this);
+				game.despawnEntity(robot);
+			}
+			
 			if (action == null)
 				action = NoAction.INSTANCE;
 			

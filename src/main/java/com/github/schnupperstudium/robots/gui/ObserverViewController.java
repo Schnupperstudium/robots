@@ -17,9 +17,11 @@ public class ObserverViewController {
 	@FXML
 	public void initialize() {
 		worldCanvas = new ResizableCanvas();
-//		worldCanvas.widthProperty().bind(worldCanvasAnchor.widthProperty());
-//		worldCanvas.heightProperty().bind(worldCanvasAnchor.heightProperty());
 		worldCanvasAnchor.getChildren().add(worldCanvas);
+	}
+
+	protected void clearCanvas() {
+		worldCanvas.getGraphicsContext2D().clearRect(0, 0, worldCanvas.getWidth(), worldCanvas.getHeight());
 	}
 	
 	private class ResizableCanvas extends Canvas {

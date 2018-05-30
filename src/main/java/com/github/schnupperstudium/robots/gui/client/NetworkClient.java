@@ -1,5 +1,6 @@
 package com.github.schnupperstudium.robots.gui.client;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class NetworkClient extends Application {
 	private static final String DEFAULT_HOST = "127.0.0.1";
@@ -86,6 +89,8 @@ public class NetworkClient extends Application {
 	
 	@FXML
 	private ListView<GameInfo> observeView;
+	@FXML
+	private PasswordField observePassword;
 	
 	public NetworkClient() {
 		InputStream is = getClass().getResourceAsStream("/ais.txt");
@@ -228,7 +233,34 @@ public class NetworkClient extends Application {
 	
 	@FXML
 	public void observeGameClicked(ActionEvent event) {
-		System.out.println("Observe game");
+		ClientWorldObserverController observer = new ClientWorldObserverController();
+		
+		GameInfo selectedGame = observeView.getSelectionModel().getSelectedItem();
+		if (selectedGame == null) {
+			showAlert("Bitte ein Spiel auswählen!");
+			return;
+		}		
+		
+		boolean spawned = client.spawnObserver(selectedGame.getUUID(), observePassword.getText(), observer);
+		if (spawned) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
+			loader.setController(observer);
+			try {
+				Parent root = loader.load();
+				Stage stage = new Stage();
+				stage.initModality(Modality.NONE);
+				stage.initStyle(StageStyle.DECORATED);
+				stage.setTitle("Robots -- ClientGameObserver");
+				stage.setScene(new Scene(root, 800, 600));
+				stage.show();
+			} catch (IOException e) {
+				LOG.catching(e);
+				showAlert("Observer konnte nicht geladen werden :(");
+				return;
+			}
+		} else {
+			showAlert("Passwort war falsch!");
+		}
 	}
 	
 	private void showAlert(String message) {

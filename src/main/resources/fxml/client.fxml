@@ -5,7 +5,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-border-style: solid;">
@@ -48,8 +47,9 @@
          </padding>
          <children>
             <Label layoutX="14.0" layoutY="6.0" text="Ein Spiel beobachten" />
-            <ListView fx:id="observeView" layoutX="14.0" layoutY="23.0" prefHeight="318.0" prefWidth="163.0" />
+            <ListView fx:id="observeView" layoutX="14.0" layoutY="23.0" prefHeight="283.0" prefWidth="163.0" />
             <Button layoutX="14.0" layoutY="351.0" mnemonicParsing="false" onAction="#observeGameClicked" prefHeight="25.0" prefWidth="163.0" text="Beobachten" />
+            <PasswordField fx:id="observePassword" layoutX="14.0" layoutY="315.0" prefHeight="25.0" prefWidth="163.0" promptText="Passwort (Optional)" />
          </children>
       </Pane>
    </children>
