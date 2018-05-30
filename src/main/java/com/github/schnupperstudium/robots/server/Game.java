@@ -29,6 +29,7 @@ import com.github.thedwoon.event.SynchronizedEventDispatcher;
 public class Game implements Runnable, EventListener {
 	private static final Logger LOG = LogManager.getLogger();
 	private static final long TURN_DURATION = 500;
+	private static final int MAX_IDLE_TIME = 120000;
 	
 	private final long uuid = UUIDGenerator.obtain();
 	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
@@ -40,6 +41,7 @@ public class Game implements Runnable, EventListener {
 	private final Level level;
 	private final World world;
 	
+	private int idleTime = 0;
 	private boolean running = true;
 	
 	public Game(RobotsServer server, String name, Level level) throws IOException {
@@ -83,18 +85,30 @@ public class Game implements Runnable, EventListener {
 				running = false;
 			}
 		}
-		
+				
 		GameStopEvent event = new GameStopEvent(this);
 		eventDispatcher.dispatchEvent(event);
 		server.eventDispatcher.dispatchEvent(event);
+		
+		LOG.info("{}:{} has stopped (Reason: {})", getName(), getUUID(), (idleTime >= MAX_IDLE_TIME ? "IDLE" : "FINISHED"));
 	}
 
 	protected void makeTurn() {
+		if (tickables.isEmpty())
+			idleTime += TURN_DURATION;
+		else
+			idleTime = 0;
+				
 		List<Tickable> tickables = new ArrayList<>(this.tickables);
 		for (Tickable tickable : tickables) {
 			tickable.update(this);
 		}
+		
 		eventDispatcher.dispatchEvent(new RoundCompleteEvent(this));
+		
+		if (idleTime >= MAX_IDLE_TIME) {			
+			endGame();
+		}
 	}
 	
 	private void executeEvent(AbstractGameEvent event) {
