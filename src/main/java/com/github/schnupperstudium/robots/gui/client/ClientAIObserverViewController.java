@@ -40,7 +40,7 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 	
 	private void renderVision() {
 		if (vision == null || vision.isEmpty())
-			return;
+			return;		
 		
 		final int minX = vision.stream().map(t -> t.getX()).min(Integer::compareTo).get();
 		final int maxX = vision.stream().map(t -> t.getX()).max(Integer::compareTo).get();
@@ -49,7 +49,9 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 		final int visionWidth = maxX - minX;
 		final int visionHeight = maxY - minY;
 		
+		clearCanvas();
 		int tileSize = (int) Math.floor(Math.min(worldCanvas.getWidth(), worldCanvas.getHeight()) / Math.max(visionWidth, visionHeight));
+		tileSize = 25;
 		SimpleRenderer.renderTilesCompact(worldCanvas.getGraphicsContext2D(), vision, tileSize);
 	}
 }

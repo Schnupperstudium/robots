@@ -36,7 +36,7 @@ public abstract class RobotsClient {
 		return serverInterface.listGames();
 	}
 	
-	public boolean spawnAI(long gameId, String aiName, String auth, Class<? extends AbstractAI> aiClass) {
+	public AbstractAI spawnAI(long gameId, String aiName, String auth, Class<? extends AbstractAI> aiClass) {
 		try {
 			final Constructor<? extends AbstractAI> constructor = aiClass.getConstructor(long.class);
 			
@@ -51,21 +51,21 @@ public abstract class RobotsClient {
 			});
 		} catch (NoSuchMethodException | SecurityException e) {
 			LOG.error("No valid constructor found for (long): " + aiClass.getName() + " -- " + e.getMessage());
-			return false;
+			return null;
 		}
 	}
 	
-	public boolean spawnAI(long gameId, String aiName, String auth, AIFactory aiFactory) {
+	public AbstractAI spawnAI(long gameId, String aiName, String auth, AIFactory aiFactory) {
 		final long uuid = serverInterface.spawnEntity(gameId, aiName, auth);
 		if (uuid < 0) {
 			LOG.error("AI spawn failed with code: " + uuid);
-			return false;
+			return null;
 		}
 		
 		AbstractAI ai = aiFactory.createAI(uuid);
 		if (ai == null) {
 			LOG.error("Failed to create ai with uuid: " + uuid);
-			return false;
+			return null;
 		}
 		
 		synchronized (ais) {
@@ -73,7 +73,7 @@ public abstract class RobotsClient {
 		}
 		
 		LOG.info("spawned AI '{}' in game {} using auth '{}'", aiName, gameId, auth);
-		return true;
+		return ai;
 	}
 	
 	public boolean spawnObserver(long gameId, String auth, IWorldObserver observer) {

@@ -28,7 +28,7 @@ import com.github.thedwoon.event.SynchronizedEventDispatcher;
 
 public class Game implements Runnable, EventListener {
 	private static final Logger LOG = LogManager.getLogger();
-	private static final long TURN_DURATION = 500;
+	private static final long TURN_DURATION = 100;
 	private static final int MAX_IDLE_TIME = 120000;
 	
 	private final long uuid = UUIDGenerator.obtain();

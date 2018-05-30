@@ -166,8 +166,8 @@ public abstract class RobotsTest {
 		};
 		long gameId = startWaterPondLevel("TestLevel", null);
 		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, DRIVE_CIRCLE_ACTIONS, checks));
-		final boolean spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
-		Assert.assertTrue(spawned);
+		final AbstractAI spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
+		Assert.assertNotNull(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
 		Assert.assertNotNull(ai);
 		
@@ -193,8 +193,8 @@ public abstract class RobotsTest {
 		
 		final long gameId = startGame("TestLevel", "FacingTest", null);
 		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, SPIN_ACTIONS, checks));
-		final boolean spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
-		Assert.assertTrue(spawned);
+		final AbstractAI spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
+		Assert.assertNotNull(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
 		Assert.assertNotNull(ai);
 		

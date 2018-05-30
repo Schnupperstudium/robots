@@ -21,6 +21,8 @@ public class AI implements Tickable {
 	private final RobotsClientInterface client;		
 	private final Robot robot;
 	
+	private boolean kicked = false;
+	
 	public AI(Game game, RobotsClientInterface client, Robot robot) {
 		this.game = game;
 		this.client = client;
@@ -40,18 +42,14 @@ public class AI implements Tickable {
 		LOG.trace("ai location ({}, {})", robot.getX(), robot.getY());
 	}
 
-	public EntityAction makeTurn() {
-		if (robot.isAlive()) {
+	public EntityAction makeTurn() {		
+		if (robot.isAlive() && !kicked) {
 			EntityAction action = null;
 			try {
 				action = client.makeTurn(robot.getUUID());
 			} catch (Exception e) {
 				// catch any exception a client may cause
-				String name = robot != null ? robot.getName() : "<none>";
-				long uuid = robot != null ? robot.getUUID() : -1;
-				LOG.warn("{}:{} got kicked from {}:{} (Reason: {})", name, uuid, game.getName(), game.getUUID(), e.getMessage());
-				game.removeTickable(this);
-				game.despawnEntity(robot);
+				kickAI(e.getMessage());
 			}
 			
 			if (action == null)
@@ -64,30 +62,52 @@ public class AI implements Tickable {
 	}
 	
 	public void updateEntity() {
-		client.updateEntity(robot.getUUID(), robot);
+		if (kicked)
+			return;
+		
+		try {
+			client.updateEntity(robot.getUUID(), robot);
+		} catch (Exception e) {
+			// catch any exception a client may cause
+			kickAI(e.getMessage());
+		}
 	}
 	
 	public void updateVision(Game game) {
-		if (robot.isDead())
+		if (robot.isDead() || kicked)
 			return;
 		
 		final World world = game.getWorld();
 		final List<Tile> visibleTiles = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
 		final int robotX = robot.getX();
 		final int robotY = robot.getY();
-		for (int x = robotX - ROBOT_VISION; x < robotX + ROBOT_VISION; x++) {
-			if (x < 0 || x >= world.getWidth())
-				continue;
+		for (int x = robotX - ROBOT_VISION; x <= robotX + ROBOT_VISION; x++) {
+//			if (x < 0 || x >= world.getWidth())
+//				continue;
 			
-			for (int y = robotY - ROBOT_VISION; y < robotY + ROBOT_VISION; y++) {
-				if (y < 0 || y >= world.getHeight())
-					continue;
+			for (int y = robotY - ROBOT_VISION; y <= robotY + ROBOT_VISION; y++) {
+//				if (y < 0 || y >= world.getHeight())
+//					continue;
 				
 				visibleTiles.add(world.getTile(x, y));
 			}
 		}
 		
-		client.updateVisableTiles(robot.getUUID(), visibleTiles);
+		try {
+			client.updateVisableTiles(robot.getUUID(), visibleTiles);
+		} catch (Exception e) {
+			// catch any exception a client may cause
+			kickAI(e.getMessage());
+		}
+	}
+	
+	private void kickAI(String reason) {
+		kicked = true;
+		String name = robot != null ? robot.getName() : "<none>";
+		long uuid = robot != null ? robot.getUUID() : -1;
+		LOG.warn("{}:{} got kicked from {}:{} (Reason: {})", name, uuid, game.getName(), game.getUUID(), reason);
+		game.removeTickable(this);
+		game.despawnEntity(robot);
 	}
 	
 	public RobotsClientInterface getClient() {

@@ -81,7 +81,7 @@ public class NetworkClient extends Application {
 	@FXML
 	private ListView<GameInfo> gameView;
 	@FXML
-	private ComboBox<String> aiDropdown;
+	private ComboBox<Class<? extends AbstractAI>> aiDropdown;
 	@FXML
 	private TextField aiName;
 	@FXML
@@ -131,8 +131,20 @@ public class NetworkClient extends Application {
 
 	@FXML
 	public void initialize() throws Exception {	
+		aiDropdown.setCellFactory(view -> new ListCell<Class<? extends AbstractAI>>() {
+			 @Override
+		    protected void updateItem(Class<? extends AbstractAI> item, boolean empty) {
+		        super.updateItem(item, empty);
+
+		        if (empty || item == null) {
+		            setText(null);
+		        } else {
+		            setText(item.getSimpleName());
+		        }
+		    }
+		});
 		for (Class<? extends AbstractAI> aiClass : aiClasses.values())
-			aiDropdown.getItems().add(aiClass.getSimpleName());
+			aiDropdown.getItems().add(aiClass);
 		
 		Map<String, String> params = getParameters().getNamed();
 		String host = DEFAULT_HOST;
@@ -228,7 +240,46 @@ public class NetworkClient extends Application {
 	
 	@FXML
 	public void connectAIClicked(ActionEvent event) {
-		System.out.println("Connect AI");
+		GameInfo game = gameView.getSelectionModel().getSelectedItem();
+		Class<? extends AbstractAI> aiClass = aiDropdown.getValue();
+		String name = aiName.getText();
+		String password = aiPassword.getText();
+		
+		if (game == null) {
+			showAlert("Bitte ein Spiel auswählen!");
+			return;
+		} else if (aiClass == null) {
+			showAlert("Bitte eine KI auswählen!");
+			return;
+		} else if (name == null || name.isEmpty()) {
+			showAlert("Bitte einen Namen eingeben!");
+			return;
+		}
+		
+		AbstractAI ai = client.spawnAI(game.getUUID(), name, password, aiClass);
+		if (ai == null) {
+			showAlert(name + " konnte dem Spiel nicht beitreten!");
+			LOG.error("Failed to spawn {} in game {}:{}", name, game.getName(), game.getUUID());
+			return;
+		}
+		
+		ClientAIObserverViewController observer = new ClientAIObserverViewController(ai);
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
+		loader.setController(observer);
+		try {
+			Parent root = loader.load();
+			Stage stage = new Stage();
+			stage.initModality(Modality.NONE);
+			stage.initStyle(StageStyle.DECORATED);
+			stage.setTitle("Robots -- ClientAIObserver");
+			stage.setScene(new Scene(root, 800, 600));
+			stage.show();
+		} catch (IOException e) {
+			LOG.catching(e);
+			showAlert("AI konnte nicht geladen werden :(");
+			return;
+		}
 	}
 	
 	@FXML
