@@ -43,7 +43,7 @@ public class NetworkClient extends Application {
 	private static final Logger LOG = LogManager.getLogger();
 	
 	private final Map<String, Class<? extends AbstractAI>> aiClasses = new HashMap<>();
-
+		
 	private final AnimationTimer updateLevelsTimer = new AnimationTimer() {
 		private long lastUpdateMs = 0;
 		
@@ -69,6 +69,8 @@ public class NetworkClient extends Application {
 		}		
 	};
 	
+	/** if a parameter is supplied the server is started with this ui. */
+	private NetworkRobotsServer server;
 	private NetworkRobotsClient client;
 	
 	@FXML
@@ -146,14 +148,18 @@ public class NetworkClient extends Application {
 		for (Class<? extends AbstractAI> aiClass : aiClasses.values())
 			aiDropdown.getItems().add(aiClass);
 		
-		Map<String, String> params = getParameters().getNamed();
-		String host = DEFAULT_HOST;
-		if (params.get("host") != null)
-			host = params.get("host");
-		
+		Map<String, String> params = getParameters().getNamed();		
 		int port = NetworkRobotsServer.DEFAULT_PORT;
 		if (params.get("port") != null)
 			port = Integer.parseInt(params.get("port"));
+
+		if (params.get("server") != null && params.get("server").equalsIgnoreCase("true")) {
+			server = new NetworkRobotsServer(port);
+		}
+		
+		String host = DEFAULT_HOST;
+		if (params.get("host") != null)
+			host = params.get("host");
 		
 		LOG.info("Connecting to {}:{}", host, port);
 		client = NetworkRobotsClient.connect(host, port);
@@ -312,6 +318,15 @@ public class NetworkClient extends Application {
 		} else {
 			showAlert("Passwort war falsch!");
 		}
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		
+		// close the server if we started one :)
+		if (server != null)			
+			server.close();
 	}
 	
 	private void showAlert(String message) {
