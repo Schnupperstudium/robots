@@ -5,6 +5,7 @@ import com.github.schnupperstudium.robots.ai.action.MoveForwardAction;
 import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.ai.action.TurnRightAction;
 import com.github.schnupperstudium.robots.client.AbstractAI;
+import com.github.schnupperstudium.robots.client.RobotsClient;
 
 public class RepeatingAI extends AbstractAI {
 	private static final EntityAction[] DEFAULT_ACTIONS = new EntityAction[] {
@@ -30,12 +31,12 @@ public class RepeatingAI extends AbstractAI {
 
 	private int turn;
 	
-	public RepeatingAI(long gameId, long uuid) {
-		this(gameId, uuid, DEFAULT_ACTIONS);
+	public RepeatingAI(RobotsClient client, long gameId, long uuid) {
+		this(client, gameId, uuid, DEFAULT_ACTIONS);
 	}
 	
-	public RepeatingAI(long gameId, long uuid, EntityAction... actions) {
-		super(gameId, uuid);
+	public RepeatingAI(RobotsClient client, long gameId, long uuid, EntityAction... actions) {
+		super(client, gameId, uuid);
 		
 		if (actions == null || actions.length == 0)
 			this.actions = new EntityAction[] { NoAction.INSTANCE };

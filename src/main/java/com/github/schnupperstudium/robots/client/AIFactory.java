@@ -1,5 +1,5 @@
 package com.github.schnupperstudium.robots.client;
 
 public interface AIFactory {
-	AbstractAI createAI(long gameId, long uuid);
+	AbstractAI createAI(RobotsClient client, long gameId, long uuid);
 }

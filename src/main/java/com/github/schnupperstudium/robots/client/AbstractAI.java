@@ -15,6 +15,7 @@ import com.github.schnupperstudium.robots.world.Tile;
  *
  */
 public abstract class AbstractAI {
+	private final RobotsClient client;
 	private final long gameId;
 	private final long entityUUID;
 	private final List<EntityObserver> entityObservers = new ArrayList<>();
@@ -24,7 +25,8 @@ public abstract class AbstractAI {
 	private List<Tile> vision;
 
 	
-	public AbstractAI(long gameId, long entityUUID) {
+	public AbstractAI(RobotsClient client, long gameId, long entityUUID) {
+		this.client = client;
 		this.gameId = gameId;
 		this.entityUUID = entityUUID;
 	}
@@ -183,6 +185,14 @@ public abstract class AbstractAI {
 		synchronized (visionObservers) {
 			visionObservers.clear();
 		}
+	}
+	
+	public boolean despawn() {
+		return client.despawnAI(this);
+	}
+	
+	public RobotsClient getClient() {
+		return client;
 	}
 	
 	@Override

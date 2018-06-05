@@ -10,6 +10,7 @@ import com.github.schnupperstudium.robots.ai.action.PickUpItemAction;
 import com.github.schnupperstudium.robots.ai.action.TurnLeftAction;
 import com.github.schnupperstudium.robots.ai.action.TurnRightAction;
 import com.github.schnupperstudium.robots.client.AbstractAI;
+import com.github.schnupperstudium.robots.client.RobotsClient;
 
 public class RandomAI extends AbstractAI {
 	private static final EntityAction[] DEFAULT_ACTIONS = new EntityAction[] {
@@ -23,12 +24,12 @@ public class RandomAI extends AbstractAI {
 	private final Random random = new Random();
 	private final EntityAction[] actions;
 	
-	public RandomAI(long gameId, long uuid) {
-		this(gameId, uuid, DEFAULT_ACTIONS);
+	public RandomAI(RobotsClient client, long gameId, long uuid) {
+		this(client, gameId, uuid, DEFAULT_ACTIONS);
 	}
 	
-	public RandomAI(long gameId, long uuid, EntityAction... actions) {
-		super(gameId, uuid);
+	public RandomAI(RobotsClient client, long gameId, long uuid, EntityAction... actions) {
+		super(client, gameId, uuid);
 		
 		if (actions == null || actions.length == 0)
 			this.actions = new EntityAction[] { NoAction.INSTANCE };

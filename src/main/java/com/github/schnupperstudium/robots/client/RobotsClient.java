@@ -38,11 +38,11 @@ public abstract class RobotsClient {
 	
 	public AbstractAI spawnAI(long gameId, String aiName, String auth, Class<? extends AbstractAI> aiClass) {
 		try {
-			final Constructor<? extends AbstractAI> constructor = aiClass.getConstructor(long.class, long.class);
+			final Constructor<? extends AbstractAI> constructor = aiClass.getConstructor(RobotsClient.class, long.class, long.class);
 			
-			return spawnAI(gameId, aiName, auth, (gId, eId) -> {
+			return spawnAI(gameId, aiName, auth, (client, gId, eId) -> {
 				try {
-					return constructor.newInstance(gId, eId);
+					return constructor.newInstance(client, gId, eId);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
 					LOG.error("Failed to create instance from " + aiClass.getName() + ": " + e.getMessage());
@@ -62,7 +62,7 @@ public abstract class RobotsClient {
 			return null;
 		}
 		
-		AbstractAI ai = aiFactory.createAI(gameId, uuid);
+		AbstractAI ai = aiFactory.createAI(this, gameId, uuid);
 		if (ai == null) {
 			LOG.error("Failed to create ai with uuid: " + uuid);
 			return null;

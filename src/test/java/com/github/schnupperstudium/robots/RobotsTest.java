@@ -186,7 +186,7 @@ public abstract class RobotsTest {
 			}
 		};
 		final long gameId = startWaterPondLevel("TestLevel", null);
-		final SimpleAIFactory aiFactory = new SimpleAIFactory((gId, eId) -> new SimpleAI(gId, eId, DRIVE_CIRCLE_ACTIONS, checks));
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((client, gId, eId) -> new SimpleAI(client, gId, eId, DRIVE_CIRCLE_ACTIONS, checks));
 		final AbstractAI spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
 		Assert.assertNotNull(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
@@ -205,7 +205,7 @@ public abstract class RobotsTest {
 	@Test (timeout = 5000)
 	public void despawnAI() throws Exception {
 		final long gameId = startWaterPondLevel("TestLevel", null);
-		final SimpleAI ai = (SimpleAI) robotsClient.spawnAI(gameId, "testAI", null, (gId, eId) -> new SimpleAI(gId, eId, DRIVE_CIRCLE_ACTIONS, e -> {}));
+		final SimpleAI ai = (SimpleAI) robotsClient.spawnAI(gameId, "testAI", null, (client, gId, eId) -> new SimpleAI(client, gId, eId, DRIVE_CIRCLE_ACTIONS, e -> {}));
 		Assert.assertNotNull(ai);
 
 		while (ai.tickCounter < 1)
@@ -229,7 +229,7 @@ public abstract class RobotsTest {
 		};
 		
 		final long gameId = startGame("TestLevel", "FacingTest", null);
-		final SimpleAIFactory aiFactory = new SimpleAIFactory((gId, eId) -> new SimpleAI(gId, eId, SPIN_ACTIONS, checks));
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((client, gId, eId) -> new SimpleAI(client, gId, eId, SPIN_ACTIONS, checks));
 		final AbstractAI spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
 		Assert.assertNotNull(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
@@ -299,8 +299,8 @@ public abstract class RobotsTest {
 		}
 		
 		@Override
-		public AbstractAI createAI(long gameId, long uuid) {
-			lastCreatedAI = factory.createAI(gameId, uuid);
+		public AbstractAI createAI(RobotsClient client, long gameId, long uuid) {
+			lastCreatedAI = factory.createAI(client, gameId, uuid);
 			return lastCreatedAI;
 		}
 	}
@@ -312,8 +312,8 @@ public abstract class RobotsTest {
 		private int spawnX = 0;
 		private int spawnY = 0;
 		
-		public SimpleAI(long gameId, long entityUUID, EntityAction[] actions, Consumer<SimpleAI> update) {
-			super(gameId, entityUUID);
+		public SimpleAI(RobotsClient client, long gameId, long entityUUID, EntityAction[] actions, Consumer<SimpleAI> update) {
+			super(client, gameId, entityUUID);
 			
 			this.actions = actions;
 			this.update = update;
