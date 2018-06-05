@@ -23,12 +23,12 @@ public class RandomAI extends AbstractAI {
 	private final Random random = new Random();
 	private final EntityAction[] actions;
 	
-	public RandomAI(long uuid) {
-		this(uuid, DEFAULT_ACTIONS);
+	public RandomAI(long gameId, long uuid) {
+		this(gameId, uuid, DEFAULT_ACTIONS);
 	}
 	
-	public RandomAI(long uuid, EntityAction... actions) {
-		super(uuid);
+	public RandomAI(long gameId, long uuid, EntityAction... actions) {
+		super(gameId, uuid);
 		
 		if (actions == null || actions.length == 0)
 			this.actions = new EntityAction[] { NoAction.INSTANCE };

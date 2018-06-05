@@ -38,11 +38,11 @@ public abstract class RobotsClient {
 	
 	public AbstractAI spawnAI(long gameId, String aiName, String auth, Class<? extends AbstractAI> aiClass) {
 		try {
-			final Constructor<? extends AbstractAI> constructor = aiClass.getConstructor(long.class);
+			final Constructor<? extends AbstractAI> constructor = aiClass.getConstructor(long.class, long.class);
 			
-			return spawnAI(gameId, aiName, auth, (uuid) -> {
+			return spawnAI(gameId, aiName, auth, (gId, eId) -> {
 				try {
-					return constructor.newInstance(uuid);
+					return constructor.newInstance(gId, eId);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
 					LOG.error("Failed to create instance from " + aiClass.getName() + ": " + e.getMessage());
@@ -62,7 +62,7 @@ public abstract class RobotsClient {
 			return null;
 		}
 		
-		AbstractAI ai = aiFactory.createAI(uuid);
+		AbstractAI ai = aiFactory.createAI(gameId, uuid);
 		if (ai == null) {
 			LOG.error("Failed to create ai with uuid: " + uuid);
 			return null;
@@ -74,6 +74,17 @@ public abstract class RobotsClient {
 		
 		LOG.info("spawned AI '{}' in game {} using auth '{}'", aiName, gameId, auth);
 		return ai;
+	}
+	
+	public boolean despawnAI(AbstractAI ai) {
+		boolean removed = serverInterface.removeEntity(ai.getGameId(), ai.getEntityUUID());
+		
+		if (removed)
+			LOG.info("despawned AI '{}' from game {}", ai.getEntity() != null ? ai.getEntity().getName() : "<none>", ai.getGameId());
+		else
+			LOG.warn("failed to despawn AI '{}' from game {}", ai.getEntity() != null ? ai.getEntity().getName() : "<none>", ai.getGameId());
+		
+		return removed;
 	}
 	
 	public boolean spawnObserver(long gameId, String auth, IWorldObserver observer) {
@@ -92,6 +103,19 @@ public abstract class RobotsClient {
 		
 		LOG.info("Observing game '{}' with auth '{}'", gameId, auth);
 		return true;
+	}
+	
+	public boolean despawnObserver(long gameId, IWorldObserver observer) {
+		if (observer == null)
+			return false;
+		
+		boolean removed = serverInterface.stopObserving(gameId);
+		if (removed)
+			LOG.info("removed observer from game {}", gameId);
+		else
+			LOG.warn("failed to remove observer from game {}", gameId);
+		
+		return removed;
 	}
 	
 	public List<Level> listLevels() {

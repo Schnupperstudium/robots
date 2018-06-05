@@ -207,7 +207,7 @@ public abstract class RobotsServer implements Runnable {
 		if (game == null)
 			return false;
 		
-		List<Tickable> possibleObservers = game.getTickales(t -> (t instanceof WorldObserver) && ((WorldObserver) t).getClientInterface().equals(clientInterface));
+		List<Tickable> possibleObservers = game.getTickales(t -> (t instanceof WorldObserver) && ((WorldObserver) t).getClientInterface() == clientInterface);
 		if (possibleObservers.isEmpty())
 			return false;
 		

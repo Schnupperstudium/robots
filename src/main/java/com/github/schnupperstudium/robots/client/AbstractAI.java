@@ -15,6 +15,7 @@ import com.github.schnupperstudium.robots.world.Tile;
  *
  */
 public abstract class AbstractAI {
+	private final long gameId;
 	private final long entityUUID;
 	private final List<EntityObserver> entityObservers = new ArrayList<>();
 	private final List<VisionObserver> visionObservers = new ArrayList<>();
@@ -23,7 +24,8 @@ public abstract class AbstractAI {
 	private List<Tile> vision;
 
 	
-	public AbstractAI(long entityUUID) {
+	public AbstractAI(long gameId, long entityUUID) {
+		this.gameId = gameId;
 		this.entityUUID = entityUUID;
 	}
 	
@@ -63,6 +65,13 @@ public abstract class AbstractAI {
 	 */
 	public abstract EntityAction makeTurn();
 	
+	/**
+	 * @return the games uuid of this controlled entity.
+	 */
+	public long getGameId() {
+		return gameId;
+	}
+
 	/**
 	 * @return uuid of controlled entity.
 	 */

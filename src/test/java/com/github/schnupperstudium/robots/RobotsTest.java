@@ -155,6 +155,27 @@ public abstract class RobotsTest {
 		}
 	}
 	
+	@Test(timeout = 3000) 
+	public void unobserveWorld() throws Exception {
+		final long gameId = startGame("TestLevel2", "LoadWorldTest", null);
+		SimpleObserver observer = new SimpleObserver();
+		boolean observable = robotsClient.spawnObserver(gameId, null, observer);
+		Assert.assertTrue(observable);
+		
+		while (observer.callCounter.get() < 1) {
+			Thread.sleep(10);
+		}
+		
+		Assert.assertNotNull(observer.world);
+		robotsClient.despawnObserver(gameId, observer);
+		observer.world = null;
+		int callCount = observer.callCounter.get();
+		
+		Thread.sleep(1000);
+		Assert.assertEquals(callCount, observer.callCounter.get());
+		Assert.assertNull(observer.world);
+	}
+	
 	@Test (timeout = 10000) 
 	public void spawnAI() throws Exception {
 		final List<EntityLocation> locations = new LinkedList<>();
@@ -164,8 +185,8 @@ public abstract class RobotsTest {
 				locations.add(new EntityLocation(ai.getX(), ai.getY(), ai.getFacing()));
 			}
 		};
-		long gameId = startWaterPondLevel("TestLevel", null);
-		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, DRIVE_CIRCLE_ACTIONS, checks));
+		final long gameId = startWaterPondLevel("TestLevel", null);
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((gId, eId) -> new SimpleAI(gId, eId, DRIVE_CIRCLE_ACTIONS, checks));
 		final AbstractAI spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
 		Assert.assertNotNull(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
@@ -182,6 +203,22 @@ public abstract class RobotsTest {
 	}
 	
 	@Test (timeout = 5000)
+	public void despawnAI() throws Exception {
+		final long gameId = startWaterPondLevel("TestLevel", null);
+		final SimpleAI ai = (SimpleAI) robotsClient.spawnAI(gameId, "testAI", null, (gId, eId) -> new SimpleAI(gId, eId, DRIVE_CIRCLE_ACTIONS, e -> {}));
+		Assert.assertNotNull(ai);
+
+		while (ai.tickCounter < 1)
+			Thread.sleep(10);
+		
+		Assert.assertTrue(robotsClient.despawnAI(ai));
+		int tick = ai.tickCounter;
+		
+		Thread.sleep(1000);
+		Assert.assertEquals(tick, ai.tickCounter);
+	}
+	
+	@Test (timeout = 10000)
 	public void testFacing() throws Exception {
 		List<EntityVisinity> visinities = new LinkedList<>();
 		Consumer<SimpleAI> checks = new Consumer<RobotsTest.SimpleAI>() {
@@ -192,7 +229,7 @@ public abstract class RobotsTest {
 		};
 		
 		final long gameId = startGame("TestLevel", "FacingTest", null);
-		final SimpleAIFactory aiFactory = new SimpleAIFactory((entityUUID) -> new SimpleAI(entityUUID, SPIN_ACTIONS, checks));
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((gId, eId) -> new SimpleAI(gId, eId, SPIN_ACTIONS, checks));
 		final AbstractAI spawned = robotsClient.spawnAI(gameId, "testAI", null, aiFactory);
 		Assert.assertNotNull(spawned);
 		SimpleAI ai = (SimpleAI) aiFactory.lastCreatedAI;
@@ -262,8 +299,8 @@ public abstract class RobotsTest {
 		}
 		
 		@Override
-		public AbstractAI createAI(long uuid) {
-			lastCreatedAI = factory.createAI(uuid);
+		public AbstractAI createAI(long gameId, long uuid) {
+			lastCreatedAI = factory.createAI(gameId, uuid);
 			return lastCreatedAI;
 		}
 	}
@@ -275,8 +312,8 @@ public abstract class RobotsTest {
 		private int spawnX = 0;
 		private int spawnY = 0;
 		
-		public SimpleAI(long entityUUID, EntityAction[] actions, Consumer<SimpleAI> update) {
-			super(entityUUID);
+		public SimpleAI(long gameId, long entityUUID, EntityAction[] actions, Consumer<SimpleAI> update) {
+			super(gameId, entityUUID);
 			
 			this.actions = actions;
 			this.update = update;

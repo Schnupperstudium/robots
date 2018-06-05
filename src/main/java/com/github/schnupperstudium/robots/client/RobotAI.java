@@ -13,8 +13,8 @@ import com.github.schnupperstudium.robots.world.Tile;
  */
 public abstract class RobotAI extends AbstractAI {
 
-	public RobotAI(long entityUUID) {
-		super(entityUUID);
+	public RobotAI(long gameId, long entityUUID) {
+		super(gameId, entityUUID);
 	}
 
 	/**

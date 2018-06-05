@@ -30,12 +30,12 @@ public class RepeatingAI extends AbstractAI {
 
 	private int turn;
 	
-	public RepeatingAI(long uuid) {
-		this(uuid, DEFAULT_ACTIONS);
+	public RepeatingAI(long gameId, long uuid) {
+		this(gameId, uuid, DEFAULT_ACTIONS);
 	}
 	
-	public RepeatingAI(long uuid, EntityAction... actions) {
-		super(uuid);
+	public RepeatingAI(long gameId, long uuid, EntityAction... actions) {
+		super(gameId, uuid);
 		
 		if (actions == null || actions.length == 0)
 			this.actions = new EntityAction[] { NoAction.INSTANCE };
