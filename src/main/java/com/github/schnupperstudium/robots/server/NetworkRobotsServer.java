@@ -87,7 +87,7 @@ public class NetworkRobotsServer extends RobotsServer {
 			
 			@Override
 			public boolean observerWorld(long gameId, String auth) {
-				return NetworkRobotsServer.this.observerWorld(gameId, auth, clientInterface);
+				return NetworkRobotsServer.this.observeWorld(gameId, auth, clientInterface);
 			}
 			
 			@Override
@@ -98,6 +98,16 @@ public class NetworkRobotsServer extends RobotsServer {
 			@Override
 			public List<GameInfo> listGames() {
 				return NetworkRobotsServer.this.listGames();
+			}
+
+			@Override
+			public boolean removeEntity(long gameId, long entityUUID) {
+				return NetworkRobotsServer.this.despawnAI(gameId, entityUUID);
+			}
+
+			@Override
+			public boolean stopObserving(long gameId) {
+				return NetworkRobotsServer.this.unobserveWorld(gameId, clientInterface);
 			}
 		};
 	}

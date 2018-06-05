@@ -2,7 +2,10 @@ package com.github.schnupperstudium.robots.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -160,6 +163,20 @@ public class Game implements Runnable, EventListener {
 	public synchronized void useItem(Entity user, Item item) {
 		UseItemEvent event = new UseItemEvent(world, user, item);
 		eventDispatcher.dispatchEvent(event);	
+	}
+	
+	public List<Tickable> getTickales(Predicate<Tickable> filter) {
+		List<Tickable> result = new LinkedList<>(tickables);
+		Iterator<Tickable> it = result.iterator();
+		while (it.hasNext())
+			if (!filter.test(it.next()))
+				it.remove();
+				
+		return result;
+	}
+	
+	public List<Tickable> getTickables() {
+		return new ArrayList<>(tickables);
 	}
 	
 	public void addTickable(Tickable tickable) {

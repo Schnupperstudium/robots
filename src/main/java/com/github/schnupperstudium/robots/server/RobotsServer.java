@@ -14,8 +14,10 @@ import org.apache.logging.log4j.Logger;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.events.AbstractServerEvent;
+import com.github.schnupperstudium.robots.events.entity.AIDespawnEvent;
 import com.github.schnupperstudium.robots.events.entity.AISpawnEvent;
 import com.github.schnupperstudium.robots.events.game.ObserverJoinEvent;
+import com.github.schnupperstudium.robots.events.game.ObserverLeftEvent;
 import com.github.schnupperstudium.robots.events.server.GameStartEvent;
 import com.github.schnupperstudium.robots.io.LevelParser;
 import com.github.schnupperstudium.robots.world.Tile;
@@ -162,7 +164,27 @@ public abstract class RobotsServer implements Runnable {
 		}
 	}
 	
-	public boolean observerWorld(long gameId, String auth, RobotsClientInterface clientInterface) {
+	public boolean despawnAI(long gameId, long entityUUID) {
+		Game game = findGame(gameId);
+		if (game == null)
+			return false;
+		
+		List<Tickable> possibleAIs = game.getTickales(t -> t instanceof AI && ((AI) t).getRobot().getUUID() == entityUUID);
+		if (possibleAIs.isEmpty())
+			return false;
+		
+		AI ai = (AI) possibleAIs.get(0);
+		AIDespawnEvent event = new AIDespawnEvent(game.getWorld(), ai.getRobot(), ai);
+		game.getEventDispatcher().dispatchEvent(event);
+		if (event.isSuccessful())
+			LOG.info("{}:{} was removed from game {}:{}", ai.getRobot().getName(), ai.getRobot().getUUID(), game.getName(), game.getUUID());
+		else
+			LOG.warn("{} could not be removed from game {}:{}", entityUUID, game.getName(), game.getUUID());
+		
+		return event.isSuccessful();
+	}
+	
+	public boolean observeWorld(long gameId, String auth, RobotsClientInterface clientInterface) {
 		Game game = findGame(gameId);
 		if (game == null)
 			return false;
@@ -176,6 +198,26 @@ public abstract class RobotsServer implements Runnable {
 			LOG.info("added observer for game {}", gameId);
 		else
 			LOG.warn("failed to add observer for game {} with auth '{}'", game, auth);
+		
+		return event.isSuccessful();
+	}
+	
+	public boolean unobserveWorld(long gameId, RobotsClientInterface clientInterface) {
+		Game game = findGame(gameId);
+		if (game == null)
+			return false;
+		
+		List<Tickable> possibleObservers = game.getTickales(t -> (t instanceof WorldObserver) && ((WorldObserver) t).getClientInterface().equals(clientInterface));
+		if (possibleObservers.isEmpty())
+			return false;
+		
+		WorldObserver observer = (WorldObserver) possibleObservers.get(0);
+		ObserverLeftEvent event = new ObserverLeftEvent(observer);
+		game.getEventDispatcher().dispatchEvent(event);
+		if (event.isSuccessful())
+			LOG.info("removed observer from game {}:{}", game.getName(), game.getUUID());
+		else
+			LOG.warn("failed to locate observer in game {}", gameId);
 		
 		return event.isSuccessful();
 	}

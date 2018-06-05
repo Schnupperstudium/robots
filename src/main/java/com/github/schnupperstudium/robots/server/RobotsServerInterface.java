@@ -43,6 +43,14 @@ public interface RobotsServerInterface {
 	long spawnEntity(long gameId, String name, String auth);
 	
 	/**
+	 * Remove the given entity from the given game.
+	 * 
+	 * @param gameId game id
+	 * @param entityUUID entity id
+	 */
+	boolean removeEntity(long gameId, long entityUUID);
+	
+	/**
 	 * Attempts start observing the game. 
 	 * 
 	 * @param gameId game to observe
@@ -50,4 +58,11 @@ public interface RobotsServerInterface {
 	 * @return true if observing started, false otherwise.
 	 */
 	boolean observerWorld(long gameId, String auth);
+	
+	/**
+	 * Remove the observer from the given game.
+	 * 
+	 * @param gameId game id
+	 */
+	boolean stopObserving(long gameId);
 }

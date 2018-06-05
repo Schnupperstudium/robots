@@ -24,4 +24,8 @@ public class WorldObserver implements Tickable {
 			game.removeTickable(this);
 		}
 	}
+	
+	public RobotsClientInterface getClientInterface() {
+		return clientInterface;
+	}
 }

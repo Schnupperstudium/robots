@@ -25,7 +25,7 @@ public class LocalRobotsServer extends RobotsServer {
 			
 			@Override
 			public boolean observerWorld(long gameId, String auth) {
-				return LocalRobotsServer.this.observerWorld(gameId, auth, clientInterface);
+				return LocalRobotsServer.this.observeWorld(gameId, auth, clientInterface);
 			}
 			
 			@Override
@@ -36,6 +36,16 @@ public class LocalRobotsServer extends RobotsServer {
 			@Override
 			public List<GameInfo> listGames() {
 				return LocalRobotsServer.this.listGames();
+			}
+
+			@Override
+			public boolean removeEntity(long gameId, long entityUUID) {
+				return LocalRobotsServer.this.despawnAI(gameId, entityUUID);
+			}
+
+			@Override
+			public boolean stopObserving(long gameId) {
+				return LocalRobotsServer.this.unobserveWorld(gameId, clientInterface);
 			}
 		};
 	}
