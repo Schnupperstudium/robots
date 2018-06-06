@@ -275,7 +275,7 @@ public abstract class RobotsTest {
 		robotsServer.close();
 	}
 	
-	private final class SimpleObserver implements IWorldObserver {
+	protected final class SimpleObserver implements IWorldObserver {
 		private final AtomicInteger callCounter = new AtomicInteger(0);
 		private World world = null;
 		
@@ -290,11 +290,11 @@ public abstract class RobotsTest {
 		}
 	}
 	
-	private final class SimpleAIFactory implements AIFactory {
+	protected final class SimpleAIFactory implements AIFactory {
 		private final AIFactory factory;
 		private AbstractAI lastCreatedAI;
 		
-		private SimpleAIFactory(AIFactory factory) {
+		protected SimpleAIFactory(AIFactory factory) {
 			this.factory = factory;
 		}
 		
@@ -305,7 +305,7 @@ public abstract class RobotsTest {
 		}
 	}
 	
-	private final class SimpleAI extends RobotAI {
+	protected final class SimpleAI extends RobotAI {
 		private final EntityAction[] actions;
 		private final Consumer<SimpleAI> update;
 		private volatile int tickCounter = -1;
@@ -343,12 +343,29 @@ public abstract class RobotsTest {
 		}
 	}
 	
-	private static final class EntityLocation {
+	protected final class NoActionAI extends RobotAI {
+		protected int tickCounter;
+
+		protected NoActionAI(RobotsClient client, long gameId, long entityUUID) {
+			super(client, gameId, entityUUID);
+			
+			this.tickCounter = 0;
+		}
+		
+		@Override
+		public EntityAction makeTurn() {
+			tickCounter++;
+			
+			return NoAction.INSTANCE;
+		}
+	}
+	
+	protected static final class EntityLocation {
 		public final int x;
 		public final int y;
 		public final Facing facing;
 		
-		private EntityLocation(int x, int y, Facing facing) {
+		protected EntityLocation(int x, int y, Facing facing) {
 			this.x = x;
 			this.y = y;
 			this.facing = facing;
@@ -360,13 +377,13 @@ public abstract class RobotsTest {
 		}
 	}
 	
-	private static final class EntityVisinity {
+	protected static final class EntityVisinity {
 		public final Tile left;
 		public final Tile right;
 		public final Tile front;
 		public final Tile back;
 		
-		private EntityVisinity(Tile left, Tile right, Tile front, Tile back) {
+		protected EntityVisinity(Tile left, Tile right, Tile front, Tile back) {
 			this.left = left;
 			this.right = right;
 			this.front = front;
