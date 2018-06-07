@@ -41,9 +41,11 @@ public class Texture {
 					InputStream is = new FileInputStream(file);					
 					Image image = new Image(is);
 					
+					// Apparently I rotate the wrong way or it gets rendered the wrong way
+					// either way just store the textures the other way round
 					LOG.debug("Loading texture: {} [{} x {}]", name, (int) image.getWidth(), (int) image.getHeight());
-					for (int w = 0; w < 360; w += 90) {
-						TEXTURES.put(name + ":" + w, image);
+					for (int w = 0; w > -360; w -= 90) {
+						TEXTURES.put(name + ":" + (360 + w) % 360, image);
 						
 						image = rotateImageRight(image);
 					}
