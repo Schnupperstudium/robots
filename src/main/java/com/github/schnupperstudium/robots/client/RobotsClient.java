@@ -77,11 +77,18 @@ public abstract class RobotsClient {
 	}
 	
 	public boolean despawnAI(AbstractAI ai) {
-		boolean removed = serverInterface.removeEntity(ai.getGameId(), ai.getEntityUUID());
+		if (ai == null)
+			return false;
 		
-		if (removed)
+		final boolean removed = serverInterface.removeEntity(ai.getGameId(), ai.getEntityUUID());
+		
+		if (removed) {
+			synchronized (ais) {
+				ais.remove(ai.getEntityUUID());
+			}
+			
 			LOG.info("despawned AI '{}' from game {}", ai.getEntity() != null ? ai.getEntity().getName() : "<none>", ai.getGameId());
-		else
+		} else
 			LOG.warn("failed to despawn AI '{}' from game {}", ai.getEntity() != null ? ai.getEntity().getName() : "<none>", ai.getGameId());
 		
 		return removed;
@@ -91,7 +98,7 @@ public abstract class RobotsClient {
 		if (observer == null)
 			return false;
 
-		boolean observable = serverInterface.observerWorld(gameId, auth);
+		final boolean observable = serverInterface.observerWorld(gameId, auth);
 		if (!observable) {
 			LOG.warn("Failed to observer game '{}' with auth '{}'", gameId, auth);
 			return false;
@@ -105,14 +112,16 @@ public abstract class RobotsClient {
 		return true;
 	}
 	
-	public boolean despawnObserver(long gameId, IWorldObserver observer) {
-		if (observer == null)
-			return false;
+	public boolean despawnObserver(long gameId) {
+		final boolean removed = serverInterface.stopObserving(gameId);
 		
-		boolean removed = serverInterface.stopObserving(gameId);
-		if (removed)
+		if (removed) {
+			synchronized (observers) {
+				observers.remove(gameId);
+			}
+			
 			LOG.info("removed observer from game {}", gameId);
-		else
+		} else
 			LOG.warn("failed to remove observer from game {}", gameId);
 		
 		return removed;

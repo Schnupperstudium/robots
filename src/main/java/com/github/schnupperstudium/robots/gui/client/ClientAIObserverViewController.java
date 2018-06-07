@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.schnupperstudium.robots.client.AbstractAI;
 import com.github.schnupperstudium.robots.client.EntityObserver;
+import com.github.schnupperstudium.robots.client.RobotsClient;
 import com.github.schnupperstudium.robots.client.VisionObserver;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.gui.ObserverViewController;
@@ -13,14 +14,16 @@ import com.github.schnupperstudium.robots.world.Tile;
 import javafx.application.Platform;
 
 public class ClientAIObserverViewController extends ObserverViewController implements VisionObserver, EntityObserver {
+	private final RobotsClient client;
 	private final AbstractAI ai;
 	
 	private List<Tile> vision = null;
 	private Entity entity = null;
 	
-	public ClientAIObserverViewController(AbstractAI ai) {
+	public ClientAIObserverViewController(RobotsClient client, AbstractAI ai) {		
 		super();
 		
+		this.client = client;
 		this.ai = ai;
 		ai.addEntityUpdateObserver(this);
 		ai.addVisionObserver(this);
@@ -51,7 +54,13 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 		
 		clearCanvas();
 		int tileSize = (int) Math.floor(Math.min(worldCanvas.getWidth(), worldCanvas.getHeight()) / Math.max(visionWidth, visionHeight));
-		tileSize = 25;
+		tileSize = Math.min(80, tileSize);
 		SimpleRenderer.renderTilesCompact(worldCanvas.getGraphicsContext2D(), vision, tileSize);
+	}
+	
+	public void shutdown() {
+		// this method must be called when the window for the AI is closed
+		if (ai != null)
+			client.despawnAI(ai);
 	}
 }

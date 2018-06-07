@@ -167,7 +167,7 @@ public abstract class RobotsTest {
 		}
 		
 		Assert.assertNotNull(observer.world);
-		robotsClient.despawnObserver(gameId, observer);
+		robotsClient.despawnObserver(gameId);
 		observer.world = null;
 		int callCount = observer.callCounter.get();
 		

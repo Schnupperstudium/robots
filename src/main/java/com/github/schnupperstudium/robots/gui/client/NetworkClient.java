@@ -262,14 +262,14 @@ public class NetworkClient extends Application {
 			return;
 		}
 		
-		AbstractAI ai = client.spawnAI(game.getUUID(), name, password, aiClass);
+		final AbstractAI ai = client.spawnAI(game.getUUID(), name, password, aiClass);
 		if (ai == null) {
 			showAlert(name + " konnte dem Spiel nicht beitreten!");
 			LOG.error("Failed to spawn {} in game {}:{}", name, game.getName(), game.getUUID());
 			return;
 		}
 		
-		ClientAIObserverViewController observer = new ClientAIObserverViewController(ai);
+		ClientAIObserverViewController observer = new ClientAIObserverViewController(client, ai);
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
 		loader.setController(observer);
@@ -279,6 +279,7 @@ public class NetworkClient extends Application {
 			stage.initModality(Modality.NONE);
 			stage.initStyle(StageStyle.DECORATED);
 			stage.setTitle("Robots -- ClientAIObserver");
+			stage.setOnHidden(e -> observer.shutdown());
 			stage.setScene(new Scene(root, 800, 600));
 			stage.show();
 		} catch (IOException e) {
@@ -290,15 +291,15 @@ public class NetworkClient extends Application {
 	
 	@FXML
 	public void observeGameClicked(ActionEvent event) {
-		ClientWorldObserverController observer = new ClientWorldObserverController();
-		
 		GameInfo selectedGame = observeView.getSelectionModel().getSelectedItem();
 		if (selectedGame == null) {
 			showAlert("Bitte ein Spiel auswählen!");
 			return;
 		}		
 		
-		boolean spawned = client.spawnObserver(selectedGame.getUUID(), observePassword.getText(), observer);
+		ClientWorldObserverController observer = new ClientWorldObserverController(client, selectedGame.getUUID());
+		
+		final boolean spawned = client.spawnObserver(selectedGame.getUUID(), observePassword.getText(), observer);
 		if (spawned) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
 			loader.setController(observer);
@@ -308,6 +309,7 @@ public class NetworkClient extends Application {
 				stage.initModality(Modality.NONE);
 				stage.initStyle(StageStyle.DECORATED);
 				stage.setTitle("Robots -- ClientGameObserver");
+				stage.setOnHidden(e -> observer.shutdown());
 				stage.setScene(new Scene(root, 800, 600));
 				stage.show();
 			} catch (IOException e) {
