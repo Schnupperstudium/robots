@@ -2,12 +2,16 @@ package com.github.schnupperstudium.robots.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 public class ObserverViewController {
 	@FXML 
 	private AnchorPane worldCanvasAnchor;
-		
+	@FXML
+	private VBox inventoryBox;
+	
 	protected Canvas worldCanvas;
 	
 	public ObserverViewController() {
@@ -21,12 +25,24 @@ public class ObserverViewController {
 	}
 
 	protected void clearCanvas() {
-		worldCanvas.getGraphicsContext2D().clearRect(0, 0, worldCanvas.getWidth(), worldCanvas.getHeight());
+		final GraphicsContext gc = worldCanvas.getGraphicsContext2D();
+		final double width = worldCanvas.getWidth();
+		final double height = worldCanvas.getHeight();
+//		final Paint oldStorke = gc.getStroke();
+		
+		gc.clearRect(0, 0, width, height);
+//		gc.setLineWidth(4);
+//		gc.setStroke(Color.BLACK);
+//		gc.strokeRect(0, 0, width, height);
+//		
+//		gc.setStroke(oldStorke);
 	}
 	
 	private class ResizableCanvas extends Canvas {
 		private ResizableCanvas() {
 			super();
+			
+			
 		}
 		
 		@Override

@@ -6,12 +6,15 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.8007518796992481" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-  <items>
-    <AnchorPane fx:id="worldCanvasAnchor" style="-fx-background-color: RED;" />
-    <AnchorPane>
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <AnchorPane fx:id="worldCanvasAnchor" minHeight="600.0" minWidth="600.0" style="-fx-border-style: SOLID;" BorderPane.alignment="CENTER" />
+   </center>
+   <right>
+      <AnchorPane maxWidth="160.0" minHeight="600.0" minWidth="160.0" prefHeight="600.0" prefWidth="160.0" style="-fx-border-style: SOLID;" BorderPane.alignment="CENTER">
          <children>
-            <VBox AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-         </children></AnchorPane>
-  </items>
-</SplitPane>
+            <VBox fx:id="inventoryBox" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </right>
+</BorderPane>
