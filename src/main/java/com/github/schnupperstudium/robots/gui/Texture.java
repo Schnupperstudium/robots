@@ -101,7 +101,10 @@ public class Texture {
 		
 		final String name = "material_" + material.name().toLowerCase();
 		return getTexture(name, rotation);
-		
+	}
+	
+	public static Image getTexture(String textureName) {
+		return getTexture(textureName, 0);
 	}
 	
 	public static Image getTexture(String textureName, int rotation) {

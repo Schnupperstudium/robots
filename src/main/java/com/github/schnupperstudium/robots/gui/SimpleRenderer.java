@@ -1,17 +1,21 @@
 package com.github.schnupperstudium.robots.gui;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
+import com.github.schnupperstudium.robots.entity.Inventory;
+import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 public final class SimpleRenderer {
 	public static int TILE_SIZE = 32;
@@ -82,7 +86,7 @@ public final class SimpleRenderer {
 		}
 	}
 	
-	private static void renderEntity(GraphicsContext gc, Entity entity, int renderX, int renderY, int tileSize, Facing facing) {
+	private static void renderEntity(GraphicsContext gc, Entity entity, int renderX, int renderY, int tileSize, Facing facing) {		
 		int rotation = 0;
 		switch (facing) {
 		case NORTH:
@@ -103,5 +107,28 @@ public final class SimpleRenderer {
 		
 		Image texture = Texture.getTexture(entity, rotation);
 		gc.drawImage(texture, renderX, renderY, tileSize, tileSize);
+	}
+	
+	public static void renderInventory(GraphicsContext gc, String name, Inventory inventory) {
+		renderInventory(gc, name, inventory, 40, 4);
+	}
+	
+	public static void renderInventory(GraphicsContext gc, String name, Inventory inventory, int tileSize, int tilesPerRow) {
+		final Image slotTexture = Texture.getTexture("inventory_slot");
+		
+		gc.setFill(Color.BLACK);
+		gc.fillText(name, 4, 16, 152);		
+		List<Item> items = inventory.getItems();
+		for (int i = 0; i < inventory.getSize(); i++) {
+			int renderX = (i % tilesPerRow) * tileSize;
+			int renderY = (i / tilesPerRow) * tileSize + 20;
+			
+			gc.drawImage(slotTexture, renderX, renderY, tileSize, tileSize);
+			
+			if (i < items.size()) {
+				Item item = items.get(i);
+				renderEntity(gc, item, renderX, renderY, tileSize, Facing.NORTH);
+			}
+		}
 	}
 }

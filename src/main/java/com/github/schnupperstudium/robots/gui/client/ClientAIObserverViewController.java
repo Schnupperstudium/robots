@@ -1,5 +1,6 @@
 package com.github.schnupperstudium.robots.gui.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.schnupperstudium.robots.client.AbstractAI;
@@ -7,6 +8,7 @@ import com.github.schnupperstudium.robots.client.EntityObserver;
 import com.github.schnupperstudium.robots.client.RobotsClient;
 import com.github.schnupperstudium.robots.client.VisionObserver;
 import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.gui.ObserverViewController;
 import com.github.schnupperstudium.robots.gui.SimpleRenderer;
 import com.github.schnupperstudium.robots.world.Tile;
@@ -39,6 +41,15 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 		this.vision = vision;
 		
 		Platform.runLater(this::renderVision);
+		
+		List<InventoryHolder> inventoryHolders = new ArrayList<>();
+		for (Tile tile : vision) {
+			if (tile.hasVisitor() && tile.getVisitor() instanceof InventoryHolder) {
+				inventoryHolders.add((InventoryHolder) tile.getVisitor());			
+			}
+		}
+		
+		updateInventories(inventoryHolders);
 	}
 	
 	private void renderVision() {
