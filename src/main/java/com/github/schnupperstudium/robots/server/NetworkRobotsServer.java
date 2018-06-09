@@ -19,7 +19,11 @@ import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.network.KryoRegistry;
 
 public class NetworkRobotsServer extends RobotsServer {
-	public static final int DEFAULT_PORT = 15681;	
+	public static final int DEFAULT_PORT = 15681;
+	/** 8 MiB of read write buffer. */
+	public static final int WRITE_BUFFER_SIZE = 8 * 1024 * 1024;
+	/** 1 MiB for object writing. */
+	public static final int OBJECT_BUFFER_SIZE = 1024 * 1024;
 
 	private static final Logger LOG = LogManager.getLogger();
 	
@@ -35,7 +39,7 @@ public class NetworkRobotsServer extends RobotsServer {
 		super();
 		
 		this.port = port;
-		this.server = new Server();
+		this.server = new Server(WRITE_BUFFER_SIZE, OBJECT_BUFFER_SIZE);
 		KryoRegistry.registerClasses(server.getKryo());
 		server.addListener(new ServerListener());
 		server.bind(port);

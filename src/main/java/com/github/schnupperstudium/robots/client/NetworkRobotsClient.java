@@ -26,7 +26,7 @@ public final class NetworkRobotsClient extends RobotsClient {
 	private NetworkRobotsClient() {
 		super();
 		
-		client = new Client();
+		client = new Client(NetworkRobotsServer.WRITE_BUFFER_SIZE, NetworkRobotsServer.OBJECT_BUFFER_SIZE);
 		KryoRegistry.registerClasses(client.getKryo());
 		objectSpace = new ObjectSpace(client);
 	}
