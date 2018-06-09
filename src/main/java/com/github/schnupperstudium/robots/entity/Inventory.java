@@ -3,6 +3,11 @@ package com.github.schnupperstudium.robots.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents an inventory.
+ * 
+ * @author Daniel Wieland
+ */
 public class Inventory {
 	private final int size;
 	private final List<Item> items;
@@ -22,6 +27,12 @@ public class Inventory {
 		this.items = new ArrayList<>(items);
 	}
 	
+	/**
+	 * Adds the item to this inventory, if possible.
+	 * 
+	 * @param item item to be added.
+	 * @return true if it was added successfully.
+	 */
 	public boolean addItem(Item item) {
 		if (item != null && items.size() < size)
 			return items.add(item);
@@ -29,6 +40,12 @@ public class Inventory {
 			return false;
 	}
 	
+	/**
+	 * Attempts to find an item contained in this inventory with the given uuid.
+	 * 
+	 * @param uuid uuid of the searched item.
+	 * @return item with matching uuid or <code>null</code>.
+	 */
 	public Item findItem(long uuid) {
 		for (Item item : items ) {
 			if (item.getUUID() == uuid)
@@ -38,26 +55,44 @@ public class Inventory {
 		return null;
 	}
 	
+	/**
+	 * @return a copy of the list containing all items in this inventory.
+	 */
 	public List<Item> getItems() {
 		return new ArrayList<>(items);
 	}
 	
+	/**
+	 * Removes the given Item.
+	 * 
+	 * @param item item to be removed.
+	 * @return true if it was removed, false otherwise.
+	 */
 	public boolean removeItem(Item item) {
 		return items.remove(item);
 	}
 	
-	public Item removeItem(int index) {
-		return items.remove(index);
-	}
-	
+	/**
+	 * @return number of available slots in this inventory.
+	 */
 	public int getSize() {
 		return size;
 	}
 	
+	/**
+	 * @return number of used slots
+	 */
 	public int getUsedSize() {
 		return items.size();
 	}
 
+	/**
+	 * @return number of free slots.
+	 */
+	public int getFreeSlots() {
+		return getSize() - getUsedSize();
+	}
+	
 	@Override
 	public Inventory clone() throws CloneNotSupportedException {
 		List<Item> itemsClone = new ArrayList<>(size);

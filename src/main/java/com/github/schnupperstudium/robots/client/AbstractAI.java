@@ -5,11 +5,13 @@ import java.util.List;
 
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
+import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
 
 /**
- * A basic AI with all basic features.
+ * A basic AI.
  * 
  * @author Daniel Wieland
  *
@@ -24,13 +26,17 @@ public abstract class AbstractAI {
 	private Entity entity;
 	private List<Tile> vision;
 
-	
 	public AbstractAI(RobotsClient client, long gameId, long entityUUID) {
 		this.client = client;
 		this.gameId = gameId;
 		this.entityUUID = entityUUID;
 	}
 	
+	/**
+	 * This method is used by the framework to update the controlled entity.
+	 * 
+	 * @param entity updated entity
+	 */
 	public void updateEntity(Entity entity) {
 		if (this.entity == null && entity != null)
 			onEntitySpawn(entity);
@@ -52,12 +58,77 @@ public abstract class AbstractAI {
 		}
 	}
 	
+	/**
+	 * This method is used by the framework to update the vision.
+	 * 
+	 * @param tiles new visable tiles
+	 */
 	public void updateVision(List<Tile> tiles) {
 		this.vision = new ArrayList<>(tiles);
 		
 		synchronized (visionObservers) {
 			visionObservers.forEach(o -> o.onVisionUpdate(this, new ArrayList<>(tiles)));
 		}
+	}
+	
+	/**
+	 * Searches for the neighboring tile in the given direction.
+	 * If there is no tile found it will create a temporary tile with the needed coordinates 
+	 * and <code>Material.VOID</code> as material.
+	 * 
+	 * @param facing direction to search in.
+	 * @return tile in the given direction.
+	 */
+	public Tile getTileByFacing(Facing facing) {
+		final int x = getEntity().getX() + facing.dx;
+		final int y = getEntity().getY() + facing.dy;
+		
+		for (Tile tile : getVision()) {
+			if (tile.getX() == x && tile.getY() == y)
+				return tile;
+		}
+		
+		return new Tile(null, x, y, Material.VOID);
+	}
+	
+	/**
+	 * Tile to the left of the robot. If there is none it will 
+	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * 
+	 * @return tile to the left of the robot.
+	 */
+	public Tile getLeftTile() {
+		return getTileByFacing(getEntity().getFacing().left());
+	}
+	
+	/**
+	 * Tile in front of the robot. If there is none it will 
+	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * 
+	 * @return tile to the left of the robot.
+	 */
+	public Tile getFrontTile() {
+		return getTileByFacing(getEntity().getFacing());
+	}
+	
+	/**
+	 * Tile to the right of the robot. If there is none it will 
+	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * 
+	 * @return tile to the left of the robot.
+	 */
+	public Tile getRightTile() {
+		return getTileByFacing(getEntity().getFacing().right());
+	}
+	
+	/**
+	 * Tile behind of the robot. If there is none it will 
+	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * 
+	 * @return tile to the left of the robot.
+	 */
+	public Tile getBackTile() {
+		return getTileByFacing(getEntity().getFacing().opposite());
 	}
 	
 	/**
@@ -95,10 +166,16 @@ public abstract class AbstractAI {
 		return vision;
 	}
 
+	/**
+	 * @return entity x coordinate.
+	 */
 	public int getX() {
 		return entity.getX();
 	}
 	
+	/**
+	 * @return entity y coordinate.
+	 */
 	public int getY() {
 		return entity.getY();		
 	}
@@ -187,10 +264,18 @@ public abstract class AbstractAI {
 		}
 	}
 	
+	/**
+	 * Removes this AI from the game.
+	 * 
+	 * @return true if successful.
+	 */
 	public boolean despawn() {
 		return client.despawnAI(this);
 	}
 	
+	/**
+	 * @return the client this AI was created with.
+	 */
 	public RobotsClient getClient() {
 		return client;
 	}
