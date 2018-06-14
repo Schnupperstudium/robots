@@ -72,6 +72,17 @@ public abstract class AbstractAI {
 	}
 	
 	/**
+	 * @return facing of the entity.
+	 */
+	public Facing getFacing() {
+		final Entity e = getEntity();
+		if (e == null)
+			return null;
+		else
+			return e.getFacing();
+	}
+	
+	/**
 	 * Searches for the neighboring tile in the given direction.
 	 * If there is no tile found it will create a temporary tile with the needed coordinates 
 	 * and <code>Material.VOID</code> as material.
