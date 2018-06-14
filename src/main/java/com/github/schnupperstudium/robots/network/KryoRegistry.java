@@ -1,6 +1,7 @@
 package com.github.schnupperstudium.robots.network;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -53,6 +54,7 @@ public class KryoRegistry {
 		kryo.register(NullPointerException.class, new ThrowableSerializer());
 		kryo.register(LinkedList.class);
 		kryo.register(ArrayList.class);
+		kryo.register(HashMap.class);
 
 		// General
 		kryo.register(GameInfo.class);

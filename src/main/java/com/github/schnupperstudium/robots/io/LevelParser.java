@@ -8,7 +8,10 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.server.Level;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,6 +64,7 @@ public final class LevelParser {
 		private static final String MAP_LOADER = "mapLoader";
 		private static final String MAP_LOCATION = "mapLocation";
 		private static final String DESC = "desc";
+		private static final String ALLOWED_ENTITIES = "allowedEntities";
 		
 		@Override
 		public JsonElement serialize(Level src, Type typeOfSrc, JsonSerializationContext context) {
@@ -70,6 +74,10 @@ public final class LevelParser {
 			obj.addProperty(MAP_LOADER, src.getMapLoader());
 			obj.addProperty(MAP_LOCATION, src.getMapLocation());
 			obj.addProperty(DESC, src.getDesc());
+			
+			JsonObject map = new JsonObject();
+			src.getSpawnableEntities().forEach(key -> map.addProperty(key, src.getSpawnableEntityCount(key)));
+			obj.add(ALLOWED_ENTITIES, map);
 			
 			return obj;
 		}
@@ -87,8 +95,9 @@ public final class LevelParser {
 			final String mapLocation = getStringOrNull(obj, MAP_LOCATION);
 			final String gameLoader = getStringOrNull(obj, GAME_LOADER);
 			final String desc = getStringOrNull(obj, DESC);
+			final Map<String, Integer> map = parseMap(obj, ALLOWED_ENTITIES);
 			
-			return new Level(name, gameLoader, mapLoader, mapLocation, desc);
+			return new Level(name, gameLoader, mapLoader, mapLocation, desc, map);
 		}
 		
 		private String getStringOrNull(JsonObject obj, String name) {
@@ -100,6 +109,24 @@ public final class LevelParser {
 				return null;
 			else
 				return element.getAsString();
+		}
+		
+		private Map<String, Integer> parseMap(JsonObject obj, String name) {
+			Map<String, Integer> result = new HashMap<>();
+			JsonElement element = obj.get(name);
+			if (element == null || !element.isJsonObject()) {
+				// one robot is the default
+				result.put(Robot.class.getName(), 1);
+				return result;
+			}
+			
+			JsonObject mapObj = element.getAsJsonObject();
+			for (String key : mapObj.keySet()) {
+				int value = mapObj.get(key).getAsInt();
+				result.put(key, value);
+			}
+			
+			return result;
 		}
 	}
 }
