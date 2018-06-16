@@ -2,6 +2,8 @@ package com.github.schnupperstudium.robots.server;
 
 import java.util.List;
 
+import com.github.schnupperstudium.robots.entity.LivingEntity;
+
 /**
  * Interface to interact with the server.
  * 
@@ -41,6 +43,19 @@ public interface RobotsServerInterface {
 	 * @return robots id
 	 */
 	long spawnEntity(long gameId, String name, String auth);
+	
+	/**
+	 * Attempts to spawn a {@link LivingEntity} in the game. If the returned id is less or equal to 0 it's 
+	 * not valid and the spawn failed.
+	 * 
+	 * @param gameId game to spawn in
+	 * @param name name of the robot
+	 * @param auth authentication token for the game or <code>null</code>.
+	 * @param entityType string representation of entities class.
+	 * @return entity id
+	 */
+	long spawnEntity(long gameId, String name, String auth, String entityType);
+	
 	
 	/**
 	 * Remove the given entity from the given game.

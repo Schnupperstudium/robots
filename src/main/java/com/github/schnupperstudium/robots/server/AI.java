@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
-import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -19,14 +19,14 @@ public class AI implements Tickable {
 	
 	private final Game game;
 	private final RobotsClientInterface client;		
-	private final Robot robot;
+	private final LivingEntity entity;
 	
 	private boolean kicked = false;
 	
-	public AI(Game game, RobotsClientInterface client, Robot robot) {
+	public AI(Game game, RobotsClientInterface client, LivingEntity entity) {
 		this.game = game;
 		this.client = client;
-		this.robot = robot;
+		this.entity = entity;
 	}
 	
 	@Override
@@ -34,19 +34,19 @@ public class AI implements Tickable {
 		updateEntity();
 		updateVision(game);
 		EntityAction action = makeTurn();
-		boolean success = action.apply(game, robot);
+		boolean success = action.apply(game, entity);
 		if (success)
-			LOG.debug("AI {}:{} made action {}", robot.getName(), robot.getUUID(), action);
+			LOG.debug("AI {}:{} made action {}", entity.getName(), entity.getUUID(), action);
 		else
-			LOG.warn("AI {}:{} failed action {}", robot.getName(), robot.getUUID(), action);
-		LOG.trace("ai location ({}, {})", robot.getX(), robot.getY());
+			LOG.warn("AI {}:{} failed action {}", entity.getName(), entity.getUUID(), action);
+		LOG.trace("ai location ({}, {})", entity.getX(), entity.getY());
 	}
 
 	public EntityAction makeTurn() {		
-		if (robot.isAlive() && !kicked) {
+		if (entity.isAlive() && !kicked) {
 			EntityAction action = null;
 			try {
-				action = client.makeTurn(robot.getUUID());
+				action = client.makeTurn(entity.getUUID());
 			} catch (Exception e) {
 				// catch any exception a client may cause
 				kickAI(e.getMessage());
@@ -66,7 +66,7 @@ public class AI implements Tickable {
 			return;
 		
 		try {
-			client.updateEntity(robot.getUUID(), robot);
+			client.updateEntity(entity.getUUID(), entity);
 		} catch (Exception e) {
 			// catch any exception a client may cause
 			kickAI(e.getMessage());
@@ -74,13 +74,13 @@ public class AI implements Tickable {
 	}
 	
 	public void updateVision(Game game) {
-		if (robot.isDead() || kicked)
+		if (entity.isDead() || kicked)
 			return;
 		
 		final World world = game.getWorld();
 		final List<Tile> visibleTiles = new ArrayList<>((ROBOT_VISION + 1) * (ROBOT_VISION + 1));
-		final int robotX = robot.getX();
-		final int robotY = robot.getY();
+		final int robotX = entity.getX();
+		final int robotY = entity.getY();
 		for (int x = robotX - ROBOT_VISION; x <= robotX + ROBOT_VISION; x++) {
 //			if (x < 0 || x >= world.getWidth())
 //				continue;
@@ -94,7 +94,7 @@ public class AI implements Tickable {
 		}
 		
 		try {
-			client.updateVisableTiles(robot.getUUID(), visibleTiles);
+			client.updateVisableTiles(entity.getUUID(), visibleTiles);
 		} catch (Exception e) {
 			// catch any exception a client may cause
 			kickAI(e.getMessage());
@@ -103,18 +103,18 @@ public class AI implements Tickable {
 	
 	private void kickAI(String reason) {
 		kicked = true;
-		String name = robot != null ? robot.getName() : "<none>";
-		long uuid = robot != null ? robot.getUUID() : -1;
+		String name = entity != null ? entity.getName() : "<none>";
+		long uuid = entity != null ? entity.getUUID() : -1;
 		LOG.warn("{}:{} got kicked from {}:{} (Reason: {})", name, uuid, game.getName(), game.getUUID(), reason);
 		game.removeTickable(this);
-		game.despawnEntity(robot);
+		game.despawnEntity(entity);
 	}
 	
 	public RobotsClientInterface getClient() {
 		return client;
 	}
 	
-	public Robot getRobot() {
-		return robot;
+	public LivingEntity getEntity() {
+		return entity;
 	}
 }

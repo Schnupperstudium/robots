@@ -24,6 +24,11 @@ public class LocalRobotsServer extends RobotsServer {
 			}
 			
 			@Override
+			public long spawnEntity(long gameId, String name, String auth, String entityType) {
+				return LocalRobotsServer.this.spawnAI(gameId, name, auth, clientInterface, entityType);
+			}
+
+			@Override
 			public boolean observerWorld(long gameId, String auth) {
 				return LocalRobotsServer.this.observeWorld(gameId, auth, clientInterface);
 			}

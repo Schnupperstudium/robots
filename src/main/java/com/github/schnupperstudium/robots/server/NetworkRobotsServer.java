@@ -17,6 +17,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
 import com.github.schnupperstudium.robots.UUIDGenerator;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
+import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.network.KryoRegistry;
 
 public class NetworkRobotsServer extends RobotsServer {
@@ -91,7 +92,7 @@ public class NetworkRobotsServer extends RobotsServer {
 
 	private class ServerInterface implements RobotsServerInterface {
 		private final List<ObserverData> observerDatas;
-		private final List<AIData> aiDatas;
+		private final List<AIData> aiDatas;		
 		private final RobotsClientInterface clientInterface;
 		
 		private ServerInterface(RobotsClientInterface clientInterface) {
@@ -107,7 +108,12 @@ public class NetworkRobotsServer extends RobotsServer {
 		
 		@Override
 		public long spawnEntity(long gameId, String name, String auth) {
-			final long uuid = NetworkRobotsServer.this.spawnAI(gameId, name, auth, clientInterface);
+			return spawnEntity(gameId, name, auth, Robot.class.getName());
+		}
+		
+		@Override
+		public long spawnEntity(long gameId, String name, String auth, String entityType) {
+			final long uuid = NetworkRobotsServer.this.spawnAI(gameId, name, auth, clientInterface, entityType);
 			if (UUIDGenerator.isValid(uuid)) {
 				synchronized (aiDatas) {
 					aiDatas.add(new AIData(gameId, uuid));
@@ -116,7 +122,7 @@ public class NetworkRobotsServer extends RobotsServer {
 			
 			return uuid;
 		}
-		
+
 		@Override
 		public boolean removeEntity(long gameId, long entityUUID) {
 			final boolean removed = NetworkRobotsServer.this.despawnAI(gameId, entityUUID);

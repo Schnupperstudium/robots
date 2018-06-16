@@ -1,15 +1,15 @@
 package com.github.schnupperstudium.robots.events.entity;
 
-import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.server.AI;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.World;
 
-public class AIDespawnEvent extends RobotDespawnEvent {
+public class AIDespawnEvent extends LivingEntityDespawnEvent {
 	protected final AI ai;
 	
-	public AIDespawnEvent(World world, Robot robot, AI ai) {
-		super(world, robot);
+	public AIDespawnEvent(World world, LivingEntity entity, AI ai) {
+		super(world, entity);
 		
 		this.ai = ai;
 	}
