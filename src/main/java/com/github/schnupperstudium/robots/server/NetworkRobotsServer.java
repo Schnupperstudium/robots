@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,8 +50,13 @@ public class NetworkRobotsServer extends RobotsServer {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		NetworkRobotsServer server = new NetworkRobotsServer();
-		while (true)
-			Thread.sleep(100);
+		Scanner scanner = new Scanner(System.in);
+		String line = scanner.nextLine();
+		while (line != null && !line.equalsIgnoreCase("exit")) {
+			line = scanner.nextLine();
+		}
+		scanner.close();
+		server.close();
 	}
 	
 	public int getPort() {

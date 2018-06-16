@@ -20,7 +20,7 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 	private final AbstractAI ai;
 	
 	private List<Tile> vision = null;
-	private Entity entity = null;
+//	private Entity entity = null;
 	
 	public ClientAIObserverViewController(RobotsClient client, AbstractAI ai) {		
 		super();
@@ -33,7 +33,7 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 
 	@Override
 	public void onEntityUpdate(AbstractAI ai, Entity entity) {
-		this.entity = entity;
+//		this.entity = entity;
 	}
 
 	@Override
