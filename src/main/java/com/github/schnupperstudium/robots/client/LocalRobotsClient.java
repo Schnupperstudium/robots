@@ -1,5 +1,6 @@
 package com.github.schnupperstudium.robots.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,14 @@ import com.github.schnupperstudium.robots.world.World;
 public final class LocalRobotsClient extends RobotsClient {
 	private static final Logger LOG = LogManager.getLogger();
 	
-	private LocalRobotsClient() {
-		super();
+	private final LocalRobotsServer server;
+	
+	private LocalRobotsClient(LocalRobotsServer server) {
+		this.server = server;
 	}
 	
 	public static LocalRobotsClient connect(LocalRobotsServer server) {
-		LocalRobotsClient robotsClient = new LocalRobotsClient();
+		LocalRobotsClient robotsClient = new LocalRobotsClient(server);
 		robotsClient.serverInterface = server.createServerInterface(robotsClient.createClientInterface()); 
 		
 		return robotsClient;
@@ -30,6 +33,13 @@ public final class LocalRobotsClient extends RobotsClient {
 		return new ClientInterface();
 	}
 
+	@Override
+	public void close() throws IOException {
+		super.close();
+		
+		server.onDisconnect(((LocalRobotsServer.ServerInterface) serverInterface).getConnectionId());
+	}
+	
 	private class ClientInterface implements RobotsClientInterface {
 
 		private ClientInterface() {

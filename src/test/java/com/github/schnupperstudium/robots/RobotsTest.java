@@ -246,6 +246,25 @@ public abstract class RobotsTest {
 			Assert.assertEquals(SPIN_MATERIALS[(3 + i) % SPIN_MATERIALS.length], visinity.left.getMaterial());
 		}
 	}
+
+	@Test (timeout = 10000) 
+	public void testClientDisconnect() throws Exception {
+		final long gameId = startGame("TestLevel", "FacingTest", null);
+		final SimpleAIFactory aiFactory = new SimpleAIFactory((c, g, e) -> new NoActionAI(c, g, e));
+		final NoActionAI ai = (NoActionAI) robotsClient.spawnAI(gameId, "lazyAi", null, aiFactory);
+		Assert.assertNotNull(ai);
+		
+		while (ai.tickCounter < 1) 
+			Thread.sleep(10);
+		
+		robotsClient.close();
+		Thread.sleep(1000);
+		Assert.assertEquals(1, ai.tickCounter);
+		
+		final Game game = robotsServer.findGame(gameId);
+		Assert.assertNotNull(game);
+		Assert.assertEquals(0, game.getTickables().size());
+	}
 	
 	protected long startWaterPondLevel(String name, String auth) {
 		return startGame(name, "WaterPond", auth);

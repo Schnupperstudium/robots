@@ -80,17 +80,21 @@ public class NetworkRobotsServer extends RobotsServer {
 			final ServerInterface serverInterface = new ServerInterface(clientInterface);
 			objectSpace.register(RobotsServerInterface.NETWORK_ID, serverInterface);
 			connectedClients.put(connection, serverInterface);
+			onConnect(serverInterface.connectionId);
 		}
 		
 		@Override
 		public void disconnected(Connection connection) {
 			ServerInterface serverInterface = connectedClients.remove(connection);
-			if (serverInterface != null)
+			if (serverInterface != null) {
 				serverInterface.onDisconnect();
+				onDisconnect(serverInterface.connectionId);
+			}
 		}
 	}
 
 	private class ServerInterface implements RobotsServerInterface {
+		private final long connectionId = UUIDGenerator.obtain();
 		private final List<ObserverData> observerDatas;
 		private final List<AIData> aiDatas;		
 		private final RobotsClientInterface clientInterface;
@@ -103,7 +107,7 @@ public class NetworkRobotsServer extends RobotsServer {
 		
 		@Override
 		public long startGame(String name, String levelName, String auth) {
-			return NetworkRobotsServer.this.startGame(name, levelName, auth);
+			return NetworkRobotsServer.this.startGame(connectionId, name, levelName, auth, clientInterface);
 		}
 		
 		@Override
@@ -113,10 +117,10 @@ public class NetworkRobotsServer extends RobotsServer {
 		
 		@Override
 		public long spawnEntity(long gameId, String name, String auth, String entityType) {
-			final long uuid = NetworkRobotsServer.this.spawnAI(gameId, name, auth, clientInterface, entityType);
+			final long uuid = NetworkRobotsServer.this.spawnAI(connectionId, gameId, name, auth, clientInterface, entityType);
 			if (UUIDGenerator.isValid(uuid)) {
 				synchronized (aiDatas) {
-					aiDatas.add(new AIData(gameId, uuid));
+//					aiDatas.add(new AIData(gameId, uuid));
 				}
 			}
 			
@@ -125,7 +129,7 @@ public class NetworkRobotsServer extends RobotsServer {
 
 		@Override
 		public boolean removeEntity(long gameId, long entityUUID) {
-			final boolean removed = NetworkRobotsServer.this.despawnAI(gameId, entityUUID);
+			final boolean removed = NetworkRobotsServer.this.despawnAI(connectionId, gameId, entityUUID, clientInterface);
 			if (removed) {
 				synchronized (aiDatas) {
 					Iterator<AIData> it = aiDatas.iterator();
@@ -143,7 +147,7 @@ public class NetworkRobotsServer extends RobotsServer {
 
 		@Override
 		public boolean observerWorld(long gameId, String auth) {
-			final boolean result = NetworkRobotsServer.this.observeWorld(gameId, auth, clientInterface);
+			final boolean result = NetworkRobotsServer.this.observeWorld(connectionId, gameId, auth, clientInterface);
 			if (result) {
 				synchronized (observerDatas) {
 					observerDatas.add(new ObserverData(gameId));
@@ -155,7 +159,7 @@ public class NetworkRobotsServer extends RobotsServer {
 		
 		@Override
 		public boolean stopObserving(long gameId) {
-			final boolean result = NetworkRobotsServer.this.unobserveWorld(gameId, clientInterface);
+			final boolean result = NetworkRobotsServer.this.unobserveWorld(connectionId, gameId, clientInterface);
 			if (result) {
 				synchronized (observerDatas) {
 					Iterator<ObserverData> it = observerDatas.iterator();
@@ -183,48 +187,22 @@ public class NetworkRobotsServer extends RobotsServer {
 
 		public void onDisconnect() {
 			// remove any remaining AI
-			synchronized (aiDatas) {
-				for (AIData data : aiDatas) {
-					NetworkRobotsServer.this.despawnAI(data.gId, data.eId);
-				}
-				
-				aiDatas.clear();
-			}
-			
-			// remove any remaining observer
-			synchronized (observerDatas) {
-				for (ObserverData data : observerDatas) {
-					NetworkRobotsServer.this.unobserveWorld(data.gameId, clientInterface);
-				}
-				
-				observerDatas.clear();
-			}
-		}
-	}
-	
-	private static class ObserverData {
-		private final long gameId;
-		
-		private ObserverData(long gameId) {
-			this.gameId = gameId;
-		}
-		
-		protected boolean match(long gId) {
-			return this.gameId == gId;
-		}
-	}
-	
-	private static class AIData {
-		private final long gId;
-		private final long eId;
-		
-		private AIData(long gId, long eId) {
-			this.gId = gId;
-			this.eId = eId;
-		}
-		
-		protected boolean match(long gId, long eId) {
-			return this.gId == gId && this.eId == eId;
+//			synchronized (aiDatas) {
+//				for (AIData data : aiDatas) {
+//					NetworkRobotsServer.this.despawnAI(connectionId, data.gId, data.eId);
+//				}
+//				
+//				aiDatas.clear();
+//			}
+//			
+//			// remove any remaining observer
+//			synchronized (observerDatas) {
+//				for (ObserverData data : observerDatas) {
+//					NetworkRobotsServer.this.unobserveWorld(connectionId, data.gameId, clientInterface);
+//				}
+//				
+//				observerDatas.clear();
+//			}
 		}
 	}
 }

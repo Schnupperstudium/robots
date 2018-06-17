@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +40,12 @@ public abstract class RobotsServer implements Runnable {
 	public static final long ERR_LEVEL_NOT_FOUND = -8;
 	public static final long ERR_FAILED_GAME_START = -9;
 	public static final long ERR_GAME_START_DENIED = -10;
+	public static final long ERR_ENTITY_LIMIT_EXCEEDED = -11;
 	
 	private static final Logger LOG = LogManager.getLogger();
 	
-	protected final Map<Class<? extends LivingEntity>, LivingEntityFactory> entityFactories = new HashMap<>();
+	protected final Map<Long, ClientTracker> clientTrackers = new HashMap<>();
+	protected final Map<String, LivingEntityFactory> entityFactories = new HashMap<>();
 	protected final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
 	protected final List<Game> games = new ArrayList<>();
 	protected final List<Level> availableLevels = new ArrayList<>();
@@ -62,7 +65,7 @@ public abstract class RobotsServer implements Runnable {
 
 	private void loadEntityFactories() {
 		// factory for every playable class
-		entityFactories.put(Robot.class, (game, x, y, name) -> { Robot robot = new Robot(name); robot.setPosition(x, y); return robot; });
+		entityFactories.put(Robot.class.getName(), (game, x, y, name) -> { Robot robot = new Robot(name); robot.setPosition(x, y); return robot; });
 	}
 	
 	private void loadLevels() throws IOException {
@@ -121,7 +124,7 @@ public abstract class RobotsServer implements Runnable {
 		return null;
 	}
 			
-	public long startGame(String name, String levelName, String auth) {
+	public long startGame(long connectionId, String name, String levelName, String auth, RobotsClientInterface clientInterface) {
 		if (name == null || name.isEmpty())
 			return ERR_INVALID_ENTITY_NAME;
 		else if (levelName == null || levelName.isEmpty())
@@ -150,33 +153,15 @@ public abstract class RobotsServer implements Runnable {
 		return game.getUUID();
 	}
 	
-	public long spawnAI(long gameId, String name, String auth, RobotsClientInterface clientInterface) {
-		return spawnAI(gameId, name, auth, clientInterface, Robot.class);
+	public long spawnAI(long connectionId, long gameId, String name, String auth, RobotsClientInterface clientInterface) {
+		return spawnAI(connectionId, gameId, name, auth, clientInterface, Robot.class.getName());
 	}
-	
-	public long spawnAI(long gameId, String name, String auth, RobotsClientInterface clientInterface, String entityType) {
-		try {
-			if (entityType == null || entityType.isEmpty())
-				return ERR_INVALID_ENTITY_TYPE;
-			
-			Class<?> clazz = Class.forName(entityType);
-			if (!LivingEntity.class.isAssignableFrom(clazz)) {
-				return ERR_INVALID_ENTITY_TYPE;
-			}
-			
-			Class<? extends LivingEntity> entityClass = clazz.asSubclass(LivingEntity.class);
-			return spawnAI(gameId, name, auth, clientInterface, entityClass);
-		} catch (ClassNotFoundException e) {
-			LOG.warn("failed to find entityClass '{}' while attempting to spawn '{}' in game {}", entityType, name, gameId);
-			return ERR_INVALID_ENTITY_TYPE;
-		}
-	}
-	
-	public long spawnAI(long gameId, String name, String auth, RobotsClientInterface clientInterface, Class<? extends LivingEntity> entityClass) {
+		
+	public long spawnAI(long connectionId, long gameId, String name, String auth, RobotsClientInterface clientInterface, String entityClass) {
 		if (name == null || name.isEmpty())
 			return ERR_INVALID_ENTITY_NAME;
 		
-		if (entityClass == null)
+		if (entityClass == null || entityClass.isEmpty())
 			return ERR_INVALID_ENTITY_TYPE;
 		
 		Game game = findGame(gameId);
@@ -185,6 +170,11 @@ public abstract class RobotsServer implements Runnable {
 		
 		if (game.hasPassword() && !game.getPassword().equals(auth))
 			return ERR_INVALID_PASSWORD;
+		
+		ClientTracker tracker = getTracker(connectionId, clientInterface);
+		if (tracker.getEntityTypeCount(gameId, entityClass) >= game.getLevel().getSpawnableEntityCount(entityClass)) {
+			return ERR_ENTITY_LIMIT_EXCEEDED;
+		}
 		
 		List<Tile> spawnTiles = game.getWorld().getSpawns();
 		Tile spawnTile = null;
@@ -204,6 +194,7 @@ public abstract class RobotsServer implements Runnable {
 		AISpawnEvent event = new AISpawnEvent(game, game.getWorld(), entity, clientInterface);
 		game.getEventDispatcher().dispatchEvent(event);
 		if (event.isSuccessful()) {
+			tracker.addAI(gameId, entity.getUUID(), entityClass);
 			LOG.info("spawned AI '{}':{} in game '{}':{}", name, entity.getUUID(), game.getName(), gameId);
 			return entity.getUUID();
 		} else {
@@ -212,7 +203,7 @@ public abstract class RobotsServer implements Runnable {
 		}
 	}
 	
-	public boolean despawnAI(long gameId, long entityUUID) {
+	public boolean despawnAI(long connectionId, long gameId, long entityUUID, RobotsClientInterface clientInterface) {
 		Game game = findGame(gameId);
 		if (game == null)
 			return false;
@@ -221,18 +212,22 @@ public abstract class RobotsServer implements Runnable {
 		if (possibleAIs.isEmpty())
 			return false;
 		
+		ClientTracker tracker = getTracker(connectionId, clientInterface);
+		
 		AI ai = (AI) possibleAIs.get(0);
 		AIDespawnEvent event = new AIDespawnEvent(game.getWorld(), ai.getEntity(), ai);
 		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful())
+		if (event.isSuccessful()) {
+			tracker.removeAI(gameId, entityUUID);
 			LOG.info("{}:{} was removed from game '{}':{}", ai.getEntity().getName(), ai.getEntity().getUUID(), game.getName(), game.getUUID());
-		else
+		} else {
 			LOG.warn("{} could not be removed from game '{}':{}", entityUUID, game.getName(), game.getUUID());
+		}
 		
 		return event.isSuccessful();
 	}
 	
-	public boolean observeWorld(long gameId, String auth, RobotsClientInterface clientInterface) {
+	public boolean observeWorld(long connectionId, long gameId, String auth, RobotsClientInterface clientInterface) {
 		Game game = findGame(gameId);
 		if (game == null)
 			return false;
@@ -240,17 +235,21 @@ public abstract class RobotsServer implements Runnable {
 		if (game.hasPassword() && !game.getPassword().equals(auth))
 			return false;
 		
+		ClientTracker tracker = getTracker(connectionId, clientInterface);
+		
 		ObserverJoinEvent event = new ObserverJoinEvent(clientInterface);
 		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful())
+		if (event.isSuccessful()) {
+			tracker.addObserver(gameId);
 			LOG.info("added observer for game '{}':{}", game.getName(), gameId);
-		else
+		} else {
 			LOG.warn("failed to add observer for game '{}':{} with auth '{}'", game.getName(), gameId, auth);
+		}
 		
 		return event.isSuccessful();
 	}
 	
-	public boolean unobserveWorld(long gameId, RobotsClientInterface clientInterface) {
+	public boolean unobserveWorld(long connectionId, long gameId, RobotsClientInterface clientInterface) {
 		Game game = findGame(gameId);
 		if (game == null)
 			return false;
@@ -259,13 +258,17 @@ public abstract class RobotsServer implements Runnable {
 		if (possibleObservers.isEmpty())
 			return false;
 		
+		ClientTracker tracker = getTracker(connectionId, clientInterface);
+		
 		WorldObserver observer = (WorldObserver) possibleObservers.get(0);
 		ObserverLeftEvent event = new ObserverLeftEvent(observer);
 		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful())
+		if (event.isSuccessful()) {
+			tracker.removeObserver(gameId);
 			LOG.info("removed observer from game '{}':{}", game.getName(), gameId);
-		else
+		} else {
 			LOG.warn("failed to locate observer in game '{}':{}", game.getName(), gameId);
+		}
 		
 		return event.isSuccessful();
 	}
@@ -300,17 +303,181 @@ public abstract class RobotsServer implements Runnable {
 
 		return gameInfos;
 	}
-	
+		
 	public void close() throws IOException {
 		run = false;
 		synchronized (games) {
 			games.forEach(game -> game.endGame());
 		}
 		
+		synchronized (clientTrackers) {
+			clientTrackers.values().forEach(tracker -> tracker.onDisconnect());
+		}
+		
 		LOG.info("server closed");
+	}
+	
+	protected ClientTracker getTracker(long connectionId, RobotsClientInterface clientInterface) {
+		synchronized (clientTrackers) {
+			ClientTracker tracker = clientTrackers.get(connectionId);
+			
+			if (tracker == null) {
+				tracker = new ClientTracker(connectionId, clientInterface);
+					clientTrackers.put(connectionId, tracker);
+			}
+		
+			return tracker;
+		}
+	}
+	
+	public void onConnect(long connectionId) {
+		// nothing to do here
+	}
+	
+	public void onDisconnect(long connectionId) {
+		ClientTracker tracker = null;
+		synchronized (clientTrackers) {
+			tracker = clientTrackers.remove(connectionId);
+		}
+		
+		if (tracker != null)
+			tracker.onDisconnect();
 	}
 	
 	public EventDispatcher getEventDispatcher() {
 		return eventDispatcher;
+	}
+
+	private final class ClientTracker {
+		private final long connectionId;
+		private final RobotsClientInterface clientInterface;
+		/** game -> (entityType -> Count) */
+		private final Map<Long, Map<String, Integer>> gameTypeCounter = new HashMap<>();
+		private final List<ObserverData> observers = new ArrayList<>();
+		private final List<AIData> ais = new ArrayList<>();
+		
+		private ClientTracker(long connectionId, RobotsClientInterface clientInterface) {
+			this.connectionId = connectionId;
+			this.clientInterface = clientInterface;
+		}
+		
+		private int getEntityTypeCount(long gameId, String entityClass) {
+			synchronized (gameTypeCounter) {
+				Map<String, Integer> typeCounter = gameTypeCounter.get(gameId);
+				if (typeCounter != null) {
+					Integer counter = typeCounter.get(entityClass);
+					if (counter != null)
+						return counter;
+				}
+				
+				return 0;
+			}
+		}
+		
+		private void addObserver(long gameId) {
+			synchronized (observers) {
+				observers.add(new ObserverData(gameId));
+			}
+		}
+		
+		private void removeObserver(long gameId) {
+			synchronized (observers) {
+				Iterator<ObserverData> it = observers.iterator();
+				while (it.hasNext()) {
+					if (it.next().match(gameId)) {
+						it.remove();
+						return;
+					}
+				}
+			}
+		}
+		
+		private void addAI(long gId, long eId, String entityClass) {
+			synchronized (ais) {
+				ais.add(new AIData(gId, eId, entityClass));
+			}
+			synchronized (gameTypeCounter) {
+				Map<String, Integer> typeCounter = gameTypeCounter.get(gId);
+				if (typeCounter == null) {
+					typeCounter = new HashMap<>();
+					gameTypeCounter.put(gId, typeCounter);
+				}
+				
+				Integer counter = typeCounter.get(entityClass);
+				if (counter == null) {
+					counter = 0;
+					typeCounter.put(entityClass, counter);
+				}
+				
+				counter++;
+			}
+		}
+		
+		private void removeAI(long gId, long eId) {
+			String entityClass = null;
+			synchronized (ais) {
+				Iterator<AIData> it = ais.iterator();
+				while (it.hasNext()) {
+					AIData ai = it.next();
+					if (ai.match(gId, eId)) {
+						it.remove();
+						entityClass = ai.entityClass;
+						break;
+					}
+				}
+			}
+			
+			synchronized (gameTypeCounter) {
+				Map<String, Integer> typeCounter = gameTypeCounter.get(gId);
+				if (typeCounter != null) {
+					Integer counter = typeCounter.get(entityClass);
+					if (counter != null)
+						counter--;
+				}
+			}
+		}
+		
+		public void onDisconnect() {
+			synchronized (ais) {
+				for (AIData ai : new ArrayList<>(ais))
+					despawnAI(connectionId, ai.gId, ai.eId, clientInterface);
+				
+				ais.clear();
+			}
+			synchronized (LOG) {
+				for (ObserverData observer : new ArrayList<>(observers))
+					unobserveWorld(connectionId, observer.gameId, clientInterface);
+				
+				observers.clear();
+			}
+		}
+	}
+	
+	protected static class ObserverData {
+		protected final long gameId;
+		
+		protected ObserverData(long gameId) {
+			this.gameId = gameId;
+		}
+		
+		protected boolean match(long gId) {
+			return this.gameId == gId;
+		}
+	}
+
+	protected static class AIData {
+		protected final long gId;
+		protected final long eId;
+		protected final String entityClass;
+		
+		protected AIData(long gId, long eId, String entityClass) {
+			this.gId = gId;
+			this.eId = eId;
+			this.entityClass = entityClass;
+		}
+		
+		protected boolean match(long gId, long eId) {
+			return this.gId == gId && this.eId == eId;
+		}
 	}
 }
