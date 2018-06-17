@@ -453,30 +453,30 @@ public abstract class RobotsServer implements Runnable {
 		}
 	}
 	
-	protected static class ObserverData {
-		protected final long gameId;
+	private static class ObserverData {
+		private final long gameId;
 		
-		protected ObserverData(long gameId) {
+		private ObserverData(long gameId) {
 			this.gameId = gameId;
 		}
 		
-		protected boolean match(long gId) {
+		private boolean match(long gId) {
 			return this.gameId == gId;
 		}
 	}
 
-	protected static class AIData {
-		protected final long gId;
-		protected final long eId;
-		protected final String entityClass;
+	private static class AIData {
+		private final long gId;
+		private final long eId;
+		private final String entityClass;
 		
-		protected AIData(long gId, long eId, String entityClass) {
+		private AIData(long gId, long eId, String entityClass) {
 			this.gId = gId;
 			this.eId = eId;
 			this.entityClass = entityClass;
 		}
 		
-		protected boolean match(long gId, long eId) {
+		private boolean match(long gId, long eId) {
 			return this.gId == gId && this.eId == eId;
 		}
 	}
