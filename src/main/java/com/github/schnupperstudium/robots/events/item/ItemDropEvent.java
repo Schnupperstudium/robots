@@ -24,7 +24,7 @@ public class ItemDropEvent extends ItemEvent {
 	@Override
 	public boolean apply(Game manager) {
 		Tile tile = entity.getTile(world);
-		if (tile.getItem() != null)
+		if (tile.getItem() != null || item == null)
 			return false;
 		
 		// if the entity holds a inventory try to remove the item.

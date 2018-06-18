@@ -88,7 +88,7 @@ public class Game implements Runnable, EventListener {
 				running = false;
 			}
 		}
-				
+		
 		GameStopEvent event = new GameStopEvent(this);
 		eventDispatcher.dispatchEvent(event);
 		server.eventDispatcher.dispatchEvent(event);

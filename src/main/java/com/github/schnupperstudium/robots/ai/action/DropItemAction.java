@@ -19,10 +19,7 @@ public class DropItemAction extends EntityAction {
 			InventoryHolder holder = (InventoryHolder) entity;
 			Inventory inventory = holder.getInventory();
 			Item item = inventory.findItem(uuid);
-			if (item != null && manager.dropItem(entity, item)) {
-				inventory.removeItem(item);
-				return true;
-			}			
+			return manager.dropItem(entity, item);
 		}
 		
 		return false;
