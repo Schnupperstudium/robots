@@ -20,6 +20,7 @@ import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.entity.item.Star;
 import com.github.schnupperstudium.robots.network.ai.action.DropItemActionSerializer;
 import com.github.schnupperstudium.robots.network.entity.EntitySerializer;
 import com.github.schnupperstudium.robots.network.entity.LivingEntitySerializer;
@@ -85,6 +86,7 @@ public class KryoRegistry {
 		// Items & Inventory
 		kryo.register(Inventory.class, new InventorySerializer<>());
 		kryo.register(Item.class, new ItemSerializer<>());
+		kryo.register(Star.class);
 		
 		// ******************
 		// *** SERIALIZER ***

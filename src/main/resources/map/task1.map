@@ -24,15 +24,15 @@ g g g g g g r g g g g g g r g g g g g g r g g g g g g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
 
-com.github.TheDwoon.robots.game.items.Star 4 3
-com.github.TheDwoon.robots.game.items.Star 11 3
-com.github.TheDwoon.robots.game.items.Star 18 3
-com.github.TheDwoon.robots.game.items.Star 25 3
-com.github.TheDwoon.robots.game.items.Star 4 9
-com.github.TheDwoon.robots.game.items.Star 11 9
-com.github.TheDwoon.robots.game.items.Star 18 9
-com.github.TheDwoon.robots.game.items.Star 25 9
-com.github.TheDwoon.robots.game.items.Star 4 15
-com.github.TheDwoon.robots.game.items.Star 11 15
-com.github.TheDwoon.robots.game.items.Star 18 15
-com.github.TheDwoon.robots.game.items.Star 25 15
+com.github.schnupperstudium.robots.entity.item.Star 4 3
+com.github.schnupperstudium.robots.entity.item.Star 11 3
+com.github.schnupperstudium.robots.entity.item.Star 18 3
+com.github.schnupperstudium.robots.entity.item.Star 25 3
+com.github.schnupperstudium.robots.entity.item.Star 4 9
+com.github.schnupperstudium.robots.entity.item.Star 11 9
+com.github.schnupperstudium.robots.entity.item.Star 18 9
+com.github.schnupperstudium.robots.entity.item.Star 25 9
+com.github.schnupperstudium.robots.entity.item.Star 4 15
+com.github.schnupperstudium.robots.entity.item.Star 11 15
+com.github.schnupperstudium.robots.entity.item.Star 18 15
+com.github.schnupperstudium.robots.entity.item.Star 25 15

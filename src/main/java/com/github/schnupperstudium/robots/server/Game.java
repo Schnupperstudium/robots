@@ -216,7 +216,7 @@ public class Game implements Runnable, EventListener {
 	}
 	
 	public boolean hasPassword() {
-		return password != null;
+		return password != null && !password.isEmpty();
 	}
 	
 	public Level getLevel() {

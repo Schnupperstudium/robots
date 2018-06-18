@@ -91,9 +91,9 @@ public final class LevelParser {
 			JsonObject obj = json.getAsJsonObject();
 			
 			final String name = getStringOrNull(obj, NAME);
-			final String mapLoader = getStringOrNull(obj, MAP_LOADER);
+			final String mapLoader = getStringOrNull(obj, MAP_LOADER, false);
 			final String mapLocation = getStringOrNull(obj, MAP_LOCATION);
-			final String gameLoader = getStringOrNull(obj, GAME_LOADER);
+			final String gameLoader = getStringOrNull(obj, GAME_LOADER, false);
 			final String desc = getStringOrNull(obj, DESC);
 			final Map<String, Integer> map = parseMap(obj, ALLOWED_ENTITIES);
 			
@@ -101,11 +101,15 @@ public final class LevelParser {
 		}
 		
 		private String getStringOrNull(JsonObject obj, String name) {
+			return getStringOrNull(obj, name, true);
+		}
+		
+		private String getStringOrNull(JsonObject obj, String name, boolean required) {
 			JsonElement element = obj.get(name);
-			if (element == null)
+			if (element == null && required)
 				throw new JsonParseException("expected an element with name: " + name);
 			
-			if (element.isJsonNull())
+			if (element == null || element.isJsonNull())
 				return null;
 			else
 				return element.getAsString();

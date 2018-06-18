@@ -38,8 +38,8 @@ b g t t g t t g t t g g g g g g g t t t t t t t g t t t t t t g t t g t t g g g 
 b g t t g g g g t t t t t t t t g g g g g g g g g t g g g g g g g g g t t g t t t t t g b
 b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b b
 
-com.github.TheDwoon.robots.game.items.Star 22 15
-com.github.TheDwoon.robots.game.items.Star 4 4
-com.github.TheDwoon.robots.game.items.Star 41 25
-com.github.TheDwoon.robots.game.items.Star 5 24
-com.github.TheDwoon.robots.game.items.Star 40 5
+com.github.schnupperstudium.robots.entity.item.Star 22 15
+com.github.schnupperstudium.robots.entity.item.Star 4 4
+com.github.schnupperstudium.robots.entity.item.Star 41 25
+com.github.schnupperstudium.robots.entity.item.Star 5 24
+com.github.schnupperstudium.robots.entity.item.Star 40 5
