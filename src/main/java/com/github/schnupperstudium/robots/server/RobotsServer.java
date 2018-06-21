@@ -17,17 +17,8 @@ import org.apache.logging.log4j.Logger;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.entity.Robot;
-import com.github.schnupperstudium.robots.events.AbstractServerEvent;
-import com.github.schnupperstudium.robots.events.entity.AIDespawnEvent;
-import com.github.schnupperstudium.robots.events.entity.AISpawnEvent;
-import com.github.schnupperstudium.robots.events.game.ObserverJoinEvent;
-import com.github.schnupperstudium.robots.events.game.ObserverLeftEvent;
-import com.github.schnupperstudium.robots.events.server.GameStartEvent;
 import com.github.schnupperstudium.robots.io.LevelParser;
 import com.github.schnupperstudium.robots.world.Tile;
-import com.github.thedwoon.event.EventDispatcher;
-import com.github.thedwoon.event.EventPriority;
-import com.github.thedwoon.event.SynchronizedEventDispatcher;
 
 public abstract class RobotsServer implements Runnable {
 	public static final long ERR_INVALID_ENTITY_NAME = -1;
@@ -41,28 +32,23 @@ public abstract class RobotsServer implements Runnable {
 	public static final long ERR_FAILED_GAME_START = -9;
 	public static final long ERR_GAME_START_DENIED = -10;
 	public static final long ERR_ENTITY_LIMIT_EXCEEDED = -11;
+	public static final long ERR_SPAWN_OCCUPIED = -12;
 	
 	private static final Logger LOG = LogManager.getLogger();
 	
 	protected final Map<Long, ClientTracker> clientTrackers = new HashMap<>();
 	protected final Map<String, LivingEntityFactory> entityFactories = new HashMap<>();
-	protected final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
+	protected final MasterServerListener masterServerListener = new MasterServerListener();
 	protected final List<Game> games = new ArrayList<>();
 	protected final List<Level> availableLevels = new ArrayList<>();
 
 	private boolean run = true;
 	
 	public RobotsServer() throws IOException {
-		eventDispatcher.registerListener(AbstractServerEvent.class, this::executeEvent, EventPriority.MONITOR, true);
-		
 		loadLevels();
 		loadEntityFactories();
 	}
 		
-	private void executeEvent(AbstractServerEvent event) {
-		event.executeEvent(this);
-	}
-
 	private void loadEntityFactories() {
 		// factory for every playable class
 		entityFactories.put(Robot.class.getName(), (game, x, y, name) -> { Robot robot = new Robot(name); robot.setPosition(x, y); return robot; });
@@ -142,11 +128,12 @@ public abstract class RobotsServer implements Runnable {
 			return ERR_FAILED_GAME_START;
 		}
 		
-		GameStartEvent event = new GameStartEvent(game);
-		eventDispatcher.dispatchEvent(event);
-		if (!event.isSuccessful()) {
+		boolean canStart = getMasterServerListener().canGameStart(this, game);		
+		if (!canStart) {
 			return ERR_GAME_START_DENIED;
 		}
+		
+		addGame(game);
 		
 		LOG.info("started game [id: {}, name: {}, level: {}, map: {}]", 
 				game.getUUID(), name, levelName, game.getLevel().getMapLocation());
@@ -190,11 +177,28 @@ public abstract class RobotsServer implements Runnable {
 		LivingEntityFactory factory = entityFactories.get(entityClass);
 		if (factory == null)
 			return ERR_INVALID_ENTITY_TYPE;
+		
 		LivingEntity entity = factory.create(game, spawnTile.getX(), spawnTile.getY(), name);
-		AISpawnEvent event = new AISpawnEvent(game, game.getWorld(), entity, clientInterface);
-		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful()) {
+		AI ai = new AI(game, clientInterface, entity);
+		
+		// check listeners
+		boolean canEntitySpawn = game.getMasterGameListener().canEntitySpawn(game, entity);
+		boolean canAISpawn = game.getMasterGameListener().canAISpawn(game, ai);
+		
+		if (canEntitySpawn && canAISpawn) {
+			// attempt to spawn entity and ai
+			Tile tile = entity.getTile(game.getWorld());
+			if (!tile.canVisit())
+				return ERR_SPAWN_OCCUPIED;
+			
+			tile.setVisitor(entity);
+			game.addTickable(ai);
 			tracker.addAI(gameId, entity.getUUID(), entityClass);
+			
+			// notify listeners
+			game.getMasterGameListener().onEntitySpawn(game, entity);
+			game.getMasterGameListener().onAISpawn(game, ai);
+			
 			LOG.info("spawned AI '{}':{} in game '{}':{}", name, entity.getUUID(), game.getName(), gameId);
 			return entity.getUUID();
 		} else {
@@ -215,16 +219,22 @@ public abstract class RobotsServer implements Runnable {
 		ClientTracker tracker = getTracker(connectionId, clientInterface);
 		
 		AI ai = (AI) possibleAIs.get(0);
-		AIDespawnEvent event = new AIDespawnEvent(game.getWorld(), ai.getEntity(), ai);
-		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful()) {
-			tracker.removeAI(gameId, entityUUID);
-			LOG.info("{}:{} was removed from game '{}':{}", ai.getEntity().getName(), ai.getEntity().getUUID(), game.getName(), game.getUUID());
-		} else {
-			LOG.warn("{} could not be removed from game '{}':{}", entityUUID, game.getName(), game.getUUID());
-		}
+		LivingEntity entity = ai.getEntity();
+
+		Tile tile = entity.getTile(game.getWorld());
+		if (tile.getVisitor() != entity)
+			return false;
 		
-		return event.isSuccessful();
+		tile.setVisitor(null);
+		game.removeTickable(ai);
+
+		tracker.removeAI(gameId, entityUUID);
+		
+		game.getMasterGameListener().onEntityDespawn(game, entity);
+		game.getMasterGameListener().onAIDespawn(game, ai);
+		LOG.info("{}:{} was removed from game '{}':{}", ai.getEntity().getName(), ai.getEntity().getUUID(), game.getName(), game.getUUID());
+		
+		return true;
 	}
 	
 	public boolean observeWorld(long connectionId, long gameId, String auth, RobotsClientInterface clientInterface) {
@@ -236,17 +246,19 @@ public abstract class RobotsServer implements Runnable {
 			return false;
 		
 		ClientTracker tracker = getTracker(connectionId, clientInterface);
+		WorldObserver observer = new WorldObserver(clientInterface);
+		boolean canObserverJoin = game.getMasterGameListener().canObserverJoin(game, observer);
 		
-		ObserverJoinEvent event = new ObserverJoinEvent(clientInterface);
-		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful()) {
+		if (canObserverJoin) {
+			game.addTickable(observer);
 			tracker.addObserver(gameId);
+			game.getMasterGameListener().onObserverJoin(game, observer);
 			LOG.info("added observer for game '{}':{}", game.getName(), gameId);
 		} else {
 			LOG.warn("failed to add observer for game '{}':{} with auth '{}'", game.getName(), gameId, auth);
 		}
 		
-		return event.isSuccessful();
+		return canObserverJoin;
 	}
 	
 	public boolean unobserveWorld(long connectionId, long gameId, RobotsClientInterface clientInterface) {
@@ -261,16 +273,13 @@ public abstract class RobotsServer implements Runnable {
 		ClientTracker tracker = getTracker(connectionId, clientInterface);
 		
 		WorldObserver observer = (WorldObserver) possibleObservers.get(0);
-		ObserverLeftEvent event = new ObserverLeftEvent(observer);
-		game.getEventDispatcher().dispatchEvent(event);
-		if (event.isSuccessful()) {
-			tracker.removeObserver(gameId);
-			LOG.info("removed observer from game '{}':{}", game.getName(), gameId);
-		} else {
-			LOG.warn("failed to locate observer in game '{}':{}", game.getName(), gameId);
-		}
-		
-		return event.isSuccessful();
+		game.removeTickable(observer);
+		tracker.removeObserver(gameId);
+
+		game.getMasterGameListener().onObserverQuit(game, observer);		
+		LOG.info("removed observer from game '{}':{}", game.getName(), gameId);
+
+		return true;
 	}
 	
 	public void addGame(Game game) {
@@ -344,8 +353,8 @@ public abstract class RobotsServer implements Runnable {
 			tracker.onDisconnect();
 	}
 	
-	public EventDispatcher getEventDispatcher() {
-		return eventDispatcher;
+	public MasterServerListener getMasterServerListener() {
+		return masterServerListener;
 	}
 
 	private final class ClientTracker {

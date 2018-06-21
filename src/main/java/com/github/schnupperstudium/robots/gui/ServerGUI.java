@@ -6,11 +6,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.schnupperstudium.robots.events.server.GameStartEvent;
-import com.github.schnupperstudium.robots.events.server.GameStopEvent;
 import com.github.schnupperstudium.robots.gui.server.ServerWorldObserverController;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.NetworkRobotsServer;
 import com.github.schnupperstudium.robots.server.RobotsServer;
+import com.github.schnupperstudium.robots.server.ServerListener;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -21,7 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public final class ServerGUI extends Application {
+public final class ServerGUI extends Application implements ServerListener {
 	private static final Logger LOG = LogManager.getLogger();
 	
 	private RobotsServer server;
@@ -51,8 +51,7 @@ public final class ServerGUI extends Application {
 			server = new NetworkRobotsServer(port);
 		}
 		
-		server.getEventDispatcher().registerListener(GameStartEvent.class, this::onGameStartEvent);
-		server.getEventDispatcher().registerListener(GameStopEvent.class, this::onGameStopEvent);
+		server.getMasterServerListener().registerListener(this);
 	}
 	
 	@Override
@@ -73,11 +72,19 @@ public final class ServerGUI extends Application {
 		primaryStage.show();
 	}
 	
-	private void onGameStartEvent(GameStartEvent event) {
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		
+		server.close();
+	}
+
+	@Override
+	public void onGameStart(RobotsServer server, Game game) { 
 		Platform.runLater(() -> {
 			try {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
-				ObserverViewController controller = new ServerWorldObserverController(event.getGame());
+				ObserverViewController controller = new ServerWorldObserverController(game);
 				loader.setController(controller);
 				Parent root = loader.load();
 				
@@ -92,15 +99,13 @@ public final class ServerGUI extends Application {
 			}
 		});
 	}
-	
-	private void onGameStopEvent(GameStopEvent event) {
-		
-	}
-	
+
 	@Override
-	public void stop() throws Exception {
-		super.stop();
+	public boolean canGameStart(RobotsServer server, Game game) { return true; }
+
+	@Override
+	public void onGameEnd(RobotsServer server, Game game) {
+		// TODO Auto-generated method stub
 		
-		server.close();
 	}
 }

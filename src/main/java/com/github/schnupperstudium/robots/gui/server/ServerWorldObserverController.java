@@ -1,8 +1,8 @@
 package com.github.schnupperstudium.robots.gui.server;
 
-import com.github.schnupperstudium.robots.events.server.RoundCompleteEvent;
 import com.github.schnupperstudium.robots.gui.ObserverViewController;
 import com.github.schnupperstudium.robots.gui.SimpleRenderer;
+import com.github.schnupperstudium.robots.server.AbstractGameListener;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -12,9 +12,16 @@ public class ServerWorldObserverController extends ObserverViewController {
 	private final long gameId;
 	
 	public ServerWorldObserverController(Game game) {
-		this.gameId = game.getUUID();		
+		this.gameId = game.getUUID();
 		
-		game.getEventDispatcher().registerListener(RoundCompleteEvent.class, this::roundCompleteEvent);
+		game.getMasterGameListener().registerListener(new AbstractGameListener() {
+			@Override
+			public void onRoundComplete(Game game) {
+				if (game.getUUID() == gameId) {
+					updateWorld(game.getWorld());
+				}
+			}
+		});
 	}
 
 	private void updateWorld(World world) {
@@ -26,11 +33,5 @@ public class ServerWorldObserverController extends ObserverViewController {
 		
 		int tileSize = (int) Math.floor(Math.min(worldCanvas.getWidth(), worldCanvas.getHeight()) / Math.max(world.getWidth(), world.getHeight()));
 		SimpleRenderer.renderWorld(gc, world, tileSize);
-	}
-	
-	private void roundCompleteEvent(RoundCompleteEvent event) {
-		if (event.getGame().getUUID() == gameId) {
-			updateWorld(event.getGame().getWorld());
-		}
 	}
 }

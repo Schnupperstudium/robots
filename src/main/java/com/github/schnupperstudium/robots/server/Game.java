@@ -13,29 +13,19 @@ import org.apache.logging.log4j.Logger;
 import com.github.schnupperstudium.robots.UUIDGenerator;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
+import com.github.schnupperstudium.robots.entity.Inventory;
+import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.events.AbstractGameEvent;
-import com.github.schnupperstudium.robots.events.entity.EntityDespawnEvent;
-import com.github.schnupperstudium.robots.events.entity.EntityMoveEvent;
-import com.github.schnupperstudium.robots.events.entity.EntitySpawnEvent;
-import com.github.schnupperstudium.robots.events.item.ItemDropEvent;
-import com.github.schnupperstudium.robots.events.item.ItemPickUpEvent;
-import com.github.schnupperstudium.robots.events.item.UseItemEvent;
-import com.github.schnupperstudium.robots.events.server.GameStopEvent;
-import com.github.schnupperstudium.robots.events.server.RoundCompleteEvent;
+import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
-import com.github.thedwoon.event.EventDispatcher;
-import com.github.thedwoon.event.EventListener;
-import com.github.thedwoon.event.EventPriority;
-import com.github.thedwoon.event.SynchronizedEventDispatcher;
 
-public class Game implements Runnable, EventListener {
+public class Game implements Runnable {
 	private static final Logger LOG = LogManager.getLogger();
 	private static final long TURN_DURATION = 250;
 	private static final int MAX_IDLE_TIME = 120000;
 	
 	private final long uuid = UUIDGenerator.obtain();
-	private final EventDispatcher eventDispatcher = new SynchronizedEventDispatcher();
+	private final MasterGameListener masterGameListener = new MasterGameListener();
 	private final List<Tickable> tickables = new ArrayList<>();
 	private final RobotsServer server;
 	private final Thread thread;
@@ -67,12 +57,14 @@ public class Game implements Runnable, EventListener {
 		this.password = password;
 		this.thread = new Thread(this::run, "GameThread: (" + name + ":" + uuid + ")");
 		this.thread.start();
-		
-		eventDispatcher.registerListener(AbstractGameEvent.class, this::executeEvent, EventPriority.MONITOR, true);
 	}
 
 	@Override
 	public void run() {
+		// TODO: load modules
+		
+		masterGameListener.onGameStart(this);
+		
 		while (running) {
 			try {
 				final long start = System.currentTimeMillis();
@@ -89,9 +81,7 @@ public class Game implements Runnable, EventListener {
 			}
 		}
 		
-		GameStopEvent event = new GameStopEvent(this);
-		eventDispatcher.dispatchEvent(event);
-		server.eventDispatcher.dispatchEvent(event);
+		masterGameListener.onGameEnd(this);
 		
 		LOG.info("{}:{} has stopped (Reason: {})", getName(), getUUID(), (idleTime >= MAX_IDLE_TIME ? "IDLE" : "FINISHED"));
 	}
@@ -107,32 +97,45 @@ public class Game implements Runnable, EventListener {
 			tickable.update(this);
 		}
 		
-		eventDispatcher.dispatchEvent(new RoundCompleteEvent(this));
+		masterGameListener.onRoundComplete(this);
 		
 		if (idleTime >= MAX_IDLE_TIME) {			
 			endGame();
 		}
 	}
 	
-	private void executeEvent(AbstractGameEvent event) {
-		event.executeEvent(this);
-	}
-	
 	public synchronized boolean spawnEntity(Entity entity, int x, int y) {
+		if (entity == null)
+			return false;
+		
 		entity.setPosition(x, y);
 		return spawnEntity(entity);
 	}
 	
 	public synchronized boolean spawnEntity(Entity entity) {
-		EntitySpawnEvent event = new EntitySpawnEvent(world, entity);
-		eventDispatcher.dispatchEvent(event);
-		return event.isSuccessful();
+		if (entity == null || !masterGameListener.canEntitySpawn(this, entity))
+			return false;
+		
+		Tile tile = entity.getTile(world);
+		if (!tile.canVisit())
+			return false;
+		
+		tile.setVisitor(entity);
+		masterGameListener.onEntitySpawn(this, entity);
+		return true;
 	}
 	
-	public synchronized boolean despawnEntity(Entity entity) {		
-		EntityDespawnEvent event = new EntityDespawnEvent(world, entity);
-		eventDispatcher.dispatchEvent(event);		
-		return event.isSuccessful();
+	public synchronized boolean despawnEntity(Entity entity) {
+		if (entity == null)
+			return false;
+		
+		Tile tile = entity.getTile(world);
+		if (tile.getVisitor() != entity)
+			return false;
+		
+		tile.setVisitor(null);
+		masterGameListener.onEntityDespawn(this, entity);
+		return true;
 	}
 	
 	public synchronized boolean moveEntity(Entity entity, Facing facing) {
@@ -140,29 +143,70 @@ public class Game implements Runnable, EventListener {
 	}
 	
 	public synchronized boolean moveEntity(Entity entity, Facing facing, int steps) {
-		EntityMoveEvent event = new EntityMoveEvent(world, entity, facing, steps);
-		eventDispatcher.dispatchEvent(event);
-		return event.isSuccessful();
+		final int tX = entity.getX() + facing.dx * steps;
+		final int tY = entity.getY() + facing.dy * steps;
+		
+		if (!masterGameListener.canEntityMove(this, entity, tX, tY))
+			return false;
+		
+		Tile currentTile = entity.getTile(world);
+		Tile nextTile = world.getTile(tX, tY);
+		if (!nextTile.canVisit())
+			return false;
+		
+		currentTile.setVisitor(null);
+		nextTile.setVisitor(entity);
+		masterGameListener.onEntityMove(this, entity);
+		return true;
 	}
 	
-	public synchronized boolean dropItem(Entity entity, Item item) {		
-		ItemDropEvent event = new ItemDropEvent(world, entity, item);
-		eventDispatcher.dispatchEvent(event);
-		return event.isSuccessful();
+	public synchronized boolean dropItem(Entity entity, Item item) {
+		InventoryHolder holder = entity instanceof InventoryHolder ? (InventoryHolder) entity : null;
+		
+		if (!masterGameListener.canDropItem(this, item, holder))
+			return false;
+		
+		Tile tile = entity.getTile(world);
+		if (tile.getItem() != null || item == null)
+			return false;
+		
+		// if the entity holds a inventory try to remove the item.
+		// but don't deny it for a non inventory holder to drop items.
+		if (holder != null) {
+			Inventory inventory = holder.getInventory();
+			if (!inventory.removeItem(item))
+				return false;
+		}
+		
+		tile.setItem(item);
+		masterGameListener.onDropItem(this, item, holder);
+		return true;
 	}
 	
 	public synchronized Item pickUpItem(Entity entity) {
-		ItemPickUpEvent event = new ItemPickUpEvent(world, entity);
-		eventDispatcher.dispatchEvent(event);
-		if (event.isSuccessful())
-			return event.getItem();
-		else
+		Tile tile = entity.getTile(world);
+		Item item = tile.getItem();
+		if (item == null)
 			return null;
+		
+		if (entity instanceof InventoryHolder) {
+			Inventory inventory = ((InventoryHolder) entity).getInventory();
+			if (!inventory.addItem(item)) 
+				return null;
+		}
+		
+		tile.setItem(null);
+		masterGameListener.onPickUpItem(this, item, (InventoryHolder) entity);
+		return item;
 	}
 	
-	public synchronized void useItem(Entity user, Item item) {
-		UseItemEvent event = new UseItemEvent(world, user, item);
-		eventDispatcher.dispatchEvent(event);	
+	public synchronized void useItem(InventoryHolder user, Item item) {
+		if (!masterGameListener.canUseItem(this, item, user))
+			return;
+		
+		// FIXME: maybe assign every entity an inventory but don't set it for entities not using it.
+		masterGameListener.onItemUse(this, item, user);
+		item.use(this, (Entity) user); 
 	}
 	
 	public List<Tickable> getTickales(Predicate<Tickable> filter) {
@@ -194,11 +238,7 @@ public class Game implements Runnable, EventListener {
 	public synchronized void endGame() {
 		running = false;
 	}
-	
-	public EventDispatcher getEventDispatcher() {
-		return eventDispatcher;
-	}
-	
+		
 	public RobotsServer getServer() {
 		return server;
 	}
@@ -229,5 +269,9 @@ public class Game implements Runnable, EventListener {
 	
 	public GameInfo getGameInfo() {
 		return new GameInfo(uuid, name, level, hasPassword());
+	}
+	
+	public MasterGameListener getMasterGameListener() {
+		return masterGameListener;
 	}
 }
