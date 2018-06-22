@@ -1,4 +1,4 @@
-package com.github.schnupperstudium.robots.server;
+package com.github.schnupperstudium.robots.server.tickable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
+import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 

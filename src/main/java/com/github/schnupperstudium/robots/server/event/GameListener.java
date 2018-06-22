@@ -1,8 +1,12 @@
-package com.github.schnupperstudium.robots.server;
+package com.github.schnupperstudium.robots.server.event;
 
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
+import com.github.schnupperstudium.robots.server.Game;
+import com.github.schnupperstudium.robots.server.tickable.AI;
+import com.github.schnupperstudium.robots.server.tickable.Tickable;
+import com.github.schnupperstudium.robots.server.tickable.WorldObserver;
 
 /**
  * Provides an interfaces to react on things happening in the game and also influence the things happening.

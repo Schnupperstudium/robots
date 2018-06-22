@@ -1,4 +1,4 @@
-package com.github.schnupperstudium.robots.server;
+package com.github.schnupperstudium.robots.server.event;
 
 import java.util.ArrayList;
 import java.util.List;

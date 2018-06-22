@@ -2,8 +2,8 @@ package com.github.schnupperstudium.robots.gui.server;
 
 import com.github.schnupperstudium.robots.gui.ObserverViewController;
 import com.github.schnupperstudium.robots.gui.SimpleRenderer;
-import com.github.schnupperstudium.robots.server.AbstractGameListener;
 import com.github.schnupperstudium.robots.server.Game;
+import com.github.schnupperstudium.robots.server.event.AbstractGameListener;
 import com.github.schnupperstudium.robots.world.World;
 
 import javafx.scene.canvas.GraphicsContext;

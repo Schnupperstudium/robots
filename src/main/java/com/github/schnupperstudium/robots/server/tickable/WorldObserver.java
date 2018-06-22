@@ -1,9 +1,10 @@
-package com.github.schnupperstudium.robots.server;
+package com.github.schnupperstudium.robots.server.tickable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
+import com.github.schnupperstudium.robots.server.Game;
 
 public class WorldObserver implements Tickable {
 	private static Logger LOG = LogManager.getLogger();

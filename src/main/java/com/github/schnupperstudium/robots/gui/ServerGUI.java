@@ -10,7 +10,7 @@ import com.github.schnupperstudium.robots.gui.server.ServerWorldObserverControll
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.NetworkRobotsServer;
 import com.github.schnupperstudium.robots.server.RobotsServer;
-import com.github.schnupperstudium.robots.server.ServerListener;
+import com.github.schnupperstudium.robots.server.event.ServerListener;
 
 import javafx.application.Application;
 import javafx.application.Platform;
