@@ -14,6 +14,7 @@ public abstract class Entity {
 	private final List<Effect> effects = new ArrayList<>();
 	
 	private String name;	
+	private Inventory inventory;
 	private Facing facing;	
 	private int x;
 	private int y;
@@ -27,8 +28,13 @@ public abstract class Entity {
 	}
 	
 	public Entity(long uuid, String name, Facing facing, int x, int y) {
+		this(uuid, name, null, facing, x, y);
+	}
+	
+	public Entity(long uuid, String name, Inventory inventory, Facing facing, int x, int y) {
 		this.uuid = uuid;
 		this.name = name;
+		this.inventory = inventory;
 		this.facing = facing;
 		this.x = x;
 		this.y = y;
@@ -72,6 +78,18 @@ public abstract class Entity {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Inventory getInventory() {
+		return inventory;
+	}
+	
+	public boolean hasInventory() {
+		return inventory != null;
+	}
+	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 	
 	public Facing getFacing() {

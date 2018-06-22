@@ -1,7 +1,6 @@
 package com.github.schnupperstudium.robots.server.event;
 
 import com.github.schnupperstudium.robots.entity.Entity;
-import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.tickable.AI;
@@ -64,33 +63,33 @@ public class MasterGameListener extends MasterListener<GameListener> implements 
 	}
 
 	@Override
-	public boolean canPickUpItem(Game game, Item item, InventoryHolder holder) {
-		return consultListeners(l -> l.canPickUpItem(game, item, holder));
+	public boolean canPickUpItem(Game game, Entity entity, Item item) {
+		return consultListeners(l -> l.canPickUpItem(game, entity, item));
 	}
 
 	@Override
-	public void onPickUpItem(Game game, Item item, InventoryHolder holder) {
-		notifyListeners(l -> l.onPickUpItem(game, item, holder));
+	public void onPickUpItem(Game game, Entity entity, Item item) {
+		notifyListeners(l -> l.onPickUpItem(game, entity, item));
 	}
 
 	@Override
-	public boolean canDropItem(Game game, Item item, InventoryHolder holder) {
-		return consultListeners(l -> l.canDropItem(game, item, holder));
+	public boolean canDropItem(Game game, Entity entity, Item item) {
+		return consultListeners(l -> l.canDropItem(game, entity, item));
 	}
 
 	@Override
-	public void onDropItem(Game game, Item item, InventoryHolder holder) {
-		notifyListeners(l -> l.onDropItem(game, item, holder));
+	public void onDropItem(Game game, Entity entity, Item item) {
+		notifyListeners(l -> l.onDropItem(game, entity, item));
 	}
 
 	@Override
-	public boolean canUseItem(Game game, Item item, InventoryHolder holder) {
-		return consultListeners(l -> l.canUseItem(game, item, holder));
+	public boolean canUseItem(Game game, Entity entity, Item item) {
+		return consultListeners(l -> l.canUseItem(game, entity, item));
 	}
 	
 	@Override
-	public void onItemUse(Game game, Item item, InventoryHolder holder) {
-		notifyListeners(l -> l.onItemUse(game, item, holder));
+	public void onItemUse(Game game, Entity entity, Item item) {
+		notifyListeners(l -> l.onItemUse(game, entity, item));
 	}
 	
 	@Override

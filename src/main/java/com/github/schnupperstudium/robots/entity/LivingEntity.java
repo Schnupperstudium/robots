@@ -18,8 +18,8 @@ public abstract class LivingEntity extends Entity {
 		this.currentHealth = health;
 	}
 	
-	public LivingEntity(long uuid, String name, Facing facing, int x, int y, int currentHealth, int maxHealth) {
-		super(uuid, name, facing, x, y);
+	public LivingEntity(long uuid, String name, Inventory inventory, Facing facing, int x, int y, int currentHealth, int maxHealth) {
+		super(uuid, name, inventory, facing, x, y);
 		
 		this.currentHealth = currentHealth;
 		this.maxHealth = maxHealth;

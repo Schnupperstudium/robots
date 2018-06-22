@@ -9,10 +9,14 @@ public abstract class Item extends Entity {
 	}
 
 	public Item(long uuid, String name) {
-		super(name);		
+		super(uuid, name);		
 	}
 	
-	public abstract void use(Game manager, Entity user);
+	public Item(long uuid, String name, Facing facing, int x, int y) {
+		super(uuid, name, facing, x, y);
+	}
+	
+	public abstract void use(Game manager, Entity entity);
 	
 	@Override
 	public abstract Item clone() throws CloneNotSupportedException;

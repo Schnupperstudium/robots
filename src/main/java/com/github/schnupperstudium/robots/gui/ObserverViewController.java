@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Inventory;
-import com.github.schnupperstudium.robots.entity.InventoryHolder;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -45,13 +45,13 @@ public class ObserverViewController {
 		gc.clearRect(0, 0, width, height);
 	}
 	
-	public void updateInventories(List<InventoryHolder> inventoryHolders) {		
+	public void updateInventories(List<Entity> inventoryHolders) {		
 		// check for inventories to remove		
 		Iterator<Entry<Long, InventoryCanvas>> it = inventoryMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Long, InventoryCanvas> entry = it.next();			
 			boolean contained = false;
-			for (InventoryHolder holder : inventoryHolders) {
+			for (Entity holder : inventoryHolders) {
 				if (holder.getUUID() == entry.getValue().eId) {
 					contained = true;
 					break;
@@ -65,7 +65,7 @@ public class ObserverViewController {
 		}
 		
 		// update or create inventories
-		for (InventoryHolder holder : inventoryHolders) {
+		for (Entity holder : inventoryHolders) {
 			updateInventory(holder.getUUID(), holder.getName(), holder.getInventory());
 		}
 	}

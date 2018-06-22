@@ -14,7 +14,6 @@ import com.github.schnupperstudium.robots.UUIDGenerator;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Inventory;
-import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.server.event.MasterGameListener;
 import com.github.schnupperstudium.robots.server.tickable.Tickable;
@@ -163,9 +162,7 @@ public class Game implements Runnable {
 	}
 	
 	public synchronized boolean dropItem(Entity entity, Item item) {
-		InventoryHolder holder = entity instanceof InventoryHolder ? (InventoryHolder) entity : null;
-		
-		if (!masterGameListener.canDropItem(this, item, holder))
+		if (!masterGameListener.canDropItem(this, entity, item))
 			return false;
 		
 		Tile tile = entity.getTile(world);
@@ -174,41 +171,38 @@ public class Game implements Runnable {
 		
 		// if the entity holds a inventory try to remove the item.
 		// but don't deny it for a non inventory holder to drop items.
-		if (holder != null) {
-			Inventory inventory = holder.getInventory();
+		if (entity != null) {
+			Inventory inventory = entity.getInventory();
 			if (!inventory.removeItem(item))
 				return false;
 		}
 		
 		tile.setItem(item);
-		masterGameListener.onDropItem(this, item, holder);
+		masterGameListener.onDropItem(this, entity, item);
 		return true;
 	}
 	
 	public synchronized Item pickUpItem(Entity entity) {
 		Tile tile = entity.getTile(world);
 		Item item = tile.getItem();
-		if (item == null)
+		if (item == null || !masterGameListener.canPickUpItem(this, entity, item))
 			return null;
 		
-		if (entity instanceof InventoryHolder) {
-			Inventory inventory = ((InventoryHolder) entity).getInventory();
-			if (!inventory.addItem(item)) 
-				return null;
-		}
+		Inventory inventory = entity.getInventory();
+		if (!inventory.addItem(item)) 
+			return null;
 		
 		tile.setItem(null);
-		masterGameListener.onPickUpItem(this, item, (InventoryHolder) entity);
+		masterGameListener.onPickUpItem(this, entity, item);
 		return item;
 	}
 	
-	public synchronized void useItem(InventoryHolder user, Item item) {
-		if (!masterGameListener.canUseItem(this, item, user))
+	public synchronized void useItem(Entity entity, Item item) {
+		if (entity == null || item == null || !masterGameListener.canUseItem(this, entity, item))
 			return;
 		
-		// FIXME: maybe assign every entity an inventory but don't set it for entities not using it.
-		masterGameListener.onItemUse(this, item, user);
-		item.use(this, (Entity) user); 
+		masterGameListener.onItemUse(this, entity, item);
+		item.use(this, entity); 
 	}
 	
 	public List<Tickable> getTickales(Predicate<Tickable> filter) {

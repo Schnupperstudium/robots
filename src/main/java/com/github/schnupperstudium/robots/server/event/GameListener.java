@@ -1,7 +1,6 @@
 package com.github.schnupperstudium.robots.server.event;
 
 import com.github.schnupperstudium.robots.entity.Entity;
-import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.tickable.AI;
@@ -33,12 +32,12 @@ public interface GameListener {
 	// Item Events
 	boolean canItemSpawn(Game game, Item item);
 	void onItemSpawn(Game game, Item item);
-	boolean canPickUpItem(Game game, Item item, InventoryHolder holder);
-	void onPickUpItem(Game game, Item item, InventoryHolder holder);
-	boolean canDropItem(Game game, Item item, InventoryHolder holder);
-	void onDropItem(Game game, Item item, InventoryHolder holder);
-	boolean canUseItem(Game game, Item item, InventoryHolder holder);
-	void onItemUse(Game game, Item item, InventoryHolder holder);
+	boolean canPickUpItem(Game game, Entity entity, Item item);
+	void onPickUpItem(Game game, Entity entity, Item item);
+	boolean canDropItem(Game game, Entity entity, Item item);
+	void onDropItem(Game game, Entity entity, Item item);
+	boolean canUseItem(Game game, Entity entity, Item item);
+	void onItemUse(Game game, Entity entity, Item item);
 	
 	// Tickables
 	void onTickableSpawn(Game game, Tickable tickable);

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.github.schnupperstudium.robots.client.IWorldObserver;
 import com.github.schnupperstudium.robots.client.RobotsClient;
-import com.github.schnupperstudium.robots.entity.InventoryHolder;
+import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.gui.ObserverViewController;
 import com.github.schnupperstudium.robots.gui.SimpleRenderer;
 import com.github.schnupperstudium.robots.world.Tile;
@@ -38,12 +38,12 @@ public class ClientWorldObserverController extends ObserverViewController implem
 	public void updateWorld(long gameId, World world) {
 		Platform.runLater(() -> updateWorld(world));
 		
-		List<InventoryHolder> inventoryHolders = new ArrayList<>();
+		List<Entity> inventoryHolders = new ArrayList<>();
 		for (int x = 0; x < world.getWidth(); x++) {
 			for (int y = 0; y < world.getHeight(); y++) {
 				Tile tile = world.getTile(x, y);
-				if (tile.hasVisitor() && tile.getVisitor() instanceof InventoryHolder) {
-					inventoryHolders.add((InventoryHolder) tile.getVisitor());
+				if (tile.hasVisitor() && tile.getVisitor().hasInventory()) {
+					inventoryHolders.add(tile.getVisitor());
 				}
 			}
 		}

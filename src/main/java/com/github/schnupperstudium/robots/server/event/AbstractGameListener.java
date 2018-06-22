@@ -1,7 +1,6 @@
 package com.github.schnupperstudium.robots.server.event;
 
 import com.github.schnupperstudium.robots.entity.Entity;
-import com.github.schnupperstudium.robots.entity.InventoryHolder;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.tickable.AI;
@@ -69,28 +68,28 @@ public abstract class AbstractGameListener implements GameListener {
 	public void onItemSpawn(Game game, Item item) { }
 
 	@Override
-	public boolean canPickUpItem(Game game, Item item, InventoryHolder holder) {
+	public boolean canPickUpItem(Game game, Entity entity, Item item) {
 		return true;
 	}
 
 	@Override
-	public void onPickUpItem(Game game, Item item, InventoryHolder holder) { }
+	public void onPickUpItem(Game game, Entity entity, Item item) { }
 
 	@Override
-	public boolean canDropItem(Game game, Item item, InventoryHolder holder) {
+	public boolean canDropItem(Game game, Entity entity, Item item) {
 		return true;
 	}
 
 	@Override
-	public void onDropItem(Game game, Item item, InventoryHolder holder) { }
+	public void onDropItem(Game game, Entity entity, Item item) { }
 
 	@Override
-	public boolean canUseItem(Game game, Item item, InventoryHolder holder) {
+	public boolean canUseItem(Game game, Entity entity, Item item) {
 		return true;
 	}
 	
 	@Override
-	public void onItemUse(Game game, Item item, InventoryHolder holder) { }
+	public void onItemUse(Game game, Entity entity, Item item) { }
 	
 	@Override
 	public void onTickableSpawn(Game game, Tickable tickable) { }
