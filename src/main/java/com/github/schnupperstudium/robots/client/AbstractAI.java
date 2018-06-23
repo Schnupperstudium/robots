@@ -102,6 +102,18 @@ public abstract class AbstractAI {
 		return new Tile(null, x, y, Material.VOID);
 	}
 	
+	public Tile getBeneathTile() {
+		final int x = getEntity().getX();
+		final int y = getEntity().getY();
+		
+		for (Tile tile : getVision()) {
+			if (tile.getX() == x && tile.getY() == y)
+				return tile;
+		}
+		
+		return new Tile(null, x, y, Material.VOID);
+	}
+	
 	/**
 	 * Tile to the left of the robot. If there is none it will 
 	 * return a temporary tile with <code>Material.VOID</code> as material.
