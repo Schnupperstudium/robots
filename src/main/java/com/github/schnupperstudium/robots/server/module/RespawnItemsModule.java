@@ -39,6 +39,7 @@ public class RespawnItemsModule extends AbstractGameListener implements GameModu
 				
 				Item item = tile.getItem();
 				try {
+					LOG.debug("saved spawn for '{}':{} at ({}, {})", item.getName(), item.getUUID(), item.getX(), item.getY());
 					spawnItems.add(item.clone());
 				} catch (CloneNotSupportedException e) {
 					LOG.catching(e);
@@ -71,6 +72,7 @@ public class RespawnItemsModule extends AbstractGameListener implements GameModu
 				
 				tile.setItem(item);
 				game.getMasterGameListener().onItemSpawn(game, item);
+				LOG.debug("moved item '{}':{} back to ({}, {})", item.getName(), item.getUUID(), item.getX(), item.getY());
 			}
 		}
 	}
