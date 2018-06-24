@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.schnupperstudium.robots.entity.Entity;
+import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.world.Material;
 
 import javafx.scene.image.Image;
@@ -87,8 +88,20 @@ public class Texture {
 		if (entity == null)
 			return ERROR_TEXTURE;
 		
+		if (entity instanceof Robot) {
+			return getRobotTexture((Robot) entity, rotation);
+		}
+		
 		final String name = "entity_" + entity.getClass().getSimpleName().toLowerCase();
 		return getTexture(name, rotation);
+	}
+	
+	public static Image getRobotTexture(Robot robot, int rotation) {
+		if (robot == null)
+			return ERROR_TEXTURE;
+		
+		int variation = (int) (robot.getUUID() % 15);
+		return getTexture("entity_" + robot.getClass().getSimpleName().toLowerCase(), rotation, variation);
 	}
 	
 	public static Image getTexture(Material material) {
@@ -109,6 +122,14 @@ public class Texture {
 	
 	public static Image getTexture(String textureName, int rotation) {
 		Image texture = TEXTURES.get(textureName + ":" + rotation);
+		if (texture == null)
+			return ERROR_TEXTURE;
+		else
+			return texture;
+	}
+	
+	public static Image getTexture(String textureName, int rotation, int variation) {
+		Image texture = TEXTURES.get(textureName + "_" + variation + ":" + rotation);
 		if (texture == null)
 			return ERROR_TEXTURE;
 		else
