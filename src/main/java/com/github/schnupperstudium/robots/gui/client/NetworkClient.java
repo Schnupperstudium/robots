@@ -216,6 +216,8 @@ public class NetworkClient extends Application {
 	}
 	
 	private void updateGameViews() {
+		final GameInfo selectedGameView = gameView.getSelectionModel().getSelectedItem();
+		final GameInfo selectedObserveView = observeView.getSelectionModel().getSelectedItem();
 		gameView.getItems().clear();
 		observeView.getItems().clear();
 		
@@ -223,6 +225,13 @@ public class NetworkClient extends Application {
 		for (GameInfo info : infos) {
 			gameView.getItems().add(info);
 			observeView.getItems().add(info);
+			
+			if (selectedGameView != null && selectedGameView.getUUID() == info.getUUID()) {
+				gameView.getSelectionModel().select(info);
+			}
+			if (selectedObserveView != null && selectedObserveView.getUUID() == info.getUUID()) {
+				observeView.getSelectionModel().select(info);
+			}
 		}
 	}
 	
