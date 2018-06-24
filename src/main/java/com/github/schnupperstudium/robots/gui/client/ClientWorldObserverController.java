@@ -30,7 +30,7 @@ public class ClientWorldObserverController extends ObserverViewController implem
 		GraphicsContext gc = worldCanvas.getGraphicsContext2D();		
 		gc.clearRect(0, 0, worldCanvas.getWidth(), worldCanvas.getHeight());
 		
-		int tileSize = (int) Math.floor(Math.min(worldCanvas.getWidth(), worldCanvas.getHeight()) / Math.max(world.getWidth(), world.getHeight()));
+		double tileSize = Math.min(worldCanvas.getWidth() / world.getWidth(), worldCanvas.getHeight() / world.getHeight());
 		SimpleRenderer.renderWorld(gc, world, tileSize);
 	}
 

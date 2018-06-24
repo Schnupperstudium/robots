@@ -30,7 +30,7 @@ public final class SimpleRenderer {
 		renderTilesCompact(gc, tiles, TILE_SIZE);
 	}
 	
-	public static void renderTilesCompact(GraphicsContext gc, Collection<Tile> tiles, int tileSize) {
+	public static void renderTilesCompact(GraphicsContext gc, Collection<Tile> tiles, double tileSize) {
 		if (tiles == null || tiles.isEmpty())
 			return;
 		
@@ -39,8 +39,8 @@ public final class SimpleRenderer {
 		final int minY = tiles.stream().map(t -> t.getY()).min(Integer::compareTo).get();
 		
 		for (Tile tile : tiles) {
-			final int renderX = (tile.getX() - minX) * tileSize;
-			final int renderY = (tile.getY() - minY) * tileSize;
+			final double renderX = (tile.getX() - minX) * tileSize;
+			final double renderY = (tile.getY() - minY) * tileSize;
 			
 			renderTile(gc, tile, renderX, renderY, tileSize);
 		}
@@ -53,15 +53,15 @@ public final class SimpleRenderer {
 		renderWorld(gc, world, TILE_SIZE);
 	}
 	
-	public static void renderWorld(GraphicsContext gc, World world, int tileSize) {
+	public static void renderWorld(GraphicsContext gc, World world, double tileSize) {
 		final long start = System.nanoTime();
 		final int width = world.getWidth();
 		final int height = world.getHeight();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				Tile tile = world.getTile(x, y);
-				final int renderX = x * tileSize;
-				final int renderY = y * tileSize;
+				final double renderX = x * tileSize;
+				final double renderY = y * tileSize;
 				
 				renderTile(gc, tile, renderX, renderY, tileSize);
 			}
@@ -70,7 +70,7 @@ public final class SimpleRenderer {
 		LOG.trace("renderWorld took {}ms", ((end - start) / 1000) / 1000.0);
 	}
 	
-	public static void renderTile(GraphicsContext gc, Tile tile, int renderX, int renderY, int tileSize) {
+	public static void renderTile(GraphicsContext gc, Tile tile, double renderX, double renderY, double tileSize) {
 		// draw texture background
 		Image materialTexture = Texture.getTexture(tile.getMaterial());
 		gc.drawImage(materialTexture, renderX, renderY, tileSize, tileSize);
@@ -86,7 +86,7 @@ public final class SimpleRenderer {
 		}
 	}
 	
-	private static void renderEntity(GraphicsContext gc, Entity entity, int renderX, int renderY, int tileSize, Facing facing) {		
+	private static void renderEntity(GraphicsContext gc, Entity entity, double renderX, double renderY, double tileSize, Facing facing) {		
 		int rotation = 0;
 		switch (facing) {
 		case NORTH:
