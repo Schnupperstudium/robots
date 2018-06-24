@@ -42,7 +42,7 @@ public class NetworkClient extends Application {
 	private static final long UPDATE_LEVELS_TIMER = 60000;
 	private static final Random RANDOM = new Random();
 	private static final String[] DEFAULT_AI_NAMES = new String[] {
-			"UnitBrain", "CodeSmacker", "SuboptimalPrime", "SlowNeo", "SparseMatrix", "Spriteless", 
+			"CodeSmacker", "SuboptimalPrime", "Spriteless", "RobotRick", "CyberMorty", "MortalWombat",
 			"Codebeauty", "Memoryleak", "Phoenix", "ConsciousCortana", "SeriousSiri", "AskingAlexa",
 			"FaceMcComputy", "HAL2018", "RobotMcRobotFace", "OhLookAWall", "SchnupperAI", "LudicrousSpeed",
 			"CookieBreaker", "HashDefender", "BugStopper", "BitRebel", "DaemonByte", "BitsN'Bytes",
@@ -53,7 +53,8 @@ public class NetworkClient extends Application {
 			"ThnksFrThMmrs", "WasSollDas?", "SyntaxError", "BillyNoTalent", "RAMSpaghetti", "PlugAndPray",
 			"DebugMe", "KernelPanic", "BunteSeiteDerMacht", "LutzFaust", "LeekBot", "LaserRaptor", "\"Laser\"",
 			"OststadtAI", "Jebediah", "Valentina", "Trevor", "DootWithTheSickness", "Marvin", "DeepThought",
-			"Herobrine", "Kickapoo", "QuestioningAlexandria", "MegaRobotMaster3000", "Dobby", "Smeagol", "Knorke"
+			"Herobrine", "Kickapoo", "QuestioningAlexandria", "MegaRobotMaster3000", "Dobby", "Smeagol", "Knorke",
+			"ButterRobot", "WhatIsMyPurpose?", "GetSchwifty"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();
