@@ -1,2 +1,0 @@
-com.github.schnupperstudium.robots.client.ai.RandomAI
-com.github.schnupperstudium.robots.client.ai.RepeatingAI

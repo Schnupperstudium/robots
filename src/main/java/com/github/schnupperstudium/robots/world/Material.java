@@ -13,7 +13,11 @@ public enum Material {
 	ROCK(false),
 	WATER(false),
 	SPAWN(true),
-	SCORCHED_EARTH(true);
+	SCORCHED_EARTH(true),
+	TELEPORTER_RED(true),
+	TELEPORTER_BLUE(true),
+	TELEPORTER_GREEN(true),
+	TELEPORTER_YELLOW(true);
 
 	private final boolean visitable;
 

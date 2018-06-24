@@ -23,7 +23,7 @@ import com.github.schnupperstudium.robots.world.World;
 
 public class Game implements Runnable {
 	private static final Logger LOG = LogManager.getLogger();
-	private static final long TURN_DURATION = 250;
+	private static final long TURN_DURATION = 200;
 	private static final int MAX_IDLE_TIME = 120000;
 	
 	private final long uuid = UUIDGenerator.obtain();
