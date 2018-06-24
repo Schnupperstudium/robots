@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,23 @@ public class NetworkClient extends Application {
 	private static final String DEFAULT_HOST = "127.0.0.1";
 	private static final long UPDATE_GAMES_TIMER = 10000;
 	private static final long UPDATE_LEVELS_TIMER = 60000;
+	private static final Random RANDOM = new Random();
+	private static final String[] DEFAULT_AI_NAMES = new String[] {
+			"UnitBrain",
+			"CodeSmacker",
+			"SuboptimalPrime",
+			"SlowNeo",
+			"SparseMatrix",
+			"Spriteless",
+			"Codebeauty",
+			"Memoryleak",
+			"Phoenix",
+			"ConsciousCortana",
+			"SeriousSiri",
+			"AskingAlexa",
+			"FaceMcComputy",
+			"HAL2018"
+	};
 	
 	private static final Logger LOG = LogManager.getLogger();
 	
@@ -267,8 +285,7 @@ public class NetworkClient extends Application {
 			showAlert("Bitte eine KI auswählen!");
 			return;
 		} else if (name == null || name.isEmpty()) {
-			showAlert("Bitte einen Namen eingeben!");
-			return;
+			name = DEFAULT_AI_NAMES[RANDOM.nextInt(DEFAULT_AI_NAMES.length)];
 		}
 		
 		final AbstractAI ai = client.spawnAI(game.getUUID(), name, password, aiClass);
