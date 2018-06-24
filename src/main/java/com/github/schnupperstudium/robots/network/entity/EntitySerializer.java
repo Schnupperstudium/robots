@@ -40,19 +40,10 @@ public class EntitySerializer<T extends Entity> extends Serializer<T> {
 		return create(type, uuid, name, inventory, facing, x, y);
 	}
 
-	protected final T create(Class<T> type, long uuid, String name, Inventory inventory, Facing facing, int x, int y) {
+	protected T create(Class<T> type, long uuid, String name, Inventory inventory, Facing facing, int x, int y) {
 		try {
 			Constructor<T> constructor = type.getConstructor(long.class, String.class, Inventory.class, Facing.class, int.class, int.class);
 			return constructor.newInstance(uuid, name, inventory, facing, x, y);
-		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			return create(type);
-		}
-	}
-	
-	protected final T create(Class<T> type) {
-		try {
-			Constructor<T> constructor = type.getConstructor();
-			return constructor.newInstance();
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new KryoException("could not find constructor for: " + type.getName());
 		}

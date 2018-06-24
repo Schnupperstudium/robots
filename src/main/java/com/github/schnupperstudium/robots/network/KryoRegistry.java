@@ -86,7 +86,7 @@ public class KryoRegistry {
 		// Items & Inventory
 		kryo.register(Inventory.class, new InventorySerializer<>());
 		kryo.register(Item.class, new ItemSerializer<>());
-		kryo.register(Star.class);
+		kryo.register(Star.class, new ItemSerializer<>());
 		
 		// ******************
 		// *** SERIALIZER ***

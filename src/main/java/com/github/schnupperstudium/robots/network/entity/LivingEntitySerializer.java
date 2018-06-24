@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.schnupperstudium.robots.entity.Facing;
@@ -43,7 +44,7 @@ public class LivingEntitySerializer<T extends LivingEntity> extends EntitySerial
 			Constructor<T> constructor = type.getConstructor(long.class, String.class, Inventory.class, Facing.class, int.class, int.class, int.class, int.class);
 			return constructor.newInstance(uuid, name, inventory, facing, x, y, currentHealth, maxHealth);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			return create(type);
+			throw new KryoException("could not find constructor for: " + type.getName());
 		}
 	}
 }
