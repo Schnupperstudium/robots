@@ -1,5 +1,6 @@
 {	
 	"name":"Level 1",
 	"mapLocation":"/map/task1.map",
-	"desc":"Sammle alle Sterne ein!"
+	"desc":"Sammle alle Sterne ein!",
+	"modules": ["com.github.schnupperstudium.robots.server.module.RespawnItemsModule"]
 }

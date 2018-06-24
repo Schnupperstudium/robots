@@ -59,12 +59,11 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 		final int maxX = vision.stream().map(t -> t.getX()).max(Integer::compareTo).get();
 		final int minY = vision.stream().map(t -> t.getY()).min(Integer::compareTo).get();
 		final int maxY = vision.stream().map(t -> t.getY()).max(Integer::compareTo).get();
-		final int visionWidth = maxX - minX;
-		final int visionHeight = maxY - minY;
+		final int visionWidth = maxX - minX + 1;
+		final int visionHeight = maxY - minY + 1;
 		
 		clearCanvas();
-		int tileSize = (int) Math.floor(Math.min(worldCanvas.getWidth(), worldCanvas.getHeight()) / Math.max(visionWidth, visionHeight));
-		tileSize = Math.min(80, tileSize);
+		double tileSize = Math.min(worldCanvas.getWidth() / visionWidth, worldCanvas.getHeight() / visionHeight);
 		SimpleRenderer.renderTilesCompact(worldCanvas.getGraphicsContext2D(), vision, tileSize);
 	}
 	

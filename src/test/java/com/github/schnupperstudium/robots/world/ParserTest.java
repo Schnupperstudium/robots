@@ -26,7 +26,6 @@ public final class ParserTest {
 		Assert.assertEquals("Simple", level.getName());
 		Assert.assertNull(level.getMapLoader());
 		Assert.assertEquals("/map/simple.map", level.getMapLocation());
-		Assert.assertNull(level.getGameLoader());
 		Assert.assertEquals("Das hier ist eine einfache Beschreibung!", level.getDesc());
 	}
 	
