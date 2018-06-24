@@ -167,6 +167,18 @@ public class NetworkClient extends Application {
 		        }
 		    }
 		});
+		aiDropdown.setButtonCell(new ListCell<Class<? extends AbstractAI>>() {
+			@Override
+			protected void updateItem(Class<? extends AbstractAI> item, boolean empty) {				
+				super.updateItem(item, empty);
+				
+				if (empty || item == null) {
+		            setText(null);
+		        } else {
+		            setText(item.getSimpleName());
+		        }
+			}
+		});
 		for (Class<? extends AbstractAI> aiClass : aiClasses.values())
 			aiDropdown.getItems().add(aiClass);
 		
