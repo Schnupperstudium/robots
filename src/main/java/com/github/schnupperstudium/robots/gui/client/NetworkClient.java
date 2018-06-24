@@ -50,11 +50,11 @@ public class NetworkClient extends Application {
 			"SystemOfABit", "BootstrapParadox", "Hackover", "BugHunter", "BitsEnd", "FlowBitTheory",
 			"PurpleByteRiot", "BinaryBomber", "CtrlAltWin", "GreyCellInterface", "BitArchitecture",
 			"InsertCodeHere", "ByteMechanic", "SpacePenguin", "NoEvolution", "ThnksFrThRAM", "Centuries64",
-			"ThnksFrThMmrs", "WasSollDas?", "SyntaxError", "BillyNoTalent", "RAMSpaghetti", "PlugAndPray",
+			"ThnksFrThMmrs", "WasSollDas?", "SyntaxTerror", "BillyNoTalent", "RAMSpaghetti", "PlugAndPray",
 			"DebugMe", "KernelPanic", "BunteSeiteDerMacht", "LutzFaust", "LeekBot", "LaserRaptor", "\"Laser\"",
 			"OststadtAI", "Jebediah", "Valentina", "Trevor", "DootWithTheSickness", "Marvin", "DeepThought",
 			"Herobrine", "Kickapoo", "QuestioningAlexandria", "MegaRobotMaster3000", "Dobby", "Smeagol", "Knorke",
-			"ButterRobot", "WhatIsMyPurpose?", "GetSchwifty"
+			"ButterRobot", "WhatIsMyPurpose?", "GetSchwifty", "SeeSharp"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();
