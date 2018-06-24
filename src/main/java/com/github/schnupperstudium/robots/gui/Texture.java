@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +21,8 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 public class Texture {
-	private static Logger LOG = LogManager.getLogger();
-	
+	private static final Logger LOG = LogManager.getLogger();
+	private static final String SECRET_NAME = new String(Base64.getDecoder().decode("eFh4X1B1c3N5RGVzdHJveWVyX3hYeA=="));
 	private static final String TEXTURE_LOCATION = "/textures/";
 	private static final Image ERROR_TEXTURE = new Image(Texture.class.getResourceAsStream(TEXTURE_LOCATION + "error.png"));
 	private static final Map<String, Image> TEXTURES = new HashMap<>();
@@ -99,6 +100,10 @@ public class Texture {
 	public static Image getRobotTexture(Robot robot, int rotation) {
 		if (robot == null)
 			return ERROR_TEXTURE;
+		
+		if (SECRET_NAME.equalsIgnoreCase(robot.getName())) {
+			return getTexture("entity_robot_xx", rotation);
+		}
 		
 		int variation = (int) (robot.getUUID() % 15);
 		return getTexture("entity_" + robot.getClass().getSimpleName().toLowerCase(), rotation, variation);
