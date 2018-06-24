@@ -3,22 +3,28 @@ package com.github.schnupperstudium.robots.server;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.io.MapFileParser;
+import com.github.schnupperstudium.robots.server.module.GameModule;
 import com.github.schnupperstudium.robots.world.World;
 import com.github.schnupperstudium.robots.world.WorldLoader;
 
 public class Level {
+	private static final Logger LOG = LogManager.getLogger();
 	private static final WorldLoader DEFAULT_LOADER = new MapFileParser();
 	
 	private String name;
-	private String gameLoader;
+	private List<String> modules;
 	private String mapLoader;
 	private String mapLocation;
 	private String desc;
@@ -29,12 +35,12 @@ public class Level {
 	}
 	
 	public Level(String name, String mapLocation, String desc) {
-		this(name, null, null, mapLocation, desc, new HashMap<>());
+		this(name, new ArrayList<>(), null, mapLocation, desc, new HashMap<>());
 	}
 	
-	public Level(String name, String gameLoader, String mapLoader, String mapLocation, String desc, Map<String, Integer> spawnableEntities) {
+	public Level(String name, List<String> modules, String mapLoader, String mapLocation, String desc, Map<String, Integer> spawnableEntities) {
 		this.name = name;
-		this.gameLoader = gameLoader;
+		this.modules = modules;
 		this.mapLoader = mapLoader;
 		this.mapLocation = mapLocation;
 		this.desc = desc;
@@ -45,8 +51,8 @@ public class Level {
 		return name;
 	}
 	
-	public String getGameLoader() {
-		return gameLoader;
+	public List<String> getModules() {
+		return modules;
 	}
 	
 	public String getMapLoader() {
@@ -80,6 +86,29 @@ public class Level {
 			return count;
 	}
 	
+	public List<GameModule> loadModules() {
+		List<GameModule> modules = new ArrayList<>();
+		getModules().stream().map(moduleName -> {
+			try {
+				Class<?> clazz = Class.forName(moduleName);
+				if (!GameModule.class.isAssignableFrom(clazz)) {					
+					return null;
+				}
+				
+				Class<? extends GameModule> moduleClazz = clazz.asSubclass(GameModule.class);
+				Constructor<? extends GameModule> constructor = moduleClazz.getConstructor();
+				return constructor.newInstance();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException 
+					| IllegalArgumentException | InvocationTargetException | NoSuchMethodException 
+					| SecurityException e) {
+				LOG.catching(e);
+				return null;
+			}			
+		}).filter(module -> module != null).forEach(modules::add);
+		
+		return modules;
+	}
+	
 	public World loadWorld() throws IOException {
 		InputStream is = Level.class.getResourceAsStream(mapLocation);
 		if (is == null)
@@ -103,7 +132,7 @@ public class Level {
 
 	@Override
 	public String toString() {
-		return "Level [name=" + name + ", gameLoader=" + gameLoader + ", mapLoader=" + mapLoader + ", mapLocation="
+		return "Level [name=" + name + ", modules=" + modules + ", mapLoader=" + mapLoader + ", mapLocation="
 				+ mapLocation + ", desc=" + desc + "]";
 	}
 }

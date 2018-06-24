@@ -17,7 +17,6 @@ import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.server.event.MasterGameListener;
 import com.github.schnupperstudium.robots.server.module.GameModule;
-import com.github.schnupperstudium.robots.server.module.RespawnItemsModule;
 import com.github.schnupperstudium.robots.server.tickable.Tickable;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
@@ -30,7 +29,7 @@ public class Game implements Runnable {
 	private final long uuid = UUIDGenerator.obtain();
 	private final MasterGameListener masterGameListener = new MasterGameListener();
 	private final List<Tickable> tickables = new ArrayList<>();
-	private final List<GameModule> modules = new ArrayList<>();
+	private final List<GameModule> modules;
 	private final RobotsServer server;
 	private final Thread thread;
 	private final String name;
@@ -59,16 +58,16 @@ public class Game implements Runnable {
 		this.level = level;
 		this.world = world;
 		this.password = password;
+		this.modules = level.loadModules();
 		this.thread = new Thread(this::run, "GameThread: (" + name + ":" + uuid + ")");
-		this.thread.start();
-		
-		// TODO: remove debug
-		addModule(new RespawnItemsModule());
+		this.thread.start();		
 	}
 
 	@Override
 	public void run() {
-		// TODO: load modules
+		for (GameModule module : modules) {
+			module.init(server, this);
+		}
 		
 		masterGameListener.onGameStart(this);
 		
