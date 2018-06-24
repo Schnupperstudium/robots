@@ -109,15 +109,17 @@ public final class SimpleRenderer {
 		gc.drawImage(texture, renderX, renderY, tileSize, tileSize);
 	}
 	
-	public static void renderInventory(GraphicsContext gc, String name, Inventory inventory) {
-		renderInventory(gc, name, inventory, 40, 4);
+	public static void renderInventory(GraphicsContext gc, String name, Entity entity) {
+		renderInventory(gc, name, entity, 40, 4);
 	}
 	
-	public static void renderInventory(GraphicsContext gc, String name, Inventory inventory, int tileSize, int tilesPerRow) {
+	public static void renderInventory(GraphicsContext gc, String name, Entity entity, int tileSize, int tilesPerRow) {
 		final Image slotTexture = Texture.getTexture("inventory_slot");
+		final Inventory inventory = entity.getInventory();
 		
+		gc.drawImage(Texture.getTexture(entity), 2, 2, 18, 18);
 		gc.setFill(Color.BLACK);
-		gc.fillText(name, 4, 16, 152);		
+		gc.fillText(name, 20, 16, 152);		
 		List<Item> items = inventory.getItems();
 		for (int i = 0; i < inventory.getSize(); i++) {
 			int renderX = (i % tilesPerRow) * tileSize;

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.github.schnupperstudium.robots.entity.Entity;
-import com.github.schnupperstudium.robots.entity.Inventory;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -66,21 +65,21 @@ public class ObserverViewController {
 		
 		// update or create inventories
 		for (Entity holder : inventoryHolders) {
-			updateInventory(holder.getUUID(), holder.getName(), holder.getInventory());
+			updateInventory(holder);
 		}
 	}
 	
-	private void updateInventory(long eId, String name, Inventory inventory) {
-		InventoryCanvas invCanvas = inventoryMap.get(eId);
+	private void updateInventory(Entity entity) {
+		InventoryCanvas invCanvas = inventoryMap.get(entity.getUUID());
 		if (invCanvas == null) {
-			final InventoryCanvas inventoryCanvas = new InventoryCanvas(eId, inventory.getSize());
+			final InventoryCanvas inventoryCanvas = new InventoryCanvas(entity.getUUID(), entity.getInventory().getSize());
 			invCanvas = inventoryCanvas;
-			inventoryMap.put(eId, invCanvas);
+			inventoryMap.put(entity.getUUID(), invCanvas);
 			Platform.runLater(() -> inventoryBox.getChildren().add(inventoryCanvas));
 		}
 		
-		invCanvas.name = name;
-		invCanvas.inventory = inventory;
+		invCanvas.name = entity.getName();
+		invCanvas.entity = entity;
 		Platform.runLater(invCanvas::render);
 	}
 		
@@ -117,7 +116,7 @@ public class ObserverViewController {
 		
 		private final long eId;
 		private String name;
-		private Inventory inventory;
+		private Entity entity;
 		
 		private InventoryCanvas(long entityUUID, int slots) {
 			this.eId = entityUUID;
@@ -127,7 +126,9 @@ public class ObserverViewController {
 		}
 		
 		private void render() {
-			SimpleRenderer.renderInventory(getGraphicsContext2D(), name, inventory);
+			final GraphicsContext gc = getGraphicsContext2D();
+			gc.clearRect(0, 0, getWidth(), getHeight());
+			SimpleRenderer.renderInventory(gc, name, entity);
 		}
 	}
 }
