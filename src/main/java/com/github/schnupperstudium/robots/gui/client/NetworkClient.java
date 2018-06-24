@@ -57,7 +57,9 @@ public class NetworkClient extends Application {
 			"FaceMcComputy",
 			"HAL2018",
 			"RobotMcRobotFace",
-			"OLookAWall"
+			"OLookAWall",
+			"SchnupperAI",
+			"LudicrousSpeed"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();
