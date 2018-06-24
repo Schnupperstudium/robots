@@ -55,7 +55,9 @@ public class NetworkClient extends Application {
 			"SeriousSiri",
 			"AskingAlexa",
 			"FaceMcComputy",
-			"HAL2018"
+			"HAL2018",
+			"RobotMcRobotFace",
+			"OLookAWall"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();
