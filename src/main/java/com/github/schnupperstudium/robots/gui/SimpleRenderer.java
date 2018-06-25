@@ -10,6 +10,7 @@ import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
+import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -99,9 +100,20 @@ public final class SimpleRenderer {
 		final Image slotTexture = Texture.getTexture("inventory_slot");
 		final Inventory inventory = entity.getInventory();
 		
-		gc.drawImage(Texture.getTexture(entity), 2, 2, 18, 18);
+		gc.drawImage(Texture.getTexture(entity), 2, 2, 16, 16);
+		if (entity instanceof LivingEntity) {
+			LivingEntity livingEntity = (LivingEntity) entity;
+			final double relativHealth = livingEntity.getCurrentHealth() / (double) livingEntity.getMaxHealth();
+			
+			gc.setFill(Color.BLACK);
+			gc.fillRect(20, 2, 136, 16);
+			gc.setFill(Color.WHITE);
+			gc.fillRect(22, 4, 132, 12);
+			gc.setFill(Color.RED);
+			gc.fillRect(22, 4, relativHealth * 132, 12);
+		}
 		gc.setFill(Color.BLACK);
-		gc.fillText(name, 20, 16, 152);		
+		gc.fillText(name, 24, 14, 128);	
 		List<Item> items = inventory.getItems();
 		for (int i = 0; i < inventory.getSize(); i++) {
 			int renderX = (i % tilesPerRow) * tileSize;
