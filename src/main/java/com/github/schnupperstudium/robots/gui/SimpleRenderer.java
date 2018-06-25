@@ -87,25 +87,7 @@ public final class SimpleRenderer {
 	}
 	
 	private static void renderEntity(GraphicsContext gc, Entity entity, double renderX, double renderY, double tileSize, Facing facing) {		
-		int rotation = 0;
-		switch (facing) {
-		case NORTH:
-			rotation = 0;
-			break;
-		case EAST:
-			rotation = 90;
-			break;
-		case SOUTH:
-			rotation = 180;
-			break;
-		case WEST:
-			rotation = 270;
-			break;
-		default:
-			throw new IllegalArgumentException("unkown facing:" + facing);
-		}
-		
-		Image texture = Texture.getTexture(entity, rotation);
+		Image texture = Texture.getTexture(entity, facing);
 		gc.drawImage(texture, renderX, renderY, tileSize, tileSize);
 	}
 	
