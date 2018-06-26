@@ -54,7 +54,8 @@ public class NetworkClient extends Application {
 			"DebugMe", "KernelPanic", "BunteSeiteDerMacht", "LutzFaust", "LeekBot", "LaserRaptor", "\"Laser\"",
 			"OststadtAI", "Jebediah", "Valentina", "Trevor", "DootWithTheSickness", "Marvin", "DeepThought",
 			"Herobrine", "Kickapoo", "QuestioningAlexandria", "MegaRobotMaster3000", "Dobby", "Smeagol", "Knorke",
-			"ButterRobot", "WhatIsMyPurpose?", "GetSchwifty", "SeeSharp"
+			"ButterRobot", "WhatIsMyPurpose?", "GetSchwifty", "SeeSharp", "Awesome-O", "R2D2", "FullSteamSpaceMachine",
+			"30SecondsToWall", "DerGrät", "IBims1Robot"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();
