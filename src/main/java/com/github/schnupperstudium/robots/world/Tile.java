@@ -3,7 +3,14 @@ package com.github.schnupperstudium.robots.world;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
 
+/**
+ * Represents a tile in a {@link World}.
+ * 
+ * @author Daniel Wieland
+ *
+ */
 public class Tile {
+	/** world (<code>null</code> on client). */
 	private transient final World world;
 	private final int x;
 	private final int y;
@@ -42,18 +49,32 @@ public class Tile {
 		setItem(item);
 	}
 	
+	/**
+	 * @return x coordinate.
+	 */
 	public int getX() {
 		return x;
 	}
 	
+	/**
+	 * @return y coordinate.
+	 */
 	public int getY() {
 		return y;
 	}
 	
+	/**
+	 * @return material of this tile.
+	 */
 	public Material getMaterial() {
 		return material;
 	}
 	
+	/**
+	 * changes the material of this tile.
+	 * 
+	 * @param material new material.
+	 */
 	public void setMaterial(Material material) {
 		if (world != null && this.material != material) {
 			if (material == Material.SPAWN)
@@ -65,34 +86,59 @@ public class Tile {
 		this.material = material;
 	}
 	
+	/**
+	 * @return true if there is an item on this tile.
+	 */
 	public boolean hasItem() {
 		return item != null;
 	}
 	
+	/**
+	 * @return item on this tile or <code>null</code>
+	 */
 	public Item getItem() {
 		return item;
 	}
 	
+	/**
+	 * sets the item on this tile.
+	 *  
+	 * @param item new item on this tile.
+	 */
 	public void setItem(Item item) {
 		this.item = item;
 		if (item != null)
 			item.setPosition(x, y);
 	}
 	
+	/**
+	 * @return true if there is an entity on this tile.
+	 */
 	public boolean hasVisitor() {
 		return visitor != null;
 	}
 	
+	/**
+	 * @return entity on this tile or <code>null</code>
+	 */
 	public Entity getVisitor() {
 		return visitor;
 	}
 	
+	/**
+	 * changes the visitor for this tile.
+	 * 
+	 * @param visitor new visitor.
+	 */
 	public void setVisitor(Entity visitor) {
 		this.visitor = visitor;
 		if (visitor != null)
 			visitor.setPosition(x, y);
 	}
 	
+	/**
+	 * @return true if an entity can walk on this tile <b>and</b> there is no visitor currently occupying this tile.
+	 */
 	public boolean canVisit() {
 		return material.isVisitable() && visitor == null;
 	}

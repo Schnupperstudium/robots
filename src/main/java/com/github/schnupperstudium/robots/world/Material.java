@@ -1,5 +1,7 @@
 package com.github.schnupperstudium.robots.world;
 
+import com.github.schnupperstudium.robots.entity.Entity;
+
 /**
  * This enum represents the materials known to the game.
  *
@@ -25,6 +27,9 @@ public enum Material {
 		this.visitable = visitiable;
 	}
 
+	/**
+	 * @return true if an {@link Entity} can drive on these
+	 */
 	public final boolean isVisitable() {
 		return visitable;
 	}

@@ -7,6 +7,12 @@ import com.github.schnupperstudium.robots.UUIDGenerator;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
+/**
+ * This is a basic entity for games. It stores the position, facing and some other essential properties.
+ * 
+ * @author Daniel Wieland
+ *
+ */
 public abstract class Entity {
 	private static final Facing DEFAULT_FACING = Facing.NORTH;
 	
@@ -40,10 +46,18 @@ public abstract class Entity {
 		this.y = y;
 	}
 	
+	/**
+	 * @return unique identifier for this entity.
+	 */
 	public final long getUUID() {
 		return uuid;
 	}
 	
+	/**
+	 * adds an {@link Effect} to this entity.
+	 * 
+	 * @param e an effect
+	 */
 	public void addEffect(Effect e) {
 		synchronized (effects) {
 			if (e != null)
@@ -51,6 +65,12 @@ public abstract class Entity {
 		}
 	}
 	
+	/**
+	 * searches for an effect of the given type.
+	 * 
+	 * @param effectClass searched class.
+	 * @return found effect or <code>null</code>
+	 */
 	public <T extends Effect> T getEffect(Class<T> effectClass) {
 		synchronized (effects) {
 			for (Effect e : effects) {
@@ -62,6 +82,11 @@ public abstract class Entity {
 		return null;
 	}
 	
+	/**
+	 * removes a given effect.
+	 * 
+	 * @param e effect to remove.
+	 */
 	public void removeEffect(Effect e) {
 		synchronized (effects) {
 			effects.remove(e);
@@ -72,50 +97,100 @@ public abstract class Entity {
 		return world.getTile(x, y);
 	}
 	
+	/**
+	 * @return name of this entity.
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * changes the name for this entity.
+	 * 
+	 * @param name new name.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 * @return the inventory of this entity or <code>null</code>
+	 */
 	public Inventory getInventory() {
 		return inventory;
 	}
 	
+	/**
+	 * @return true if this entity has an inventory.
+	 */
 	public boolean hasInventory() {
 		return inventory != null;
 	}
 	
+	/**
+	 * assigns a new inventory to this entity.
+	 * 
+	 * @param inventory new inventory.
+	 */
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
 	}
 	
+	/**
+	 * @return facing of this entity.
+	 */
 	public Facing getFacing() {
 		return facing;
 	}
 	
+	/**
+	 * changes the facing of this entity.
+	 * 
+	 * @param facing new facing.
+	 */
 	public void setFacing(Facing facing) {
 		this.facing = facing;
 	}
 	
+	/**
+	 * @return x coordinate.
+	 */
 	public int getX() {
 		return x;
 	}
 	
+	/**
+	 * set x coordinate.
+	 * 
+	 * @param x new x coordinate.
+	 */
 	public void setX(int x) {
 		this.x = x;
 	}
 	
+	/**
+	 * @return y coordinate.
+	 */
 	public int getY() {
 		return y;
 	}
 	
+	
+	/**
+	 * set y coordinate.
+	 * 
+	 * @param y new y coordinate.
+	 */
 	public void setY(int y) {
 		this.y = y;
 	}
 	
+	/**
+	 * sets the x and y coordinate.
+	 * 
+	 * @param x new x coordinate.
+	 * @param y new y coordinate.
+	 */
 	public void setPosition(int x, int y) {
 		setX(x);
 		setY(y);

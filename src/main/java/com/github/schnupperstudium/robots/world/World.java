@@ -6,6 +6,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A world made of {@link Tile}s.
+ * 
+ * @author Daniel Wieland
+ *
+ */
 public class World {
 	private final Tile[][] tiles;
 	private transient final Set<Tile> spawns = new HashSet<>();
@@ -42,6 +48,14 @@ public class World {
 		}
 	}
 	
+	/**
+	 * tile at the given location. If none is found this will return a valid
+	 * dummy tile with <code>Material.VOID</code> as material.
+	 * 
+	 * @param x x coordinate.
+	 * @param y y coordinate.
+	 * @return persisted tile or dummy tile (never <code>null</code>).
+	 */
 	public Tile getTile(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) 
 			return new Tile(this, x, y, Material.VOID);
@@ -49,10 +63,20 @@ public class World {
 		return tiles[x][y];
 	}
 	
+	/**
+	 * changes the material for the given field.
+	 * 
+	 * @param x x coordinate.
+	 * @param y y coordinate.
+	 * @param material new material.
+	 */
 	public void setMaterial(int x, int y, Material material) {
 		getTile(x, y).setMaterial(material);
 	}
 	
+	/**
+	 * @return copy of the list of spawns for this world.
+	 */
 	public List<Tile> getSpawns() {
 		synchronized (spawns) {
 			return new ArrayList<>(spawns);
@@ -71,10 +95,16 @@ public class World {
 		}
 	}
 	
+	/**
+	 * @return width of this world.
+	 */
 	public int getWidth() {
 		return width;
 	}
 	
+	/**
+	 * @return height of this world.
+	 */
 	public int getHeight() {
 		return height;
 	}
