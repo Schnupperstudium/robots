@@ -73,7 +73,7 @@ public final class SimpleRenderer {
 	
 	public static void renderTile(GraphicsContext gc, Tile tile, double renderX, double renderY, double tileSize) {
 		// draw texture background
-		Image materialTexture = Texture.getTexture(tile.getMaterial());
+		Image materialTexture = Texture.getTexture(tile);
 		gc.drawImage(materialTexture, renderX, renderY, tileSize, tileSize);
 		
 		// draw item

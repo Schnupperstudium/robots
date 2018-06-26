@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.world.Material;
+import com.github.schnupperstudium.robots.world.Tile;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -40,6 +41,13 @@ public class Texture {
 		}
 		
 		return list.get((int) (entity.getUUID() % list.size()));
+	};
+	private static final TextureSelector<Tile> TILE_SELECTOR = (list, tile) -> {
+		if (tile == null || list.isEmpty())
+			return ERROR_TEXTURE;
+		
+		int index = (tile.getX() * 7) ^ (tile.getY() * 11);
+		return list.get(index % list.size());
 	};
 	
 	static {
@@ -118,6 +126,14 @@ public class Texture {
 	
 	public static Image getTexture(Material material) {
 		return getTexture(material, Facing.NORTH);
+	}
+	
+	public static Image getTexture(Tile tile) {
+		if (tile == null)
+			return ERROR_IMAGE;
+		
+		final String name = "material_" + tile.getMaterial().name().toLowerCase();
+		return getTexture(name, Facing.NORTH, TILE_SELECTOR, tile);
 	}
 	
 	public static Image getTexture(Material material, Facing facing) {
