@@ -13,6 +13,7 @@ import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.ai.action.PickUpItemAction;
 import com.github.schnupperstudium.robots.ai.action.TurnLeftAction;
 import com.github.schnupperstudium.robots.ai.action.TurnRightAction;
+import com.github.schnupperstudium.robots.ai.action.UseItemAction;
 import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
@@ -20,11 +21,16 @@ import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.entity.Robot;
+import com.github.schnupperstudium.robots.entity.Tank;
+import com.github.schnupperstudium.robots.entity.item.LaserCharge;
 import com.github.schnupperstudium.robots.entity.item.Star;
+import com.github.schnupperstudium.robots.entity.projectile.LaserBeam;
 import com.github.schnupperstudium.robots.network.ai.action.DropItemActionSerializer;
+import com.github.schnupperstudium.robots.network.ai.action.UseItemActionSerializer;
 import com.github.schnupperstudium.robots.network.entity.EntitySerializer;
 import com.github.schnupperstudium.robots.network.entity.LivingEntitySerializer;
 import com.github.schnupperstudium.robots.network.entity.RobotSerializer;
+import com.github.schnupperstudium.robots.network.entity.TankSerializer;
 import com.github.schnupperstudium.robots.network.item.ItemSerializer;
 import com.github.schnupperstudium.robots.network.world.TileSerializer;
 import com.github.schnupperstudium.robots.network.world.WorldSerializer;
@@ -73,6 +79,7 @@ public class KryoRegistry {
 		kryo.register(TurnLeftAction.class);
 		kryo.register(TurnRightAction.class);
 		kryo.register(NoAction.class);		
+		kryo.register(UseItemAction.class, new UseItemActionSerializer());
 		
 		// World		
 		kryo.register(World.class, new WorldSerializer<>());
@@ -82,11 +89,14 @@ public class KryoRegistry {
 		kryo.register(Entity.class, new EntitySerializer<>());
 		kryo.register(LivingEntity.class, new LivingEntitySerializer<>());
 		kryo.register(Robot.class, new RobotSerializer<>());
+		kryo.register(Tank.class, new TankSerializer<>());
+		kryo.register(LaserBeam.class, new LivingEntitySerializer<>());
 		
 		// Items & Inventory
 		kryo.register(Inventory.class, new InventorySerializer<>());
 		kryo.register(Item.class, new ItemSerializer<>());
 		kryo.register(Star.class, new ItemSerializer<>());
+		kryo.register(LaserCharge.class, new ItemSerializer<>());
 		
 		// ******************
 		// *** SERIALIZER ***

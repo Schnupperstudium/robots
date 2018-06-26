@@ -55,7 +55,7 @@ public class NetworkClient extends Application {
 			"OststadtAI", "Jebediah", "Valentina", "Trevor", "DootWithTheSickness", "Marvin", "DeepThought",
 			"Herobrine", "Kickapoo", "QuestioningAlexandria", "MegaRobotMaster3000", "Dobby", "Smeagol", "Knorke",
 			"ButterRobot", "WhatIsMyPurpose?", "GetSchwifty", "SeeSharp", "Awesome-O", "R2D2", "FullSteamSpaceMachine",
-			"30SecondsToWall", "DerGrät", "IBims1Robot"
+			"30SecondsToWall", "DerGrät", "IBims1Robot", "RobyWanKenoby", "LukeSkybotter", "RobaFett"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();

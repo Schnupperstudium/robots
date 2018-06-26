@@ -240,6 +240,15 @@ public class Game implements Runnable {
 		module.init(server, this);
 	}
 	
+	public <T extends GameModule> T getModule(Class<T> moduleClazz) {
+		for (GameModule module : modules) {
+			if (module.getClass() == moduleClazz)
+				return moduleClazz.cast(module);
+		}
+		
+		return null;
+	}
+	
 	public synchronized void restartGame() {
 		// TODO: implement
 	}

@@ -1,0 +1,13 @@
+40x1
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+MAP_BORDER:b
+WATER:w
+SPAWN:s
+
+s g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g s
+
+com.github.schnupperstudium.robots.entity.item.LaserCharge 0 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 39 0

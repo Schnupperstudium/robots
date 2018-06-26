@@ -137,6 +137,25 @@ public class Tile {
 	}
 	
 	/**
+	 * Removes the visitor from this filed if the uuid matches 
+	 * with the given visitor.
+	 * 
+	 * @param entity visitor has to match entities uuid to be removed.
+	 * @return true if the visitor was set to null.
+	 */
+	public boolean clearVisitor(Entity entity) {
+		if (entity == null || visitor == null)
+			return visitor == null;
+		
+		if (visitor.getUUID() == entity.getUUID()) {
+			visitor = null;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * @return true if an entity can walk on this tile <b>and</b> there is no visitor currently occupying this tile.
 	 */
 	public boolean canVisit() {

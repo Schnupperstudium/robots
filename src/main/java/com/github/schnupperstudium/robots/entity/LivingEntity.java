@@ -59,6 +59,10 @@ public abstract class LivingEntity extends Entity {
 		return currentHealth <= 0;
 	}
 
+	public void kill() {
+		currentHealth = 0;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
