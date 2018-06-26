@@ -32,7 +32,7 @@ public class ProjectileModule extends AbstractGameListener implements GameModule
 	public void onRoundComplete(Game game) {
 		for (Projectile projectile : new ArrayList<>(projectiles)) {
 			projectile.updateProjectile(game);
-			if (projectile.isDead())
+			if (projectile.isDead()) {
 				removeProjectile(projectile);
 				projectile.getTile(game.getWorld()).clearVisitor(projectile);
 			}
