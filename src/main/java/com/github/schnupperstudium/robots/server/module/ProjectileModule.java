@@ -34,6 +34,8 @@ public class ProjectileModule extends AbstractGameListener implements GameModule
 			projectile.updateProjectile(game);
 			if (projectile.isDead())
 				removeProjectile(projectile);
+				projectile.getTile(game.getWorld()).clearVisitor(projectile);
+			}
 		}
 	}
 }
