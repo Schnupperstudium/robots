@@ -2,5 +2,8 @@
 	"name":"Weapon Demo",
 	"mapLocation":"/map/WeaponDemo.map",
 	"desc":"Lasers!",
-	"modules": ["com.github.schnupperstudium.robots.server.module.RespawnItemsModule", "com.github.schnupperstudium.robots.server.module.ProjectileModule"]
+	"modules": {
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null, 
+		"com.github.schnupperstudium.robots.server.module.ProjectileModule": null
+	}
 }
