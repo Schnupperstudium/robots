@@ -125,7 +125,8 @@ public final class LevelParser {
 			JsonElement element = obj.get(name);
 			if (element == null || !element.isJsonObject()) {
 				// one robot is the default
-				result.put(Robot.class.getName(), 1);
+				// TODO: for debug purposes this allows 10 robots per connection
+				result.put(Robot.class.getName(), 10);
 				return result;
 			}
 			
