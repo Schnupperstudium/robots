@@ -152,7 +152,7 @@ public abstract class RobotsClient {
 	protected void updateVision(long uuid, List<Tile> vision) {
 		AbstractAI ai = ais.get(uuid);
 		if (ai != null) {
-			LOG.trace("vision update {}: {}", uuid, vision);
+//			LOG.trace("vision update {}: {}", uuid, vision);
 			ai.updateVision(vision);
 		}
 	}
@@ -168,7 +168,7 @@ public abstract class RobotsClient {
 	protected void updateObserver(long gameId, World world) {
 		IWorldObserver observer = observers.get(gameId);
 		if (observer != null) {
-			LOG.trace("update observer {}: {}", gameId, world);
+//			LOG.trace("update observer {}: {}", gameId, world);
 			observer.updateWorld(gameId, world);
 		}
 	}
