@@ -37,7 +37,7 @@ public class AI implements Tickable {
 		EntityAction action = makeTurn();
 		boolean success = action.apply(game, entity);
 		if (success)
-			LOG.debug("AI {}:{} made action {}", entity.getName(), entity.getUUID(), action);
+			LOG.trace("AI {}:{} made action {}", entity.getName(), entity.getUUID(), action);
 		else
 			LOG.warn("AI {}:{} failed action {}", entity.getName(), entity.getUUID(), action);
 		LOG.trace("ai location ({}, {})", entity.getX(), entity.getY());

@@ -336,7 +336,7 @@ public abstract class RobotsServer implements Runnable {
 			
 			if (tracker == null) {
 				tracker = new ClientTracker(connectionId, clientInterface);
-					clientTrackers.put(connectionId, tracker);
+				clientTrackers.put(connectionId, tracker);
 			}
 		
 			return tracker;
@@ -375,16 +375,18 @@ public abstract class RobotsServer implements Runnable {
 		}
 		
 		private int getEntityTypeCount(long gameId, String entityClass) {
+			int result = 0;
 			synchronized (gameTypeCounter) {
 				Map<String, Integer> typeCounter = gameTypeCounter.get(gameId);
 				if (typeCounter != null) {
 					Integer counter = typeCounter.get(entityClass);
 					if (counter != null)
-						return counter;
+						result = counter;
 				}
-				
-				return 0;
 			}
+			
+			LOG.debug("connection {} has {} entities of type '{}'", connectionId, result, entityClass);
+			return result;
 		}
 		
 		private void addObserver(long gameId) {
@@ -416,13 +418,8 @@ public abstract class RobotsServer implements Runnable {
 					gameTypeCounter.put(gId, typeCounter);
 				}
 				
-				Integer counter = typeCounter.get(entityClass);
-				if (counter == null) {
-					counter = 0;
-					typeCounter.put(entityClass, counter);
-				}
-				
-				counter++;
+				Integer counter = typeCounter.getOrDefault(entityClass, 0) + 1;
+				typeCounter.put(entityClass, counter);
 			}
 		}
 		
