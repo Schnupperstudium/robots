@@ -40,6 +40,10 @@ import com.github.schnupperstudium.robots.server.RobotsServerInterface;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class KryoRegistry {
 
@@ -70,6 +74,11 @@ public class KryoRegistry {
 		kryo.register(Material.class);
 		kryo.register(RobotsClientInterface.class);
 		kryo.register(RobotsServerInterface.class);
+		kryo.register(JsonPrimitive.class);
+		kryo.register(JsonNull.class);
+		kryo.register(JsonObject.class);
+		kryo.register(JsonArray.class);
+		
 		
 		// AI
 		kryo.register(PickUpItemAction.class);

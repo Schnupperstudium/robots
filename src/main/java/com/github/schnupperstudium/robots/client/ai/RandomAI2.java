@@ -1,11 +1,7 @@
 package com.github.schnupperstudium.robots.client.ai;
 
-import java.util.Random;
-
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
-import com.github.schnupperstudium.robots.ai.action.MoveBackwardAction;
 import com.github.schnupperstudium.robots.ai.action.MoveForwardAction;
-import com.github.schnupperstudium.robots.ai.action.NoAction;
 import com.github.schnupperstudium.robots.ai.action.PickUpItemAction;
 import com.github.schnupperstudium.robots.ai.action.TurnLeftAction;
 import com.github.schnupperstudium.robots.ai.action.TurnRightAction;

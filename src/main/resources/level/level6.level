@@ -2,5 +2,7 @@
 	"name":"Level 6",
 	"mapLocation":"/map/maze_big.map",
 	"desc":"Navigiere durch ein großes Labyrinth und sammle alle Sterne ein!",
-	"modules": ["com.github.schnupperstudium.robots.server.module.RespawnItemsModule"]
+	"modules": {
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null
+	}
 }

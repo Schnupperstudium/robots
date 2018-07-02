@@ -18,13 +18,14 @@ import com.github.schnupperstudium.robots.io.MapFileParser;
 import com.github.schnupperstudium.robots.server.module.GameModule;
 import com.github.schnupperstudium.robots.world.World;
 import com.github.schnupperstudium.robots.world.WorldLoader;
+import com.google.gson.JsonElement;
 
 public class Level {
 	private static final Logger LOG = LogManager.getLogger();
 	private static final WorldLoader DEFAULT_LOADER = new MapFileParser();
 	
 	private String name;
-	private List<String> modules;
+	private Map<String, JsonElement> modules;
 	private String mapLoader;
 	private String mapLocation;
 	private String desc;
@@ -35,10 +36,10 @@ public class Level {
 	}
 	
 	public Level(String name, String mapLocation, String desc) {
-		this(name, new ArrayList<>(), null, mapLocation, desc, new HashMap<>());
+		this(name, new HashMap<>(), null, mapLocation, desc, new HashMap<>());
 	}
 	
-	public Level(String name, List<String> modules, String mapLoader, String mapLocation, String desc, Map<String, Integer> spawnableEntities) {
+	public Level(String name, Map<String, JsonElement> modules, String mapLoader, String mapLocation, String desc, Map<String, Integer> spawnableEntities) {
 		this.name = name;
 		this.modules = modules;
 		this.mapLoader = mapLoader;
@@ -51,7 +52,7 @@ public class Level {
 		return name;
 	}
 	
-	public List<String> getModules() {
+	public Map<String, JsonElement> getModules() {
 		return modules;
 	}
 	
@@ -88,16 +89,23 @@ public class Level {
 	
 	public List<GameModule> loadModules() {
 		List<GameModule> modules = new ArrayList<>();
-		getModules().stream().map(moduleName -> {
+		getModules().entrySet().stream().map(entry -> {
 			try {
-				Class<?> clazz = Class.forName(moduleName);
+				Class<?> clazz = Class.forName(entry.getKey());
 				if (!GameModule.class.isAssignableFrom(clazz)) {					
 					return null;
 				}
 				
 				Class<? extends GameModule> moduleClazz = clazz.asSubclass(GameModule.class);
-				Constructor<? extends GameModule> constructor = moduleClazz.getConstructor();
-				return constructor.newInstance();
+				
+				JsonElement element = entry.getValue();
+				if (element == null || element.isJsonNull()) {
+					Constructor<? extends GameModule> constructor = moduleClazz.getConstructor();
+					return constructor.newInstance();
+				} else {
+					Constructor<? extends GameModule> constructor = moduleClazz.getConstructor(JsonElement.class);
+					return constructor.newInstance(element);
+				}
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException 
 					| IllegalArgumentException | InvocationTargetException | NoSuchMethodException 
 					| SecurityException e) {

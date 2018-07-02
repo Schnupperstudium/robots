@@ -2,5 +2,7 @@
 	"name":"Level 5",
 	"mapLocation":"/map/maze.map",
 	"desc":"Navigiere durch ein Labyrinth und finde alle Sterne!",
-	"modules": ["com.github.schnupperstudium.robots.server.module.RespawnItemsModule"]
+	"modules": {
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null
+	}
 }

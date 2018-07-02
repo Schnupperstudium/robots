@@ -2,5 +2,7 @@
 	"name":"Level 4",
 	"mapLocation":"/map/task4.map",
 	"desc":"Sammle alle Sterne ein!",
-	"modules": ["com.github.schnupperstudium.robots.server.module.RespawnItemsModule"]
+	"modules": {
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null
+	}
 }

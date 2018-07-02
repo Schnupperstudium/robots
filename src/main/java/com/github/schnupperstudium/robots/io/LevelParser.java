@@ -8,16 +8,13 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.server.Level;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -71,20 +68,7 @@ public final class LevelParser {
 		
 		@Override
 		public JsonElement serialize(Level src, Type typeOfSrc, JsonSerializationContext context) {
-			JsonObject obj = new JsonObject();
-			obj.addProperty(NAME, src.getName());			
-			obj.addProperty(MAP_LOADER, src.getMapLoader());
-			obj.addProperty(MAP_LOCATION, src.getMapLocation());
-			obj.addProperty(DESC, src.getDesc());
-			
-			JsonObject map = new JsonObject();
-			src.getSpawnableEntities().forEach(key -> map.addProperty(key, src.getSpawnableEntityCount(key)));
-			obj.add(ALLOWED_ENTITIES, map);
-			
-			JsonArray arr = new JsonArray();
-			src.getModules().forEach(module -> arr.add(module.getClass().getName()));
-			obj.add(MODULES, arr);
-			return obj;
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
@@ -100,7 +84,7 @@ public final class LevelParser {
 			final String mapLocation = getStringOrNull(obj, MAP_LOCATION);
 			final String desc = getStringOrNull(obj, DESC);
 			final Map<String, Integer> map = parseMap(obj, ALLOWED_ENTITIES);
-			final List<String> modules = parseModules(obj);
+			final Map<String, JsonElement> modules = parseModules(obj);
 			
 			return new Level(name, modules, mapLoader, mapLocation, desc, map);
 		}
@@ -139,14 +123,13 @@ public final class LevelParser {
 			return result;
 		}
 		
-		private List<String> parseModules(JsonObject obj) {
-			ArrayList<String> modules = new ArrayList<>();
+		private Map<String, JsonElement> parseModules(JsonObject obj) {
+			Map<String, JsonElement> modules = new HashMap<>();
 			JsonElement element = obj.get(MODULES);
-			if (element != null && element.isJsonArray()) {
-				JsonArray arr = element.getAsJsonArray();
-				for (JsonElement e : arr) {
-					String name = e.getAsString();
-					modules.add(name);
+			if (element != null && element.isJsonObject()) {
+				JsonObject moduleMap = element.getAsJsonObject();
+				for (String key : moduleMap.keySet()) {										
+					modules.put(key, moduleMap.get(key));
 				}
 			}
 				
