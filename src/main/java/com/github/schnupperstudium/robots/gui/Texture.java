@@ -82,7 +82,7 @@ public class Texture {
 					}					
 					
 					TEXTURES.put(name, atlas);
-					LOG.info("Loaded {} texutures for {} [{} x {}]", atlas.textures.size(), name, size, size);
+					LOG.trace("Loaded {} texutures for {} [{} x {}]", atlas.textures.size(), name, size, size);
 				}
 			} catch (Exception e) {
 				LOG.catching(e);
