@@ -1,0 +1,12 @@
+7x1
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+MAP_BORDER:b
+WATER:w
+SPAWN:s
+PRESSURE_PLATE_RED:p
+GATE_CLOSED_RED:z
+
+s g p z g g s

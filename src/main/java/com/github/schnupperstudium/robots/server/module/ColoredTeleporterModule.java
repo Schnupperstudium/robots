@@ -20,7 +20,7 @@ public class ColoredTeleporterModule extends AbstractGameListener implements Gam
 	}
 
 	@Override
-	public void onEntityMove(Game game, Entity entity) {
+	public void onEntityMove(Game game, Entity entity, int sX, int sY) {
 		Tile tile = entity.getTile(game.getWorld());
 		Material material = tile.getMaterial();
 		if (material != Material.TELEPORTER_RED && material != Material.TELEPORTER_GREEN 

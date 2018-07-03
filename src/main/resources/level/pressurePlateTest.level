@@ -1,0 +1,10 @@
+{	
+	"name":"PressurePlateTest",
+	"mapLocation":"/map/PressurePlateTest.map",
+	"desc":"Navigiere durch ein großes Labyrinth mit Teleportern und sammle alle Sterne ein!",
+	"modules": {
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null,
+		"com.github.schnupperstudium.robots.server.module.ColoredTeleporterModule": null,
+		"com.github.schnupperstudium.robots.server.module.ColoredPressurePlateModule": null
+	}
+}

@@ -149,6 +149,8 @@ public class Game implements Runnable {
 	}
 	
 	public synchronized boolean moveEntity(Entity entity, Facing facing, int steps) {
+		final int sX = entity.getX();
+		final int sY = entity.getY();
 		final int tX = entity.getX() + facing.dx * steps;
 		final int tY = entity.getY() + facing.dy * steps;
 		
@@ -162,7 +164,7 @@ public class Game implements Runnable {
 		
 		currentTile.setVisitor(null);
 		nextTile.setVisitor(entity);
-		masterGameListener.onEntityMove(this, entity);
+		masterGameListener.onEntityMove(this, entity, sX, sY);
 		return true;
 	}
 	

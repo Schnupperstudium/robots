@@ -27,7 +27,7 @@ public interface GameListener {
 	void onAIDespawn(Game game, AI ai);
 	void onEntityDespawn(Game game, Entity entity);
 	boolean canEntityMove(Game game, Entity entity, int tX, int tY);
-	void onEntityMove(Game game, Entity entity);
+	void onEntityMove(Game game, Entity entity, int sX, int sY);
 	
 	// Item Events
 	boolean canItemSpawn(Game game, Item item);

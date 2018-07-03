@@ -129,6 +129,7 @@ public abstract class RobotsServer implements Runnable {
 			game = new Game(this, name, level, auth);
 		} catch (IOException e) {
 			LOG.warn("failed to start game '{}', '{}': {}", name, level, e.getMessage());
+			LOG.catching(e);
 			return ERR_FAILED_GAME_START;
 		}
 		

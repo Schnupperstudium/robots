@@ -48,8 +48,8 @@ public class MasterGameListener extends MasterListener<GameListener> implements 
 	}
 
 	@Override
-	public void onEntityMove(Game game, Entity entity) {
-		notifyListeners(l -> l.onEntityMove(game, entity));
+	public void onEntityMove(Game game, Entity entity, int sX, int sY) {
+		notifyListeners(l -> l.onEntityMove(game, entity, sX, sY));
 	}
 
 	@Override

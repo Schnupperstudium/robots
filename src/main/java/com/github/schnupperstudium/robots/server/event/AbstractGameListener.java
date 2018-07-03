@@ -46,7 +46,7 @@ public abstract class AbstractGameListener implements GameListener {
 	}
 	
 	@Override
-	public void onEntityMove(Game game, Entity entity) { }
+	public void onEntityMove(Game game, Entity entity, int sX, int sY) { }
 	
 	@Override
 	public boolean canAISpawn(Game game, AI ai) {
