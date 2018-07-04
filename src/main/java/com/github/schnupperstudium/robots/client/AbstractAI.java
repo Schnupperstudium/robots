@@ -85,7 +85,7 @@ public abstract class AbstractAI {
 	/**
 	 * Searches for the neighboring tile in the given direction.
 	 * If there is no tile found it will create a temporary tile with the needed coordinates 
-	 * and <code>Material.VOID</code> as material.
+	 * and <code>Material.UNDEFINED</code> as material.
 	 * 
 	 * @param facing direction to search in.
 	 * @return tile in the given direction.
@@ -94,36 +94,45 @@ public abstract class AbstractAI {
 		final int x = getEntity().getX() + facing.dx;
 		final int y = getEntity().getY() + facing.dy;
 		
+		return getTileFromVision(x, y);
+	}
+	
+	/**
+	 * Searches for a tile with the given x and y coordinates within the entities vision.
+	 * If there is no tile found it will create a temporary tile with the needed coordinates
+	 * and <code>Material.UNDEFINED</code> as material.
+	 * 
+	 * @param x x coordinate of the searched tile.
+	 * @param y y coordinate of the searched tile.
+	 * @return found tile or temporary tile.
+	 * @see AbstractAI#getVision()
+	 */
+	public Tile getTileFromVision(int x, int y) {
 		for (Tile tile : getVision()) {
 			if (tile.getX() == x && tile.getY() == y)
 				return tile;
 		}
 		
-		return new Tile(null, x, y, Material.VOID);
+		return new Tile(null, x, y, Material.UNDEFINED);
 	}
 	
 	/**
 	 * Searches for the tile beneath the entity.
 	 * If there is no tile found it will create a temporary tile with the needed coordinates 
-	 * and <code>Material.VOID</code> as material.
+	 * and <code>Material.UNDEFINED</code> as material.
 	 * 
 	 * @return tile beneath the entity.
 	 */
 	public Tile getBeneathTile() {
 		final int x = getEntity().getX();
 		final int y = getEntity().getY();
-		
-		for (Tile tile : getVision()) {
-			if (tile.getX() == x && tile.getY() == y)
-				return tile;
-		}
-		
-		return new Tile(null, x, y, Material.VOID);
+
+		return getTileFromVision(x, y);
 	}
 	
 	/**
 	 * Tile to the left of the robot. If there is none it will 
-	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * return a temporary tile with <code>Material.UNDEFINED</code> as material.
 	 * 
 	 * @return tile to the left of the entity.
 	 */
@@ -133,7 +142,7 @@ public abstract class AbstractAI {
 	
 	/**
 	 * Tile in front of the robot. If there is none it will 
-	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * return a temporary tile with <code>Material.UNDEFINED</code> as material.
 	 * 
 	 * @return tile in front of the entity.
 	 */
@@ -143,7 +152,7 @@ public abstract class AbstractAI {
 	
 	/**
 	 * Tile to the right of the robot. If there is none it will 
-	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * return a temporary tile with <code>Material.UNDEFINED</code> as material.
 	 * 
 	 * @return tile to the right of the entity.
 	 */
@@ -153,7 +162,7 @@ public abstract class AbstractAI {
 	
 	/**
 	 * Tile behind of the robot. If there is none it will 
-	 * return a temporary tile with <code>Material.VOID</code> as material.
+	 * return a temporary tile with <code>Material.UNDEFINED</code> as material.
 	 * 
 	 * @return tile behind the entity.
 	 */
