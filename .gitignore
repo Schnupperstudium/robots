@@ -8,3 +8,5 @@
 /logs/
 /bin/
 /run/
+/src/main/resources/customAIs.txt
+src/main/java/com/github/schnupperstudium/robots/client/ai/hidden/*

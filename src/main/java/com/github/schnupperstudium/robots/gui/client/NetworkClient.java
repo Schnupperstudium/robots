@@ -114,6 +114,14 @@ public class NetworkClient extends Application {
 	
 	public NetworkClient() {
 		InputStream is = getClass().getResourceAsStream("/ais.txt");
+		loadAIsFromStream(is);
+		
+		is = getClass().getResourceAsStream("/customAIs.txt");
+		if (is != null)
+			loadAIsFromStream(is);
+	}
+	
+	private void loadAIsFromStream(InputStream is) {
 		Scanner scanner = new Scanner(is);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
