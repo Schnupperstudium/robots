@@ -139,8 +139,13 @@ public abstract class RobotsClient {
 			LOG.warn("AI not found: {}", uuid);
 			return NoAction.INSTANCE;
 		}
-		
-		EntityAction action = ai.makeTurn();
+		EntityAction action;
+		try {
+			action = ai.makeTurn();
+		} catch (Exception e) {
+			LOG.catching(e);
+			action = null;
+		}
 		if (action == null) {
 			LOG.warn("AI returned null action: {}", uuid);
 			return NoAction.INSTANCE;
@@ -149,11 +154,15 @@ public abstract class RobotsClient {
 		}
 	}
 	
-	protected void updateVision(long uuid, List<Tile> vision) {
+	protected void updateVision(long uuid, List<Tile> vision) {		
 		AbstractAI ai = ais.get(uuid);
 		if (ai != null) {
 //			LOG.trace("vision update {}: {}", uuid, vision);
-			ai.updateVision(vision);
+			try {
+				ai.updateVision(vision);
+			} catch (Exception e) {
+				LOG.catching(e);
+			}
 		}
 	}
 	
@@ -161,7 +170,11 @@ public abstract class RobotsClient {
 		AbstractAI ai = ais.get(uuid);
 		if (ai != null) { 
 			LOG.trace("update entity {}: {}", uuid, entity);
-			ai.updateEntity(entity);
+			try {
+				ai.updateEntity(entity);
+			} catch (Exception e) {
+				LOG.catching(e);
+			}
 		}
 	}
 	
@@ -169,7 +182,11 @@ public abstract class RobotsClient {
 		IWorldObserver observer = observers.get(gameId);
 		if (observer != null) {
 //			LOG.trace("update observer {}: {}", gameId, world);
-			observer.updateWorld(gameId, world);
+			try {
+				observer.updateWorld(gameId, world);
+			} catch (Exception e) {
+				LOG.catching(e);
+			}
 		}
 	}
 	
