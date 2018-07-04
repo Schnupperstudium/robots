@@ -87,6 +87,7 @@ public class Game implements Runnable {
 			}
 		}
 		
+		server.removeGame(this);
 		masterGameListener.onGameEnd(this);
 		
 		LOG.info("{}:{} has stopped (Reason: {})", getName(), getUUID(), (idleTime >= MAX_IDLE_TIME ? "IDLE" : "FINISHED"));
