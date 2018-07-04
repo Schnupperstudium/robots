@@ -93,6 +93,13 @@ public class Inventory {
 		return getSize() - getUsedSize();
 	}
 	
+	/**
+	 * @return true if no items are in this inventory.
+	 */
+	public boolean isEmpty() {
+		return items.isEmpty();
+	}
+
 	@Override
 	public Inventory clone() throws CloneNotSupportedException {
 		List<Item> itemsClone = new ArrayList<>(size);

@@ -126,6 +126,7 @@ public class Game implements Runnable {
 		if (!tile.canVisit())
 			return false;
 		
+		entity.setWorld(world);
 		tile.setVisitor(entity);
 		masterGameListener.onEntitySpawn(this, entity);
 		return true;
@@ -136,10 +137,8 @@ public class Game implements Runnable {
 			return false;
 		
 		Tile tile = entity.getTile(world);
-		if (tile.getVisitor() != entity)
-			return false;
-		
-		tile.setVisitor(null);
+		entity.setWorld(null);
+		tile.clearVisitor(entity);
 		masterGameListener.onEntityDespawn(this, entity);
 		return true;
 	}
@@ -173,7 +172,7 @@ public class Game implements Runnable {
 			return false;
 		
 		Tile tile = entity.getTile(world);
-		if (tile.getItem() != null || item == null)
+		if (tile.hasItem() || item == null)
 			return false;
 		
 		// if the entity holds a inventory try to remove the item.
@@ -185,6 +184,7 @@ public class Game implements Runnable {
 		}
 		
 		tile.setItem(item);
+		item.setWorld(world);
 		masterGameListener.onDropItem(this, entity, item);
 		return true;
 	}
@@ -199,6 +199,7 @@ public class Game implements Runnable {
 		if (!inventory.addItem(item)) 
 			return null;
 		
+		item.setWorld(null);
 		tile.setItem(null);
 		masterGameListener.onPickUpItem(this, entity, item);
 		return item;

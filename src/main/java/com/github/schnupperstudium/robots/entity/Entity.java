@@ -19,6 +19,7 @@ public abstract class Entity {
 	private final long uuid;
 	private final List<Effect> effects = new ArrayList<>();
 	
+	private transient World world;
 	private String name;	
 	private Inventory inventory;
 	private Facing facing;	
@@ -53,6 +54,25 @@ public abstract class Entity {
 		return uuid;
 	}
 	
+	/**
+	 * Returns the world this client is spawned in. 
+	 * This field will be <code>null</code> on the client. 
+	 * 
+	 * @return world or <code>null</code> on client.
+	 */
+	public World getWorld() {
+		return world;
+	}
+
+	/**
+	 * Changes the current world.
+	 * 
+	 * @param world world.
+	 */
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
 	/**
 	 * adds an {@link Effect} to this entity.
 	 * 

@@ -1,4 +1,4 @@
-40x1
+20x1
 VOID:v
 GRASS:g
 TREE:t
@@ -7,7 +7,26 @@ MAP_BORDER:b
 WATER:w
 SPAWN:s
 
-s g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g s
+s g g g g g g g g g g g g g g g g g g s
 
 com.github.schnupperstudium.robots.entity.item.LaserCharge 0 0
-com.github.schnupperstudium.robots.entity.item.LaserCharge 39 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 1 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 2 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 3 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 4 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 5 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 6 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 7 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 8 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 12 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 13 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 14 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 15 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 16 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 17 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 18 0
+com.github.schnupperstudium.robots.entity.item.LaserCharge 19 0
+
+com.github.schnupperstudium.robots.entity.scenery.SmallBoulder 9 0
+com.github.schnupperstudium.robots.entity.scenery.MediumBoulder 10 0
+com.github.schnupperstudium.robots.entity.scenery.SmallBoulder 11 0

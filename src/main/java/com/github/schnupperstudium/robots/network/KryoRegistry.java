@@ -25,6 +25,9 @@ import com.github.schnupperstudium.robots.entity.Tank;
 import com.github.schnupperstudium.robots.entity.item.LaserCharge;
 import com.github.schnupperstudium.robots.entity.item.Star;
 import com.github.schnupperstudium.robots.entity.projectile.LaserBeam;
+import com.github.schnupperstudium.robots.entity.scenery.LargeBoulder;
+import com.github.schnupperstudium.robots.entity.scenery.MediumBoulder;
+import com.github.schnupperstudium.robots.entity.scenery.SmallBoulder;
 import com.github.schnupperstudium.robots.network.ai.action.DropItemActionSerializer;
 import com.github.schnupperstudium.robots.network.ai.action.UseItemActionSerializer;
 import com.github.schnupperstudium.robots.network.entity.EntitySerializer;
@@ -100,6 +103,9 @@ public class KryoRegistry {
 		kryo.register(Robot.class, new RobotSerializer<>());
 		kryo.register(Tank.class, new TankSerializer<>());
 		kryo.register(LaserBeam.class, new LivingEntitySerializer<>());
+		kryo.register(SmallBoulder.class, new LivingEntitySerializer<>());
+		kryo.register(MediumBoulder.class, new LivingEntitySerializer<>());
+		kryo.register(LargeBoulder.class, new LivingEntitySerializer<>());
 		
 		// Items & Inventory
 		kryo.register(Inventory.class, new InventorySerializer<>());

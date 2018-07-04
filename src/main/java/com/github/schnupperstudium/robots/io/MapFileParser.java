@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.World;
@@ -160,6 +161,43 @@ public final class MapFileParser implements WorldLoader {
 				}
 			}
 
+			// read entities
+			if (scanner.hasNextLine()) {
+				for (String line = readLine(); !line.isEmpty(); line = readLine()) {
+					String[] itemLineSplit = line.split(" ");
+					try {
+						Class<?> clazz = Class.forName(itemLineSplit[0]);
+						int x = Integer.parseInt(itemLineSplit[1]);
+						int y = Integer.parseInt(itemLineSplit[2]);
+
+						Class<? extends Entity> entityClazz = clazz.asSubclass(Entity.class);
+						Entity entity = entityClazz.getConstructor().newInstance();
+
+						if (x < 0 || x >= width) {
+							throw new ParseException(lineCount, "x out of bounds");
+						}
+						if (y < 0 || y >= height) {
+							throw new ParseException(lineCount, "y out of bounds");
+						}
+
+						world.getTile(x, y).setVisitor(entity);
+						entity.setWorld(world);
+					} catch (ClassNotFoundException e) {
+						throw new ParseException(lineCount,
+								"class for item not found: " + itemLineSplit[0]);
+					} catch (NumberFormatException e) {
+						throw new ParseException(lineCount, "x or y parameter is not an int");
+					} catch (InstantiationException e) {
+						throw new ParseException(lineCount, "no default constructor for item");
+					} catch (Exception e) {
+						throw new ParseException(lineCount, e.getMessage());
+					}
+
+					if (!scanner.hasNextLine())
+						break;
+				}
+			}
+			
 			return world;
 		}
 
