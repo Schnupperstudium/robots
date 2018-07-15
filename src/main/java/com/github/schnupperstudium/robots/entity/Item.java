@@ -16,7 +16,7 @@ public abstract class Item extends Entity {
 		super(uuid, name, facing, x, y);
 	}
 	
-	public abstract void use(Game manager, Entity entity);
+	public abstract void use(Game game, Entity entity);
 	
 	@Override
 	public abstract Item clone() throws CloneNotSupportedException;

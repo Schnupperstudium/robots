@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.schnupperstudium.robots.entity.Facing;
+
 /**
  * A world made of {@link Tile}s.
  * 
@@ -61,6 +63,19 @@ public class World {
 			return new Tile(this, x, y, Material.VOID);
 		
 		return tiles[x][y];
+	}
+	
+	/**
+	 * tile at the location offset by the given facing. If none is found this will return a valid
+	 * dummy tile with <code>Material.VOID</code> as material.
+	 * 
+	 * @param x x coordinate.
+	 * @param y y coordinate.
+	 * @param facing direction of the desired tile
+	 * @return persisted tile or dummy tile (never <code>null</code>).
+	 */
+	public Tile getTile(int x, int y, Facing facing) {
+		return getTile(x + facing.dx, y + facing.dy);
 	}
 	
 	/**

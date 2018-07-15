@@ -22,8 +22,14 @@ import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.entity.Tank;
+import com.github.schnupperstudium.robots.entity.item.BlueKey;
+import com.github.schnupperstudium.robots.entity.item.Cookie;
+import com.github.schnupperstudium.robots.entity.item.GreenKey;
+import com.github.schnupperstudium.robots.entity.item.Key;
 import com.github.schnupperstudium.robots.entity.item.LaserCharge;
+import com.github.schnupperstudium.robots.entity.item.RedKey;
 import com.github.schnupperstudium.robots.entity.item.Star;
+import com.github.schnupperstudium.robots.entity.item.YellowKey;
 import com.github.schnupperstudium.robots.entity.projectile.LaserBeam;
 import com.github.schnupperstudium.robots.entity.scenery.LargeBoulder;
 import com.github.schnupperstudium.robots.entity.scenery.MediumBoulder;
@@ -112,6 +118,12 @@ public class KryoRegistry {
 		kryo.register(Item.class, new ItemSerializer<>());
 		kryo.register(Star.class, new ItemSerializer<>());
 		kryo.register(LaserCharge.class, new ItemSerializer<>());
+		kryo.register(Key.class, new ItemSerializer<>());
+		kryo.register(RedKey.class, new ItemSerializer<>());
+		kryo.register(GreenKey.class, new ItemSerializer<>());
+		kryo.register(BlueKey.class, new ItemSerializer<>());
+		kryo.register(YellowKey.class, new ItemSerializer<>());
+		kryo.register(Cookie.class, new ItemSerializer<>());
 		
 		// ******************
 		// *** SERIALIZER ***
