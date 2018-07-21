@@ -2,3 +2,4 @@ com.github.schnupperstudium.robots.client.ai.RandomAI
 com.github.schnupperstudium.robots.client.ai.RandomAI2
 com.github.schnupperstudium.robots.client.ai.RepeatingAI
 com.github.schnupperstudium.robots.client.ai.ShooterAI
+com.github.schnupperstudium.robots.client.ai.ExploringAI

@@ -70,6 +70,6 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 	public void shutdown() {
 		// this method must be called when the window for the AI is closed
 		if (ai != null)
-			client.despawnAI(ai);
+			ai.despawn();
 	}
 }

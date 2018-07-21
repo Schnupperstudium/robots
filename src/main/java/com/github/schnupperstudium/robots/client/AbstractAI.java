@@ -187,7 +187,7 @@ public abstract class AbstractAI {
 	/**
 	 * @return uuid of controlled entity.
 	 */
-	public long getEntityUUID() {
+	public long getEntityUUID() {		
 		return entityUUID;
 	}
 	
