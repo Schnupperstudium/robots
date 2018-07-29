@@ -58,7 +58,9 @@ public abstract class AbstractRunningAI extends AbstractAI {
 			// clear flags and perform action
 			entityUpdated = false;
 			visionUpdated = false;
-			selectedAction = action;
+			if (action != null)
+				selectedAction = action;
+			
 			action = null;
 			
 			// notify waiting threads
