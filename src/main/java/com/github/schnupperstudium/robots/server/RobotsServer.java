@@ -1,15 +1,14 @@
 package com.github.schnupperstudium.robots.server;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,21 +60,24 @@ public abstract class RobotsServer implements Runnable {
 	private void loadLevels() throws IOException {
 		availableLevels.clear();
 		
-		URL url = RobotsServer.class.getResource("/level/");
-		if (url == null) {
-			LOG.error("Failed to load levels");
-			return;
+		InputStream levelListIS = getClass().getResourceAsStream("/level/levels.list");
+		List<String> levelNames = new ArrayList<>();
+		Scanner scanner = new Scanner(levelListIS);
+		while(scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			if (line != null && !line.isEmpty())
+				levelNames.add(line);
 		}
 		
-		File levelDir = null;
-		try {
-			levelDir = new File(url.toURI());
-		} catch (URISyntaxException e) {
-			throw new IOException(e);
-		}
-		File[] levels = levelDir.listFiles((dir, name) -> name.endsWith(".level"));
-		for (File level : levels) {
-			Level l = LevelParser.loadLevel(level);
+		scanner.close();
+		
+		for (String levelName : levelNames) {
+			InputStream is = getClass().getResourceAsStream("/level/" + levelName);
+			if (is == null) {
+				LOG.warn("level not found: /level/" + levelName);
+				continue;
+			}
+			Level l = LevelParser.loadLevel(is);
 			if (l != null)
 				availableLevels.add(l);
 		}

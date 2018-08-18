@@ -1,14 +1,12 @@
 package com.github.schnupperstudium.robots.gui;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +25,7 @@ public class Texture {
 	private static final Logger LOG = LogManager.getLogger();
 	private static final String SECRET_NAME = new String(Base64.getDecoder().decode("eFh4X1B1c3N5RGVzdHJveWVyX3hYeA=="));
 	private static final String TEXTURE_LOCATION = "/textures/";
+	private static final String TEXTURE_LIST = TEXTURE_LOCATION + "textures.list";
 	private static final Image ERROR_IMAGE = new Image(Texture.class.getResourceAsStream(TEXTURE_LOCATION + "error.png"));
 	private static final Texture ERROR_TEXTURE = new Texture(ERROR_IMAGE);
 	private static final Texture SPECIAL_ROBOT_TEXTURE = new Texture(new Image(Texture.class.getResourceAsStream(TEXTURE_LOCATION + "entity_robot_xx.png")));
@@ -52,42 +51,59 @@ public class Texture {
 	
 	static {
 		// load textures
-		URL url = Texture.class.getResource(TEXTURE_LOCATION);
-		if (url == null) {
-			LOG.error("could not locate textures: "  + TEXTURE_LOCATION);			
+		InputStream textureListIS = Texture.class.getResourceAsStream(TEXTURE_LIST);
+		if (textureListIS == null) {
+			LOG.error("could not locate textures: "  + TEXTURE_LOCATION);
 		} else {
+			List<String> textureNames = new ArrayList<>();
+			Scanner scanner = new Scanner(textureListIS);
+			while(scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				if (line != null && !line.isEmpty())
+				textureNames.add(line);
+			}
+			
+			scanner.close();
+						
 			try {
-				File dir = new File(url.toURI());
-				for (File file : dir.listFiles()) {
-					if (!file.getName().endsWith(".png"))
+				for (String fileName : textureNames) {
+					InputStream is = Texture.class.getResourceAsStream(TEXTURE_LOCATION + fileName);
+					if (!fileName.endsWith(".png"))
 						continue;
+					if (is == null) {
+						LOG.warn("unable to find texture: " + TEXTURE_LOCATION + fileName);
+						continue;
+					}
 					
-					final String name = file.getName().substring(0, file.getName().lastIndexOf('.'));
-					InputStream is = new FileInputStream(file);					
-					Image image = new Image(is);
-					final PixelReader imageReader = image.getPixelReader();
-					final int size = (int) image.getHeight();
-					final int totalWidth = (int) image.getWidth();					
-					TextureAtlas atlas = new TextureAtlas(totalWidth / size);
-					for (int x = 0; x + size <= totalWidth; x += size) {
-						 WritableImage texture = new WritableImage(size, size);
-						 PixelWriter writer = texture.getPixelWriter();
-						 for (int j = 0; j < size; j++) {
-							 for (int k = 0; k < size; k++) {
-								 writer.setArgb(j, k, imageReader.getArgb(x + j, k));
-							 }
-						 }
-						 
-						 atlas.textures.add(new Texture(texture));
-					}					
-					
-					TEXTURES.put(name, atlas);
-					LOG.trace("Loaded {} texutures for {} [{} x {}]", atlas.textures.size(), name, size, size);
+					final String name = fileName.substring(0, fileName.lastIndexOf('.'));
+					loadTexture(name, is);
 				}
 			} catch (Exception e) {
 				LOG.catching(e);
 			}
 		}
+	}
+	
+	private static void loadTexture(String name, InputStream is) {
+		Image image = new Image(is);
+		final PixelReader imageReader = image.getPixelReader();
+		final int size = (int) image.getHeight();
+		final int totalWidth = (int) image.getWidth();					
+		TextureAtlas atlas = new TextureAtlas(totalWidth / size);
+		for (int x = 0; x + size <= totalWidth; x += size) {
+			 WritableImage texture = new WritableImage(size, size);
+			 PixelWriter writer = texture.getPixelWriter();
+			 for (int j = 0; j < size; j++) {
+				 for (int k = 0; k < size; k++) {
+					 writer.setArgb(j, k, imageReader.getArgb(x + j, k));
+				 }
+			 }
+			 
+			 atlas.textures.add(new Texture(texture));
+		}					
+		
+		TEXTURES.put(name, atlas);
+		LOG.trace("Loaded {} texutures for {} [{} x {}]", atlas.textures.size(), name, size, size);
 	}
 	
 	private static Image rotateImageRight(Image input) {

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.TheDwoon</groupId>
+	<groupId>com.github.schnupperstudium</groupId>
 	<artifactId>robots</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -13,9 +13,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<!-- <repositories> <repository> <id>clojars</id> <url>http://clojars.org/repo/</url> 
-		</repository> </repositories> -->
 
 	<dependencies>
 		<dependency>
@@ -63,25 +60,48 @@
 					<target>8</target>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <executions> 
-				<execution> <id>client</id> <phase>package</phase> <goals> <goal>attached</goal> 
-				</goals> <configuration> <finalName>${project.name}-client</finalName> <appendAssemblyId>false</appendAssemblyId> 
-				<archive> <manifest> <mainClass>${project.groupId}.${project.artifactId}.client.RobotsClient</mainClass> 
-				</manifest> </archive> </configuration> </execution> <execution> <id>server</id> 
-				<phase>package</phase> <goals> <goal>attached</goal> </goals> <configuration> 
-				<finalName>${project.name}-server</finalName> <appendAssemblyId>false</appendAssemblyId> 
-				<archive> <manifest> <mainClass>${project.groupId}.${project.artifactId}.server.RobotsServer</mainClass> 
-				</manifest> </archive> </configuration> </execution> <execution> <id>server_combined</id> 
-				<phase>package</phase> <goals> <goal>attached</goal> </goals> <configuration> 
-				<finalName>${project.name}-server_combined</finalName> <appendAssemblyId>false</appendAssemblyId> 
-				<archive> <manifest> <mainClass>${project.groupId}.${project.artifactId}.gui.RobotsCombinedServerView</mainClass> 
-				</manifest> </archive> </configuration> </execution> <execution> <id>gui</id> 
-				<phase>package</phase> <goals> <goal>attached</goal> </goals> <configuration> 
-				<finalName>${project.name}-gui</finalName> <appendAssemblyId>false</appendAssemblyId> 
-				<archive> <manifest> <mainClass>${project.groupId}.${project.artifactId}.gui.RobotsViewerClient</mainClass> 
-				</manifest> </archive> </configuration> </execution> </executions> <configuration> 
-				<descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> 
-				</configuration> </plugin> -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>client</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.name}-client</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<archive>
+								<manifest>
+									<mainClass>com.github.schnupperstudium.robots.gui.client.NetworkClient</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+					<execution>
+						<id>server</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.name}-server</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<archive>
+								<manifest>
+									<mainClass>com.github.schnupperstudium.robots.server.NetworkRobotsServer</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
