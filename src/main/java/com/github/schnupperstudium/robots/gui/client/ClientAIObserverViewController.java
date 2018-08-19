@@ -15,7 +15,7 @@ import com.github.schnupperstudium.robots.world.Tile;
 import javafx.application.Platform;
 
 public class ClientAIObserverViewController extends ObserverViewController implements VisionObserver, EntityObserver {
-	private final RobotsClient client;
+//	private final RobotsClient client;
 	private final AbstractAI ai;
 	
 	private List<Tile> vision = null;
@@ -24,7 +24,7 @@ public class ClientAIObserverViewController extends ObserverViewController imple
 	public ClientAIObserverViewController(RobotsClient client, AbstractAI ai) {		
 		super();
 		
-		this.client = client;
+//		this.client = client;
 		this.ai = ai;
 		ai.addEntityUpdateObserver(this);
 		ai.addVisionObserver(this);
