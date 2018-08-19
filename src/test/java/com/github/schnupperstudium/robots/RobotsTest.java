@@ -99,6 +99,7 @@ public abstract class RobotsTest {
 	
 	@Test
 	public void startGame() {
+		robotsServer.loadLevel("/level/LoadWorldTest.level");
 		long gameId = 0;
 		assertNoRunningGames();
 		gameId = startGame("TestLevel01", "LoadWorldTest", null);
@@ -130,6 +131,7 @@ public abstract class RobotsTest {
 
 	@Test (timeout = 1000)
 	public void observeWorld() throws Exception {
+		robotsServer.loadLevel("/level/LoadWorldTest.level");
 		final long gameId = startGame("TestLevel2", "LoadWorldTest", null);
 		SimpleObserver observer = new SimpleObserver();
 		boolean observable = robotsClient.spawnObserver(gameId, null, observer);
@@ -157,6 +159,7 @@ public abstract class RobotsTest {
 	
 	@Test(timeout = 3000) 
 	public void unobserveWorld() throws Exception {
+		robotsServer.loadLevel("/level/LoadWorldTest.level");
 		final long gameId = startGame("TestLevel2", "LoadWorldTest", null);
 		SimpleObserver observer = new SimpleObserver();
 		boolean observable = robotsClient.spawnObserver(gameId, null, observer);
@@ -178,6 +181,7 @@ public abstract class RobotsTest {
 	
 	@Test (timeout = 10000) 
 	public void spawnAI() throws Exception {
+		robotsServer.loadLevel("/level/WaterPond.level");
 		final List<EntityLocation> locations = new LinkedList<>();
 		Consumer<SimpleAI> checks = new Consumer<RobotsTest.SimpleAI>() {
 			@Override
@@ -204,6 +208,7 @@ public abstract class RobotsTest {
 	
 	@Test (timeout = 5000)
 	public void despawnAI() throws Exception {
+		robotsServer.loadLevel("/level/WaterPond.level");
 		final long gameId = startWaterPondLevel("TestLevel", null);
 		final SimpleAI ai = (SimpleAI) robotsClient.spawnAI(gameId, "testAI", null, (client, gId, eId) -> new SimpleAI(client, gId, eId, DRIVE_CIRCLE_ACTIONS, e -> {}));
 		Assert.assertNotNull(ai);
@@ -220,6 +225,7 @@ public abstract class RobotsTest {
 	
 	@Test (timeout = 10000)
 	public void testFacing() throws Exception {
+		robotsServer.loadLevel("/level/facing_test.level");
 		List<EntityVisinity> visinities = new LinkedList<>();
 		Consumer<SimpleAI> checks = new Consumer<RobotsTest.SimpleAI>() {
 			@Override
@@ -249,6 +255,7 @@ public abstract class RobotsTest {
 
 	@Test (timeout = 10000) 
 	public void testClientDisconnect() throws Exception {
+		robotsServer.loadLevel("/level/facing_test.level");
 		final long gameId = startGame("TestLevel", "FacingTest", null);
 		final SimpleAIFactory aiFactory = new SimpleAIFactory((c, g, e) -> new NoActionAI(c, g, e));
 		final NoActionAI ai = (NoActionAI) robotsClient.spawnAI(gameId, "lazyAi", null, aiFactory);

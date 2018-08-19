@@ -72,17 +72,21 @@ public abstract class RobotsServer implements Runnable {
 		scanner.close();
 		
 		for (String levelName : levelNames) {
-			InputStream is = getClass().getResourceAsStream("/level/" + levelName);
-			if (is == null) {
-				LOG.warn("level not found: /level/" + levelName);
-				continue;
-			}
-			Level l = LevelParser.loadLevel(is);
-			if (l != null)
-				availableLevels.add(l);
+			loadLevel("/level/" + levelName);
 		}
 		
 		LOG.info("Loaded " + availableLevels.size() + " levels");
+	}
+	
+	public void loadLevel(String resourcePath) {
+		InputStream is = getClass().getResourceAsStream(resourcePath);
+		if (is == null) {
+			LOG.warn("level not found: /level/" + resourcePath);
+			return;
+		}
+		Level l = LevelParser.loadLevel(is);
+		if (l != null)
+			availableLevels.add(l);
 	}
 	
 	@Override
