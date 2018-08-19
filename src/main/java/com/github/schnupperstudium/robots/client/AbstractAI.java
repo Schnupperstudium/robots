@@ -1,14 +1,26 @@
 package com.github.schnupperstudium.robots.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
 
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
+import com.github.schnupperstudium.robots.gui.client.ClientMapView;
+import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * A basic AI.
@@ -23,6 +35,7 @@ public abstract class AbstractAI {
 	private final List<EntityObserver> entityObservers = new ArrayList<>();
 	private final List<VisionObserver> visionObservers = new ArrayList<>();
 	
+	private ClientMapView mapView;
 	private Entity entity;
 	private List<Tile> vision;
 
@@ -339,5 +352,28 @@ public abstract class AbstractAI {
 		if (entityUUID != other.entityUUID)
 			return false;
 		return true;
+	}
+	
+	protected void openMapView(Map map) {
+		this.mapView = new ClientMapView();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
+		loader.setController(mapView);
+		try {
+			Parent root = loader.load();
+			Stage stage = new Stage();
+			stage.initModality(Modality.NONE);
+			stage.initStyle(StageStyle.DECORATED);
+			stage.setTitle("Robots -- ClientAIObserver");			
+			stage.setScene(new Scene(root, 800, 600));
+			stage.show();
+		} catch (IOException e) {
+			LogManager.getLogger().catching(e);
+			return;
+		}
+	}
+	
+	protected void updateMap(Map map) {
+		if (mapView != null)
+			mapView.updateMap(map);
 	}
 }
