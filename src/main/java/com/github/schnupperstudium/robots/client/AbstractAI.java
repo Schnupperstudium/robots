@@ -354,7 +354,7 @@ public abstract class AbstractAI {
 		return true;
 	}
 	
-	protected void openMapView(Map map) {
+	protected void openMapView() {
 		this.mapView = new ClientMapView();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/observerView.fxml"));
 		loader.setController(mapView);
@@ -363,8 +363,9 @@ public abstract class AbstractAI {
 			Stage stage = new Stage();
 			stage.initModality(Modality.NONE);
 			stage.initStyle(StageStyle.DECORATED);
-			stage.setTitle("Robots -- ClientAIObserver");			
+			stage.setTitle("Robots -- MapView");			
 			stage.setScene(new Scene(root, 800, 600));
+			stage.setOnHidden(e -> mapView = null);
 			stage.show();
 		} catch (IOException e) {
 			LogManager.getLogger().catching(e);
