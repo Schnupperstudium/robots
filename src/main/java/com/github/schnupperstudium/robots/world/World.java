@@ -14,7 +14,7 @@ import com.github.schnupperstudium.robots.entity.Facing;
  * @author Daniel Wieland
  *
  */
-public class World {
+public class World implements Map {
 	private final Tile[][] tiles;
 	private transient final Set<Tile> spawns = new HashSet<>();
 	private final int width;
@@ -58,6 +58,7 @@ public class World {
 	 * @param y y coordinate.
 	 * @return persisted tile or dummy tile (never <code>null</code>).
 	 */
+	@Override
 	public Tile getTile(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) 
 			return new Tile(this, x, y, Material.VOID);
@@ -113,6 +114,7 @@ public class World {
 	/**
 	 * @return width of this world.
 	 */
+	@Override
 	public int getWidth() {
 		return width;
 	}
@@ -120,6 +122,7 @@ public class World {
 	/**
 	 * @return height of this world.
 	 */
+	@Override
 	public int getHeight() {
 		return height;
 	}

@@ -11,6 +11,7 @@ import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
+import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -51,16 +52,16 @@ public final class SimpleRenderer {
 	}
 	
 	public static void renderWorld(GraphicsContext gc, World world) {
-		renderWorld(gc, world, TILE_SIZE);
+		renderMap(gc, world, TILE_SIZE);
 	}
 	
-	public static void renderWorld(GraphicsContext gc, World world, double tileSize) {
+	public static void renderMap(GraphicsContext gc, Map map, double tileSize) {
 		final long start = System.nanoTime();
-		final int width = world.getWidth();
-		final int height = world.getHeight();
+		final int width = map.getWidth();
+		final int height = map.getHeight();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				Tile tile = world.getTile(x, y);
+				Tile tile = map.getTile(x, y);
 				final double renderX = x * tileSize;
 				final double renderY = y * tileSize;
 				
@@ -68,7 +69,7 @@ public final class SimpleRenderer {
 			}
 		}
 		final long end = System.nanoTime();
-		LOG.trace("renderWorld took {}ms", ((end - start) / 1000) / 1000.0);
+		LOG.trace("renderMap took {}ms", ((end - start) / 1000) / 1000.0);
 	}
 	
 	public static void renderTile(GraphicsContext gc, Tile tile, double renderX, double renderY, double tileSize) {

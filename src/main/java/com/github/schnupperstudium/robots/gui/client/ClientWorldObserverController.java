@@ -31,7 +31,7 @@ public class ClientWorldObserverController extends ObserverViewController implem
 		gc.clearRect(0, 0, worldCanvas.getWidth(), worldCanvas.getHeight());
 		
 		double tileSize = Math.min(worldCanvas.getWidth() / world.getWidth(), worldCanvas.getHeight() / world.getHeight());
-		SimpleRenderer.renderWorld(gc, world, tileSize);
+		SimpleRenderer.renderMap(gc, world, tileSize);
 	}
 
 	@Override
