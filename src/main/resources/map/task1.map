@@ -5,23 +5,25 @@ TREE:t
 ROCK:r
 WATER:w
 SPAWN:s
+FINISH:f
+PEDESTAL:p
 
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
 g s g g g g r g s g g g g r g s g g g g r g s g g g g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
-g g g g g g r g g g g g g r g g g g g g r g g g g g g
-g g g g g g r g g g g g g r g g g g g g r g g g g g g
-r r r r r r r r r r r r r r r r r r r r r r r r r r r
-g g g g g g r g g g g g g r g g g g g g r g g g g g g
-g s g g g g r g s g g g g r g s g g g g r g s g g g g
-g g g g g g r g g g g g g r g g g g g g r g g g g g g
-g g g g g g r g g g g g g r g g g g g g r g g g g g g
+g g g g p g r g g g g p g r g g g g p g r g g g g p g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
 r r r r r r r r r r r r r r r r r r r r r r r r r r r
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
 g s g g g g r g s g g g g r g s g g g g r g s g g g g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
+g g g g p g r g g g g p g r g g g g p g r g g g g p g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
+r r r r r r r r r r r r r r r r r r r r r r r r r r r
+g g g g g g r g g g g g g r g g g g g g r g g g g g g
+g s g g g g r g s g g g g r g s g g g g r g s g g g g
+g g g g g g r g g g g g g r g g g g g g r g g g g g g
+g g g g p g r g g g g p g r g g g g p g r g g g g p g
 g g g g g g r g g g g g g r g g g g g g r g g g g g g
 
 com.github.schnupperstudium.robots.entity.item.Star 4 3

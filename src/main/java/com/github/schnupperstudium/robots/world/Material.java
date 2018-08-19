@@ -16,6 +16,7 @@ public enum Material {
 	WATER(false),
 	SPAWN(true),
 	FINISH(true),
+	PEDESTAL(true),
 	SCORCHED_EARTH(true),
 	/** used to mark unknown terrain. Must not be used within a map. */
 	UNDEFINED(false),
