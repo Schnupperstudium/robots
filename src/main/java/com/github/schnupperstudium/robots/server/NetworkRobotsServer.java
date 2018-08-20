@@ -48,7 +48,13 @@ public class NetworkRobotsServer extends RobotsServer {
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		NetworkRobotsServer server = new NetworkRobotsServer();
+		NetworkRobotsServer server = null;
+		if (args.length > 0) {
+			server = new NetworkRobotsServer(Integer.parseInt(args[0]));
+		} else {
+			server = new NetworkRobotsServer();
+		}
+		
 		Scanner scanner = new Scanner(System.in);
 		String line = scanner.nextLine();
 		while (line != null && !line.equalsIgnoreCase("exit")) {
