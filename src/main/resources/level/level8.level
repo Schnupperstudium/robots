@@ -1,0 +1,8 @@
+{	
+	"name":"Level 8",
+	"mapLocation":"/map/maze_2poly.map",
+	"desc":"Navigiere durch ein großes Labyrinth aus 2 getrennten Polygonen!",
+	"modules": {
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null		
+	}
+}

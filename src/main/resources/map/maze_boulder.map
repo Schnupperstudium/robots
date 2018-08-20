@@ -1,0 +1,52 @@
+45x30
+VOID:v
+GRASS:g
+TREE:t
+ROCK:r
+MAP_BORDER:b
+WATER:w
+SPAWN:s
+PEDESTAL:p
+
+b b b b b b b b b b b b b b b b b b b b v v v v v v b b b b b b b b b b b b b b b b b b b 
+b g g g r g g g g g g g g g g g g g g g g v v v v g g g g g g g g g r g g g g g r g g g b 
+b g s g r g g g g g g g g g w w w g g g g g v v g g r r r r r r r g r g g g g g r g p g b 
+b g g g r g g g g g g g g w w w g g g g g g v v g g r g r g r g r g r g g g g g r g g g b 
+b r g r r g g g g g g g w w w g g g g g g v v g g g r g r g r g r g r g g g g g r r g r b 
+b g g g g g g g g g g w w w w g g g g g g v v v g g r g r g r g r g r g g g g g g g g g b 
+b g g g g g g g g g w w w w w g g g g g g v v v g g r g r g g g r g r g g g g g g g g g b 
+b g g g g g g g g w w g g w w g g g g g v v v v g g r g r g r g r g r g g g g g g g g g b 
+b g w w g g g g w w g g g w w g g g g g g v v g g g r g g g r g r g r g g g g g g g g g b 
+b g g w w g g w w w g g g w w g g g g g g g v g g g r g r g r g r g r g g g g g g g g g b 
+b g g g w w g g w g g g g w w g g g g g g v v g g g r g r g r g r g r g g g g g g g g g b 
+b g g g g w w g g g g g g w w g g g g g g v v v g g r g r g r g r g r g g g g g g g g g b 
+b g g g g g w w g g g g g w w g g g g g g g v g g g r g r g r g g g r g g g g g g g g g b 
+b g g g g g g w w w g g g w w g g g r r r r v v r r r r r g r r r g r g g g g g g g g g b 
+b g g g g g g g g w w g g w w g g g g g g g g g g g g g g g g g g g g g g g g g g g g g b 
+b g g g g g g g w w w w g w w g g g r r r r g g g g g g g g g g g g g g g g g g g g g g b 
+b g g g g g g w w g g w w w w g g g g g g r v r r r r g r r r r r r r g g g g g g g g g b 
+b g g g g g w w g g g g w w g g g g g g g v v g g g r g r g g g g g r g g g g g g g g g b 
+b g g g g g w w g g g g w w g g g g g g g v v v g g r g r g r r r g r g g g g g g g g g b 
+b g g w w w w w g g g g w w g g g g g g v v v g g g r g r g r g g g r g g g g g g g g g b 
+b g g w w w w w g g g g w w g g g g g v v v v v g g r g r g r g r r r g g g g g g g g g b 
+b g g w w g g w w g g g w w g g g g g g v v v v g g r g r g r g r g r g g g g g g g g g b 
+b g g w w g g g w w g g w w g g g g g g v v v g g g r g r g r g r g r g g g g g g g g g b 
+b g g g g g g g g w w g g w w g g g g g g v v g g g r g g g r g r g r g g g g g g g g g b 
+b g g g g g g g g g w w g g w w g g g g g v v v g g r g r g r g g g r g g g g g g g g g b 
+b r g r r g g g g g g g g g g w w g g g g g v v g g r g r g r g r g r g g g g g r r g r b 
+b g g g r g g g g g g g g g g g g g g g g v v v g g r g r g r g r g r g g g g g r g g g b 
+b g s g r g g g g g g g g g r r r g g g g v v v v g r r r r r r r g r g g g g g r g p g b 
+b g g g r g g g g g g g g r r r g g g g v v v v v g g g g g g g g g r g g g g g r g g g b
+b b b b b b b b b b b b b b b b b b b v v v v v v v b b b b b b b b b b b b b b b b b b b
+
+com.github.schnupperstudium.robots.entity.item.Star 42 2
+com.github.schnupperstudium.robots.entity.item.Star 42 27
+com.github.schnupperstudium.robots.entity.item.LaserCharge 23 12
+com.github.schnupperstudium.robots.entity.item.LaserCharge 24 12
+com.github.schnupperstudium.robots.entity.item.LaserCharge 25 12
+com.github.schnupperstudium.robots.entity.item.LaserCharge 23 17
+com.github.schnupperstudium.robots.entity.item.LaserCharge 24 17
+com.github.schnupperstudium.robots.entity.item.LaserCharge 25 17
+
+com.github.schnupperstudium.robots.entity.scenery.MediumBoulder 42 4
+com.github.schnupperstudium.robots.entity.scenery.MediumBoulder 42 25
