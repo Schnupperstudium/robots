@@ -57,13 +57,16 @@ public final class SimpleRenderer {
 	
 	public static void renderMap(GraphicsContext gc, Map map, double tileSize) {
 		final long start = System.nanoTime();
-		final int width = map.getWidth();
-		final int height = map.getHeight();
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		final int minX = map.getMinX();
+		final int minY = map.getMinY();
+		final int maxX = map.getMaxX();
+		final int maxY = map.getMaxY();
+		
+		for (int x = minX; x < maxX; x++) {
+			for (int y = minY; y < maxY; y++) {
 				Tile tile = map.getTile(x, y);
-				final double renderX = x * tileSize;
-				final double renderY = y * tileSize;
+				final double renderX = (x - minX) * tileSize;
+				final double renderY = (y - minY) * tileSize;
 				
 				renderTile(gc, tile, renderX, renderY, tileSize);
 			}

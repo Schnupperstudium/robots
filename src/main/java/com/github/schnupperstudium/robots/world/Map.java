@@ -24,4 +24,32 @@ public interface Map {
 	 * @return tile at the given location.
 	 */
 	Tile getTile(int x, int y);
+	
+	/**
+	 * @return lower x coordinate bound (included in map).
+	 */
+	default int getMinX() {
+		return 0;
+	}
+	
+	/**
+	 * @return upper x coordinate bound (not contained in map).
+	 */
+	default int getMaxX() {
+		return getWidth();
+	}
+	
+	/**
+	 * @return lower y coordinate bound (included in map).
+	 */
+	default int getMinY() {
+		return 0;
+	}
+	
+	/**
+	 * @return upper y coordinate bound (not contained in map).
+	 */
+	default int getMaxY() {
+		return getHeight();
+	}
 }
