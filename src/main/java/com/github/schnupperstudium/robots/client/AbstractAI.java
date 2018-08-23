@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import com.github.schnupperstudium.robots.ai.action.EntityAction;
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
+import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.gui.client.ClientMapView;
 import com.github.schnupperstudium.robots.world.Map;
@@ -93,6 +94,17 @@ public abstract class AbstractAI {
 			return null;
 		else
 			return e.getFacing();
+	}
+	
+	/**
+	 * @return inventory of the entity.
+	 */
+	public Inventory getInventory() {
+		final Entity e = getEntity();
+		if (e == null)
+			return null;
+		else
+			return e.getInventory();
 	}
 	
 	/**
