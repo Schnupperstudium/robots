@@ -3,6 +3,7 @@
 	"mapLocation":"/map/maze_boulder.map",
 	"desc":"Navigiere durch ein Karte mit Steinen im Weg!",
 	"modules": {
-		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null		
+		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null,
+		"com.github.schnupperstudium.robots.server.module.ProjectileModule": null	
 	}
 }
