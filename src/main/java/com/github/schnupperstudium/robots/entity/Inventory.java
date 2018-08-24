@@ -56,6 +56,36 @@ public class Inventory {
 	}
 	
 	/**
+	 * Attempts to find an item contained in this inventory with the given name.
+	 * 
+	 * @param name name of the searched item.
+	 * @return item with matching name or <code>null</code>.
+	 */
+	public Item findItem(String name) {
+		for (Item item : items ) {
+			if (item.getName() == name)
+				return item;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Searches for an item with the given name within the inventory.
+	 * 
+	 * @param name name of an item.
+	 * @return true if an item with the given name was found.
+	 */
+	public boolean hasItem(String name) {
+		for (Item item : items ) {
+			if (item.getName() == name)
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * @return a copy of the list containing all items in this inventory.
 	 */
 	public List<Item> getItems() {
