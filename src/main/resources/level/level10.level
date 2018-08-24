@@ -4,6 +4,7 @@
 	"desc":"Navigiere durch ein Karte mit Steinen und Toren!",
 	"modules": {
 		"com.github.schnupperstudium.robots.server.module.RespawnItemsModule": null,
-		"com.github.schnupperstudium.robots.server.module.ColoredTeleporterModule": null		
+		"com.github.schnupperstudium.robots.server.module.ColoredTeleporterModule": null,
+		"com.github.schnupperstudium.robots.server.module.ProjectileModule": null	
 	}
 }
