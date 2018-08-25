@@ -12,10 +12,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.schnupperstudium.robots.client.AbstractAI;
+import com.github.schnupperstudium.robots.client.LocalRobotsClient;
 import com.github.schnupperstudium.robots.client.NetworkRobotsClient;
+import com.github.schnupperstudium.robots.client.RobotsClient;
 import com.github.schnupperstudium.robots.server.GameInfo;
 import com.github.schnupperstudium.robots.server.Level;
+import com.github.schnupperstudium.robots.server.LocalRobotsServer;
 import com.github.schnupperstudium.robots.server.NetworkRobotsServer;
+import com.github.schnupperstudium.robots.server.RobotsServer;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -91,8 +95,8 @@ public class NetworkClient extends Application {
 	};
 	
 	/** if a parameter is supplied the server is started with this ui. */
-	private NetworkRobotsServer server;
-	private NetworkRobotsClient client;
+	private RobotsServer server;
+	private RobotsClient client;
 	
 	@FXML
 	private ListView<Level> levelView;
@@ -194,16 +198,27 @@ public class NetworkClient extends Application {
 		if (params.get("port") != null)
 			port = Integer.parseInt(params.get("port"));
 
-		if (params.get("server") != null && params.get("server").equalsIgnoreCase("true")) {
+		boolean networkServer = params.get("server") != null && (params.get("server").equalsIgnoreCase("true") || params.get("server").equalsIgnoreCase("network"));
+		boolean localServer = params.get("server") != null && params.get("server").equalsIgnoreCase("local");
+		if (networkServer) {
+			LOG.info("started network server");
 			server = new NetworkRobotsServer(port);
+		} else if (localServer) {
+			LOG.info("started local server");
+			server = new LocalRobotsServer();
 		}
 		
-		String host = DEFAULT_HOST;
-		if (params.get("host") != null)
-			host = params.get("host");
-		
-		LOG.info("Connecting to {}:{}", host, port);
-		client = NetworkRobotsClient.connect(host, port);
+		if (localServer) {
+			LOG.info("Connecting to local server");
+			client = LocalRobotsClient.connect((LocalRobotsServer) server);
+		} else {
+			String host = DEFAULT_HOST;
+			if (params.get("host") != null)
+				host = params.get("host");
+			
+			LOG.info("Connecting to {}:{}", host, port);
+			client = NetworkRobotsClient.connect(host, port);
+		}
 		
 		levelView.setCellFactory(view -> new ListCell<Level>() {
 			 @Override
