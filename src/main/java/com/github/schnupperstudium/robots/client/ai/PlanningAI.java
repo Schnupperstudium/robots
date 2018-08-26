@@ -15,7 +15,7 @@ public abstract class PlanningAI extends AbstractAI {
 	}
 
 	@Override
-	public final EntityAction makeTurn() {
+	public EntityAction makeTurn() {
 		if (stack.isEmpty())
 			planMovement();
 			
@@ -36,12 +36,19 @@ public abstract class PlanningAI extends AbstractAI {
 	/**
 	 * Clears currently planned actions.
 	 */
-	protected void clearPath() {
+	protected void clearStack() {
 		stack.clear();
 	}
 	
-	protected void enqueueAction(EntityAction action) {
-		stack.add(action);
+	/**
+	 * @param action action to be queued.
+	 */
+	protected void enqueueAction(EntityAction... actions) {
+		if (actions != null) {
+			for (EntityAction action : actions) {
+				stack.add(action);
+			}
+		}
 	}
 	
 	protected void preAction() { };

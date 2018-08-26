@@ -1,12 +1,16 @@
 package com.github.schnupperstudium.robots.client.ai.map;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.github.schnupperstudium.robots.gui.MapRenderAddition;
 import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
 
 public class ScalingMap implements Map {
+	private final List<MapRenderAddition> renderAdditions = new ArrayList<>();
+	
 	private Tile[][] mapTiles;
 	private int width;
 	private int height;
@@ -120,5 +124,24 @@ public class ScalingMap implements Map {
 	
 	public boolean isWithinMap(int x, int y) {
 		return x >= minX && x < maxX && y >= minY && y < maxY;
+	}
+	
+	public void addMapRenderAddition(MapRenderAddition renderAddition) {
+		renderAdditions.add(renderAddition);
+	}
+	
+	@Override
+	public boolean hasMapRenderAdditions() {		
+		return !renderAdditions.isEmpty();
+	}
+	
+	@Override
+	public List<MapRenderAddition> getMapRenderAdditions() {
+		return new ArrayList<>(renderAdditions);
+	}
+	
+	@Override
+	public void clearMapRenderAdditions() {
+		renderAdditions.clear();
 	}
 }

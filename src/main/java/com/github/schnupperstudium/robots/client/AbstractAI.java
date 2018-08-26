@@ -12,6 +12,7 @@ import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.gui.client.ClientMapView;
+import com.github.schnupperstudium.robots.world.Location;
 import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
@@ -242,6 +243,13 @@ public abstract class AbstractAI {
 	 */
 	public int getY() {
 		return entity.getY();		
+	}
+	
+	/**
+	 * @return current entity location.
+	 */
+	public Location getLocation() {
+		return new Location(getX(), getY());
 	}
 	
 	/**

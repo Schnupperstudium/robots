@@ -1,13 +1,17 @@
 package com.github.schnupperstudium.robots.entity;
 
 public enum Facing {
-
+	NONE(0, 0),
 	NORTH(0, -1),
     WEST(-1, 0),
     SOUTH(0, 1),
     EAST(1, 0);
 
 	static {
+		NONE.left = NONE;
+		NONE.right = NONE;
+		NONE.opposite = NONE;
+		
         NORTH.left = WEST;
         NORTH.right = EAST;
         NORTH.opposite = SOUTH;
@@ -58,6 +62,7 @@ public enum Facing {
 			return NORTH;
 		if (dx == 0 && dy > 0)
 			return SOUTH;
-		throw new IllegalArgumentException("Invalid facing: dx = " + dx + ", dy = " + dy);
+		
+		return NONE;
 	}
 }

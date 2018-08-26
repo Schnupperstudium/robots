@@ -1,7 +1,11 @@
 package com.github.schnupperstudium.robots.world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
+import com.github.schnupperstudium.robots.gui.TileRenderAddition;
 
 /**
  * Represents a tile in a {@link World}.
@@ -12,6 +16,8 @@ import com.github.schnupperstudium.robots.entity.Item;
 public class Tile {
 	/** world (<code>null</code> on client). */
 	private transient final World world;
+	/** additional render operations on tiles (<code>null</code> on server). */
+	private transient final List<TileRenderAddition> tileRenderAdditions = new ArrayList<>();	
 	private final int x;
 	private final int y;
 		
@@ -161,7 +167,46 @@ public class Tile {
 	public boolean canVisit() {
 		return material.isVisitable() && visitor == null;
 	}
+	
+	/**
+	 * Checks if the current material for this tile can be walked on. 
+	 * The tile can sill be blocked by an entity even if this returns <code>true</code>.
+	 * 
+	 * @return true if an entity can walk on this tile. 
+	 */
+	public boolean isVisitable() {
+		return material.isVisitable();
+	}
 
+	/**
+	 * @return true if there are render additions present for this tile.
+	 */
+	public boolean hasTileRenderAdditions() {
+		return !tileRenderAdditions.isEmpty();
+	}
+	
+	/**
+	 * @return a copy of the list for additional renderers.
+	 */
+	public List<TileRenderAddition> getTileRenderAdditions() {
+		return new ArrayList<>(tileRenderAdditions);
+	}
+	
+	/**
+	 * @param renderAddition new render addition.
+	 */
+	public void addTileRenderAddition(TileRenderAddition renderAddition) {
+		if (renderAddition != null)
+			tileRenderAdditions.add(renderAddition);
+	}
+	
+	/**
+	 * Removes all render additions.
+	 */
+	public void clearTileRenderAdditions() {
+		tileRenderAdditions.clear();
+	}
+	
 	@Override
 	public Tile clone() throws CloneNotSupportedException {
 		return new Tile(x, y, material, visitor != null ? visitor.clone() : null, item != null ? item.clone() : null);

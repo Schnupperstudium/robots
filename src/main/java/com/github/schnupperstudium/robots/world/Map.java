@@ -1,5 +1,10 @@
 package com.github.schnupperstudium.robots.world;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.github.schnupperstudium.robots.gui.MapRenderAddition;
+
 /**
  * Defines methods for a simple map.
  * 
@@ -51,5 +56,27 @@ public interface Map {
 	 */
 	default int getMaxY() {
 		return getHeight();
+	}
+	
+	
+	/**
+	 * @return true if this map has render addtions.
+	 */
+	default boolean hasMapRenderAdditions() {
+		return false;
+	}
+	
+	/**
+	 * @return copy of a list containing all current render additions.
+	 */
+	default List<MapRenderAddition> getMapRenderAdditions() {
+		return new ArrayList<>();
+	}
+	
+	/**
+	 * Clears currently assigned render additions.
+	 */
+	default void clearMapRenderAdditions() {
+		
 	}
 }

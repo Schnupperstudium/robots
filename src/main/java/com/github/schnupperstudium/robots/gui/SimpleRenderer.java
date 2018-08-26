@@ -71,6 +71,13 @@ public final class SimpleRenderer {
 				renderTile(gc, tile, renderX, renderY, tileSize);
 			}
 		}
+		
+		if (map.hasMapRenderAdditions()) {
+			for (MapRenderAddition renderAddition : map.getMapRenderAdditions()) {
+				renderAddition.renderMapAddition(map, gc, minX, minY, tileSize);;
+			}
+		}
+		
 		final long end = System.nanoTime();
 		LOG.trace("renderMap took {}ms", ((end - start) / 1000) / 1000.0);
 	}
@@ -88,6 +95,13 @@ public final class SimpleRenderer {
 		// draw entity
 		if (tile.hasVisitor()) {
 			renderEntity(gc, tile.getVisitor(), renderX, renderY, tileSize, tile.getVisitor().getFacing());
+		}
+		
+		// draw debug information
+		if (tile.hasTileRenderAdditions()) {
+			for (TileRenderAddition renderAddition : tile.getTileRenderAdditions()) {
+				renderAddition.renderTileAddition(tile, gc, renderX, renderY, tileSize);
+			}
 		}
 	}
 	
