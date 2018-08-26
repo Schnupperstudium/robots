@@ -199,7 +199,7 @@ public class NetworkClient extends Application {
 			port = Integer.parseInt(params.get("port"));
 
 		boolean networkServer = params.get("server") != null && (params.get("server").equalsIgnoreCase("true") || params.get("server").equalsIgnoreCase("network"));
-		boolean localServer = params.get("server") != null && params.get("server").equalsIgnoreCase("local");
+		boolean localServer = params.get("server") != null && params.get("server").equalsIgnoreCase("local") || (!params.containsKey("host") && !params.containsKey("port"));
 		if (networkServer) {
 			LOG.info("started network server");
 			server = new NetworkRobotsServer(port);
