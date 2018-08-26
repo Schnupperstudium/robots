@@ -41,6 +41,19 @@ public class Inventory {
 	}
 	
 	/**
+	 * Gets the item at the given position.
+	 * 
+	 * @param index item index.
+	 * @return item at the given index or <code>null</code>.
+	 */
+	public Item getItem(int index) {
+		if (index < 0 || index >= items.size())
+			return null;
+		
+		return items.get(index);
+	}
+	
+	/**
 	 * Attempts to find an item contained in this inventory with the given uuid.
 	 * 
 	 * @param uuid uuid of the searched item.
