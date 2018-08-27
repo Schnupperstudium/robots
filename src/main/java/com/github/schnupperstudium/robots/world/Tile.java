@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.gui.TileRenderAddition;
+import com.github.schnupperstudium.robots.gui.overlay.TileRenderAddition;
 
 /**
  * Represents a tile in a {@link World}.

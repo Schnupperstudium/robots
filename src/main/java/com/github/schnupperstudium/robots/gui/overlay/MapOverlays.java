@@ -1,4 +1,4 @@
-package com.github.schnupperstudium.robots.gui;
+package com.github.schnupperstudium.robots.gui.overlay;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@ package com.github.schnupperstudium.robots.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.schnupperstudium.robots.gui.MapRenderAddition;
+import com.github.schnupperstudium.robots.gui.overlay.MapRenderAddition;
 
 /**
  * Defines methods for a simple map.

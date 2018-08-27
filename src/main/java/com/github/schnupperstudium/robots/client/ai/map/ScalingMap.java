@@ -3,7 +3,7 @@ package com.github.schnupperstudium.robots.client.ai.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.schnupperstudium.robots.gui.MapRenderAddition;
+import com.github.schnupperstudium.robots.gui.overlay.MapRenderAddition;
 import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;

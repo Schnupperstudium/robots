@@ -1,4 +1,4 @@
-package com.github.schnupperstudium.robots.gui;
+package com.github.schnupperstudium.robots.gui.overlay;
 
 import com.github.schnupperstudium.robots.world.Tile;
 

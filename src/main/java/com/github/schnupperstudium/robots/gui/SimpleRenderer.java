@@ -11,6 +11,8 @@ import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
+import com.github.schnupperstudium.robots.gui.overlay.MapRenderAddition;
+import com.github.schnupperstudium.robots.gui.overlay.TileRenderAddition;
 import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
