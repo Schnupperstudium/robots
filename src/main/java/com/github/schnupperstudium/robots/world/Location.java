@@ -1,5 +1,7 @@
 package com.github.schnupperstudium.robots.world;
 
+import com.github.schnupperstudium.robots.entity.Facing;
+
 /**
  * Marks a location on a map.
  * 
@@ -9,16 +11,29 @@ package com.github.schnupperstudium.robots.world;
 public class Location {
 	private final int x;
 	private final int y;
+	private final Facing facing;
+	
+	/**
+	 * Creates a new location with <code>Facing.NONE</code> as facing. 
+	 * 
+	 * @param x x coordinate.
+	 * @param y y coordinate.
+	 */
+	public Location(int x, int y) {
+		this(x, y, Facing.NONE);
+	}
 	
 	/**
 	 * Creates a new location. 
 	 * 
 	 * @param x x coordinate.
 	 * @param y y coordinate.
+	 * @param facing facing.
 	 */
-	public Location(int x, int y) {
+	public Location(int x, int y, Facing facing) {
 		this.x = x;
 		this.y = y;
+		this.facing = facing;
 	}
 	
 	/**
@@ -35,6 +50,13 @@ public class Location {
 		return y;
 	}
 
+	/**
+	 * @return facing.
+	 */
+	public Facing getFacing() {
+		return facing;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
