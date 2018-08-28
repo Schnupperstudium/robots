@@ -301,8 +301,7 @@ public class NetworkClient extends Application {
 			showAlert("Bitte ein Level auswählen!");
 			return;
 		} else if (name == null || name.isEmpty()) {
-			showAlert("Bitte einen Namen angeben!");
-			return;
+			name = level.getName();
 		}
 		
 		client.getServerInterface().startGame(name, level.getName(), password);
