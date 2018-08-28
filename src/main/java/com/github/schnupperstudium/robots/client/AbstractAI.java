@@ -249,7 +249,7 @@ public abstract class AbstractAI {
 	 * @return current entity location.
 	 */
 	public Location getLocation() {
-		return new Location(getX(), getY());
+		return new Location(getX(), getY(), getFacing());
 	}
 	
 	/**
