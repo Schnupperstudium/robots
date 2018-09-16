@@ -57,6 +57,13 @@ public class Location {
 		return facing;
 	}
 	
+	/**
+	 * @return true if the facing is a valid facing other than <code>Facing.NONE</code>.
+	 */
+	public boolean hasFacing() {
+		return facing != Facing.NONE;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
