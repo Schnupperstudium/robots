@@ -63,11 +63,12 @@ public class Location {
 	public boolean hasFacing() {
 		return facing != Facing.NONE;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((facing == null) ? 0 : facing.hashCode());
 		result = prime * result + x;
 		result = prime * result + y;
 		return result;
@@ -82,6 +83,8 @@ public class Location {
 		if (getClass() != obj.getClass())
 			return false;
 		Location other = (Location) obj;
+		if (facing != other.facing)
+			return false;
 		if (x != other.x)
 			return false;
 		if (y != other.y)

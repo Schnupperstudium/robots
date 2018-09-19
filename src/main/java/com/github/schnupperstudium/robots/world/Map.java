@@ -31,6 +31,17 @@ public interface Map {
 	Tile getTile(int x, int y);
 	
 	/**
+	 * Returns the tile at the given location.
+	 * The tile must not be <code>null</code>.
+	 * 
+	 * @param location
+	 * @return tile at the given location.
+	 */
+	default Tile getTile(Location location) {
+		return getTile(location.getX(), location.getY());
+	}
+	
+	/**
 	 * @return lower x coordinate bound (included in map).
 	 */
 	default int getMinX() {
