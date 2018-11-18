@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.rmi.ObjectSpace;
+import com.github.schnupperstudium.robots.ai.action.CombinedEntityAction;
 import com.github.schnupperstudium.robots.ai.action.DropItemAction;
 import com.github.schnupperstudium.robots.ai.action.MoveBackwardAction;
 import com.github.schnupperstudium.robots.ai.action.MoveForwardAction;
@@ -34,6 +35,7 @@ import com.github.schnupperstudium.robots.entity.projectile.LaserBeam;
 import com.github.schnupperstudium.robots.entity.scenery.LargeBoulder;
 import com.github.schnupperstudium.robots.entity.scenery.MediumBoulder;
 import com.github.schnupperstudium.robots.entity.scenery.SmallBoulder;
+import com.github.schnupperstudium.robots.network.ai.action.CombinedEntityActionSerializer;
 import com.github.schnupperstudium.robots.network.ai.action.DropItemActionSerializer;
 import com.github.schnupperstudium.robots.network.ai.action.UseItemActionSerializer;
 import com.github.schnupperstudium.robots.network.entity.EntitySerializer;
@@ -98,6 +100,7 @@ public class KryoRegistry {
 		kryo.register(TurnRightAction.class);
 		kryo.register(NoAction.class);		
 		kryo.register(UseItemAction.class, new UseItemActionSerializer());
+		kryo.register(CombinedEntityAction.class, new CombinedEntityActionSerializer());
 		
 		// World		
 		kryo.register(World.class, new WorldSerializer<>());
