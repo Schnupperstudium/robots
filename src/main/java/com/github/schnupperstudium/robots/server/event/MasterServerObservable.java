@@ -3,9 +3,9 @@ package com.github.schnupperstudium.robots.server.event;
 import com.github.schnupperstudium.robots.server.Game;
 import com.github.schnupperstudium.robots.server.RobotsServer;
 
-public class MasterServerListener extends MasterListener<ServerListener> implements ServerListener {
+public class MasterServerObservable extends AbstractObservable<ServerListener> implements ServerListener {
 
-	public MasterServerListener() {
+	public MasterServerObservable() {
 
 	}
 	

@@ -17,7 +17,7 @@ import com.github.schnupperstudium.robots.client.RobotsClientInterface;
 import com.github.schnupperstudium.robots.entity.LivingEntity;
 import com.github.schnupperstudium.robots.entity.Robot;
 import com.github.schnupperstudium.robots.io.LevelParser;
-import com.github.schnupperstudium.robots.server.event.MasterServerListener;
+import com.github.schnupperstudium.robots.server.event.MasterServerObservable;
 import com.github.schnupperstudium.robots.server.tickable.AI;
 import com.github.schnupperstudium.robots.server.tickable.Tickable;
 import com.github.schnupperstudium.robots.server.tickable.WorldObserver;
@@ -41,7 +41,7 @@ public abstract class RobotsServer implements Runnable {
 	
 	protected final Map<Long, ClientTracker> clientTrackers = new HashMap<>();
 	protected final Map<String, LivingEntityFactory> entityFactories = new HashMap<>();
-	protected final MasterServerListener masterServerListener = new MasterServerListener();
+	protected final MasterServerObservable masterServerListener = new MasterServerObservable();
 	protected final List<Game> games = new ArrayList<>();
 	protected final List<Level> availableLevels = new ArrayList<>();
 
@@ -364,7 +364,7 @@ public abstract class RobotsServer implements Runnable {
 			tracker.onDisconnect();
 	}
 	
-	public MasterServerListener getMasterServerListener() {
+	public MasterServerObservable getMasterServerListener() {
 		return masterServerListener;
 	}
 

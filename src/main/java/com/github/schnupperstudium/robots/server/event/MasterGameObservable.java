@@ -7,8 +7,8 @@ import com.github.schnupperstudium.robots.server.tickable.AI;
 import com.github.schnupperstudium.robots.server.tickable.Tickable;
 import com.github.schnupperstudium.robots.server.tickable.WorldObserver;
 
-public class MasterGameListener extends MasterListener<GameListener> implements GameListener {
-	public MasterGameListener() {
+public class MasterGameObservable extends AbstractObservable<GameListener> implements GameListener {
+	public MasterGameObservable() {
 		
 	}
 

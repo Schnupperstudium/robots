@@ -15,7 +15,7 @@ import com.github.schnupperstudium.robots.entity.Entity;
 import com.github.schnupperstudium.robots.entity.Facing;
 import com.github.schnupperstudium.robots.entity.Inventory;
 import com.github.schnupperstudium.robots.entity.Item;
-import com.github.schnupperstudium.robots.server.event.MasterGameListener;
+import com.github.schnupperstudium.robots.server.event.MasterGameObservable;
 import com.github.schnupperstudium.robots.server.module.GameModule;
 import com.github.schnupperstudium.robots.server.tickable.Tickable;
 import com.github.schnupperstudium.robots.world.Tile;
@@ -27,7 +27,7 @@ public class Game implements Runnable {
 	private static final int MAX_IDLE_TIME = 120000;
 	
 	private final long uuid = UUIDGenerator.obtain();
-	private final MasterGameListener masterGameListener = new MasterGameListener();
+	private final MasterGameObservable masterGameListener = new MasterGameObservable();
 	private final List<Tickable> tickables = new ArrayList<>();
 	private final List<GameModule> modules;
 	private final RobotsServer server;
@@ -293,7 +293,7 @@ public class Game implements Runnable {
 		return new GameInfo(uuid, name, level, hasPassword());
 	}
 	
-	public MasterGameListener getMasterGameListener() {
+	public MasterGameObservable getMasterGameListener() {
 		return masterGameListener;
 	}
 }

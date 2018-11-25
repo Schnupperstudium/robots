@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class MasterListener<T> {
+public abstract class AbstractObservable<T> {
 	private final List<T> toAdd;
 	private final List<T> toRemove;
 	private final List<T> gameListeners;
 	
-	public MasterListener() {
+	public AbstractObservable() {
 		this.toAdd = new ArrayList<>();
 		this.toRemove = new ArrayList<>();
 		this.gameListeners = new ArrayList<>();
