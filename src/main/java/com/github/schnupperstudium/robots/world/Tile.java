@@ -208,6 +208,28 @@ public class Tile {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + x;
+		result = prime * result + y;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tile other = (Tile) obj;
+
+		return other.x == this.x && other.y == this.y;
+	}
+
+	@Override
 	public Tile clone() throws CloneNotSupportedException {
 		return new Tile(x, y, material, visitor != null ? visitor.clone() : null, item != null ? item.clone() : null);
 	}
