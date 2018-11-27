@@ -2,10 +2,14 @@ package com.github.schnupperstudium.robots.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +22,7 @@ import com.github.schnupperstudium.robots.entity.Item;
 import com.github.schnupperstudium.robots.server.event.MasterGameObservable;
 import com.github.schnupperstudium.robots.server.module.GameModule;
 import com.github.schnupperstudium.robots.server.tickable.Tickable;
+import com.github.schnupperstudium.robots.server.tickable.TickableType;
 import com.github.schnupperstudium.robots.world.Tile;
 import com.github.schnupperstudium.robots.world.World;
 
@@ -28,7 +33,7 @@ public class Game implements Runnable {
 	
 	private final long uuid = UUIDGenerator.obtain();
 	private final MasterGameObservable masterGameListener = new MasterGameObservable();
-	private final List<Tickable> tickables = new ArrayList<>();
+	private final List<List<Tickable>> tickables;
 	private final List<GameModule> modules;
 	private final RobotsServer server;
 	private final Thread thread;
@@ -58,9 +63,11 @@ public class Game implements Runnable {
 		this.level = level;
 		this.world = world;
 		this.password = password;
+		this.tickables = new ArrayList<>();
+		Arrays.asList(TickableType.values()).forEach(e -> tickables.add(new ArrayList<>()));
 		this.modules = level.loadModules();
 		this.thread = new Thread(this::run, "GameThread: (" + name + ":" + uuid + ")");
-		this.thread.start();		
+		this.thread.start();
 	}
 
 	@Override
@@ -99,10 +106,26 @@ public class Game implements Runnable {
 		else
 			idleTime = 0;
 				
-		List<Tickable> tickables = new ArrayList<>(this.tickables);
-		for (Tickable tickable : tickables) {
-			tickable.update(this);
-		}
+		List<Future<?>> futures = new LinkedList<>();
+
+		for (List<Tickable> tickables : tickables) {
+			List<Tickable> tickablesClone = new ArrayList<>(tickables);
+			for (Tickable tickable : tickablesClone) {
+				futures.add(server.executorService.submit(() -> tickable.update(this)));				
+			}
+			
+			for (Future<?> future : futures) {
+				try {
+					future.get();
+				} catch (InterruptedException e) {
+					LOG.catching(e);
+				} catch (ExecutionException e) {
+					LOG.catching(e);
+				}
+			}
+			
+			futures.clear();
+		}		
 		
 		masterGameListener.onRoundComplete(this);
 		
@@ -215,7 +238,7 @@ public class Game implements Runnable {
 	}
 	
 	public List<Tickable> getTickales(Predicate<Tickable> filter) {
-		List<Tickable> result = new LinkedList<>(tickables);
+		List<Tickable> result = tickables.stream().flatMap(List::stream).collect(Collectors.toList());
 		Iterator<Tickable> it = result.iterator();
 		while (it.hasNext())
 			if (!filter.test(it.next()))
@@ -225,15 +248,21 @@ public class Game implements Runnable {
 	}
 	
 	public List<Tickable> getTickables() {
-		return new ArrayList<>(tickables);
+		return tickables.stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 	
 	public void addTickable(Tickable tickable) {
-		tickables.add(tickable);
+		if (tickable == null)
+			return;
+		
+		tickables.get(tickable.getTickableType().ordinal()).add(tickable);
 	}
 	
 	public void removeTickable(Tickable tickable) {
-		tickables.remove(tickable);
+		if (tickable == null)
+			return;
+		
+		tickables.forEach(list -> list.remove(tickable));
 	}
 	
 	public void addModule(GameModule module) {

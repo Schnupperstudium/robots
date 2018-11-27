@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +41,7 @@ public abstract class RobotsServer implements Runnable {
 	
 	private static final Logger LOG = LogManager.getLogger();
 	
+	protected final ExecutorService executorService = Executors.newFixedThreadPool(16);
 	protected final Map<Long, ClientTracker> clientTrackers = new HashMap<>();
 	protected final Map<String, LivingEntityFactory> entityFactories = new HashMap<>();
 	protected final MasterServerObservable masterServerListener = new MasterServerObservable();

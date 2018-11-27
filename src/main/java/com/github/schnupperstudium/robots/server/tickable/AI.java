@@ -53,8 +53,10 @@ public class AI implements Tickable {
 				kickAI(e.getMessage());
 			}
 			
-			if (action == null)
+			if (action == null) {
+				LOG.warn("AI {}:{} failed to return an action for this turn", entity.getName(), entity.getUUID());
 				action = NoAction.INSTANCE;
+			}
 			
 			return action;
 		} else {
@@ -109,6 +111,11 @@ public class AI implements Tickable {
 		LOG.warn("{}:{} got kicked from {}:{} (Reason: {})", name, uuid, game.getName(), game.getUUID(), reason);
 		game.removeTickable(this);
 		game.despawnEntity(entity);
+	}
+	
+	@Override
+	public TickableType getTickableType() {
+		return TickableType.ENTITY_TICK;
 	}
 	
 	public RobotsClientInterface getClient() {

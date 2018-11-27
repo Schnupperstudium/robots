@@ -49,7 +49,7 @@ public abstract class AbstractRunningAI extends AbstractAI {
 	public final EntityAction makeTurn() {
 		synchronized (this) {
 			if (action == null) {
-				LOG.warn("{} missed action for {} in game {}", getClass().getSimpleName(), getEntityUUID(), getGameId());
+				LOG.warn("{} missed action for {} in game {}", getClass().getSimpleName(), getEntity().getName(), getGameId());
 				return EntityAction.noAction();
 			}
 		

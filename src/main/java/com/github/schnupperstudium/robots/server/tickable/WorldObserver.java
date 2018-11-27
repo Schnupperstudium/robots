@@ -26,6 +26,11 @@ public class WorldObserver implements Tickable {
 		}
 	}
 	
+	@Override
+	public TickableType getTickableType() {
+		return TickableType.MONITOR;
+	}
+	
 	public RobotsClientInterface getClientInterface() {
 		return clientInterface;
 	}
