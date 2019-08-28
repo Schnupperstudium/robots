@@ -207,15 +207,19 @@ public class NetworkClient extends Application {
 			LOG.info("started local server");
 			server = new LocalRobotsServer();
 		}
+
+		String host = DEFAULT_HOST;
+		if (params.get("host") != null)
+			host = params.get("host");
+		
 		
 		if (localServer) {
 			LOG.info("Connecting to local server");
-			client = LocalRobotsClient.connect((LocalRobotsServer) server);
+			if (networkServer)
+				client = NetworkRobotsClient.connect(host, port);
+			else
+				client = LocalRobotsClient.connect((LocalRobotsServer) server);
 		} else {
-			String host = DEFAULT_HOST;
-			if (params.get("host") != null)
-				host = params.get("host");
-			
 			LOG.info("Connecting to {}:{}", host, port);
 			client = NetworkRobotsClient.connect(host, port);
 		}
