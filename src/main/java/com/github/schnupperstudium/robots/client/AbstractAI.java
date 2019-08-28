@@ -137,6 +137,19 @@ public abstract class AbstractAI {
 	}
 	
 	/**
+	 * Searches for the given tile with the given offset to the robots position.
+	 * If there is no tile found it will create a temporary tile with the needed coordinates 
+	 * and <code>Material.UNDEFINED</code> as material.
+	 * 
+	 * @param dX delta x.
+	 * @param dY delta y.
+	 * @return tile at the given offset.
+	 */
+	public Tile getTileByOffset(int dX, int dY) {
+		return getTileFromVision(getEntity().getX() + dX, getEntity().getY() + dY);
+	}
+	
+	/**
 	 * Searches for a tile with the given x and y coordinates within the entities vision.
 	 * If there is no tile found it will create a temporary tile with the needed coordinates
 	 * and <code>Material.UNDEFINED</code> as material.
