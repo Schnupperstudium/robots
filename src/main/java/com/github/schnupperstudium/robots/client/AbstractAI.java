@@ -117,8 +117,21 @@ public abstract class AbstractAI {
 	 * @return tile in the given direction.
 	 */
 	public Tile getTileByFacing(Facing facing) {
-		final int x = getEntity().getX() + facing.dx;
-		final int y = getEntity().getY() + facing.dy;
+		return getTileByFacing(facing, 1);
+	}
+	
+	/**
+	 * Searches for the neighboring tile in the given direction and the given distance.
+	 * If there is no tile found it will create a temporary tile with the needed coordinates 
+	 * and <code>Material.UNDEFINED</code> as material.
+	 * 
+	 * @param facing direction to search in.
+	 * @param distance distance to search at.
+	 * @return tile in the given direction.
+	 */
+	public Tile getTileByFacing(Facing facing, int distance) {
+		final int x = getEntity().getX() + facing.dx * distance;
+		final int y = getEntity().getY() + facing.dy * distance;
 		
 		return getTileFromVision(x, y);
 	}
