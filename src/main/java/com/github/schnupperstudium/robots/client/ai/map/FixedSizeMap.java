@@ -49,7 +49,7 @@ public class FixedSizeMap implements Map {
 	}
 	
 	public void updateTile(Tile tile) {
-		if (tile == null) {
+		if (tile == null && inBounds(tile)) {
 			return;
 		}
 		
