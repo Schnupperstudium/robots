@@ -66,7 +66,7 @@ public class NetworkClient extends Application {
 			"DumbleBot", "AllBotsAreCreatedEvil", "Botcoin", "AINixSchuld", "StayHydrated", "EvilInside", "MadDeamon",
 			"BillyTheKIT", "DropTableRobots", "YippieYaYeahSchweinebot", "PrettyFlayForABotGuy", "AnotherOneBotsTheDust",
 			"AnotherOneBytesTheDust", "RobotSchmobot", "YellowBotmarine", "BackstreetBots", "ILokeBigBotsAndICannotLie",
-			"SendCircuitDiagrams", "Slipbot", "UptownBot", "WakeUpNeo", "Botnado", "DarfErDas?", "Bytehoven"
+			"SendCircuitDiagrams", "Slipbot", "UptownBot", "WakeUpNeo", "Botnado", "DarfErDas?", "Bytehoven", "Clifford"
 	};
 	
 	private static final Logger LOG = LogManager.getLogger();
