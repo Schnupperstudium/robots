@@ -65,4 +65,15 @@ public enum Facing {
 		
 		return NONE;
 	}
+	
+	public static Facing closestFacing(final int dx, final int dy) {
+		int offset;
+		if (Math.abs(dx) < Math.abs(dy)) {
+			offset = dx;
+		} else {
+			offset = dy;
+		}
+		
+		return Facing.of(dx - offset, dy - offset);
+	}
 }

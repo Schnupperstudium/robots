@@ -1,12 +1,16 @@
 package com.github.schnupperstudium.robots.client.ai.map;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.github.schnupperstudium.robots.gui.overlay.MapRenderAddition;
 import com.github.schnupperstudium.robots.world.Map;
 import com.github.schnupperstudium.robots.world.Material;
 import com.github.schnupperstudium.robots.world.Tile;
 
 public class FixedSizeMap implements Map {
+	private final List<MapRenderAddition> mapRenderAdditions = new ArrayList<>();
+	
 	private final int width;
 	private final int height;
 	private final Tile[][] tiles;
@@ -65,5 +69,15 @@ public class FixedSizeMap implements Map {
 	
 	public boolean inBounds(int x, int y) {
 		return x >= 0 && x < width && y >= 0 && y < height;
+	}
+	
+	@Override
+	public boolean hasMapRenderAdditions() {
+		return mapRenderAdditions.size() > 0;
+	}
+	
+	@Override
+	public List<MapRenderAddition> getMapRenderAdditions() {
+		return mapRenderAdditions;
 	}
 }
