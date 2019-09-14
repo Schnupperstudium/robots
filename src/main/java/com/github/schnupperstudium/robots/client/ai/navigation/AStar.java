@@ -35,6 +35,8 @@ public final class AStar {
 			Collections.sort(openList);
 			state = openList.remove(0);
 			
+			TOUCHED.add(state.getLocation());
+			
 			// check if state was already closed
 			if (closedList.contains(state))
 				continue;
@@ -45,16 +47,20 @@ public final class AStar {
 			
 			// generate predecessors
 			// drive forward
-			checkNext(states, openList, closedList, map, tX, tY, state, state.x + state.facing.dx, state.y + state.facing.dy, state.facing);
+			checkNext(states, openList, closedList, map, tX, tY, state,
+					state.x + state.facing.dx, state.y + state.facing.dy, state.facing, state.cost + 1);
 			
 			// drive backward
-			checkNext(states, openList, closedList, map, tX, tY, state, state.x - state.facing.dx, state.y - state.facing.dy, state.facing);
+			checkNext(states, openList, closedList, map, tX, tY, state,
+					state.x - state.facing.dx, state.y - state.facing.dy, state.facing, state.cost + 1);
 			
 			// turn left
-			checkNext(states, openList, closedList, map, tX, tY, state, state.x, state.y, state.facing.left());
+			checkNext(states, openList, closedList, map, tX, tY, state,
+					state.x, state.y, state.facing.left(), state.cost + 1);
 			
 			// turn right
-			checkNext(states, openList, closedList, map, tX, tY, state, state.x, state.y, state.facing.right());
+			checkNext(states, openList, closedList, map, tX, tY, state,
+					state.x, state.y, state.facing.right(), state.cost + 1);
 			
 		} while (!openList.isEmpty() && (state.x != tX || state.y != tY));
 		
@@ -68,8 +74,7 @@ public final class AStar {
 	}
 	
 	private static void checkNext(HashMap<Integer, State> states, List<State> openList, Set<State> closedList, Map map, int tX, int tY,
-			State state, final int nX, final int nY, final Facing nFacing) {
-		final int nextCost = state.cost + 1;
+			State state, final int nX, final int nY, final Facing nFacing, final int nextCost) {
 		final int nextEstimatedCost = computeEstimatedCost(nX, nY, tX, tY);
 		
 		// compute hash for next state and try to retrieve it
@@ -85,7 +90,7 @@ public final class AStar {
 			states.put(nextHash, nextState);
 			openList.add(nextState);
 			
-			TOUCHED.add(nextState.getLocation());
+//			TOUCHED.add(nextState.getLocation());
 		} else {
 			// check if next state is already closed
 			if (closedList.contains(nextState))
@@ -95,13 +100,13 @@ public final class AStar {
 			if (nextCost < state.cost) {
 				nextState.previous = state;
 				nextState.cost = nextCost;
-				TOUCHED.add(nextState.getLocation());
+//				TOUCHED.add(nextState.getLocation());
 			}
 		}
 	}
 	
 	private static int computeEstimatedCost(int x, int y, int targetX, int targetY) {
-		return Math.abs(x - targetX) + Math.abs(y + targetY);
+		return Math.abs(x - targetX) + Math.abs(y - targetY);
 	}
 	
 	
