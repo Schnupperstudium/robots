@@ -32,9 +32,14 @@ public class ClientMapView extends ObserverViewController {
 	public void updateMap(Map map) {
 		Platform.runLater(() -> updateWorld(map));
 		
+		final int minX = map.getMinX();
+		final int maxX = map.getMaxX();
+		final int minY = map.getMinY();
+		final int maxY = map.getMaxY();
+		
 		List<Entity> inventoryHolders = new ArrayList<>();
-		for (int x = 0; x < map.getWidth(); x++) {
-			for (int y = 0; y < map.getHeight(); y++) {
+		for (int x = minX; x < maxX; x++) {
+			for (int y = minY; y < maxY; y++) {
 				Tile tile = map.getTile(x, y);
 				if (tile.hasVisitor() && tile.getVisitor().hasInventory()) {
 					inventoryHolders.add(tile.getVisitor());
