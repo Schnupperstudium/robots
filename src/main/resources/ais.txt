@@ -1,3 +1,4 @@
+com.github.schnupperstudium.robots.client.ai.YourFirstAI
 com.github.schnupperstudium.robots.client.ai.RandomAI
 com.github.schnupperstudium.robots.client.ai.RandomAI2
 com.github.schnupperstudium.robots.client.ai.RepeatingAI
