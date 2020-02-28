@@ -337,6 +337,16 @@ public abstract class RobotsServer implements Runnable {
 			clientTrackers.values().forEach(tracker -> tracker.onDisconnect());
 		}
 		
+		LOG.info("Waiting for games to be terminated...");
+		while (games.size() > 0) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		
+		executorService.shutdown();
 		LOG.info("server closed");
 	}
 	

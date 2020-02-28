@@ -201,7 +201,7 @@ public class Game implements Runnable {
 		
 		// if the entity holds a inventory try to remove the item.
 		// but don't deny it for a non inventory holder to drop items.
-		if (entity != null) {
+		if (entity != null && entity.hasInventory()) {
 			Inventory inventory = entity.getInventory();
 			if (!inventory.removeItem(item))
 				return false;
