@@ -12,6 +12,7 @@ import com.github.schnupperstudium.robots.world.Tile;
 
 public abstract class AbstractRunningAI extends AbstractAI {
 	private static final Logger LOG = LogManager.getLogger();
+	private static final int TURN_BLOCKING_DELAY = 1500;
 	private final Thread thread; 
 
 	private volatile EntityAction action;
@@ -25,10 +26,7 @@ public abstract class AbstractRunningAI extends AbstractAI {
 			try {
 				synchronized (AbstractRunningAI.this) {
 					// wait for initial updates
-					while (!entityUpdated)
-						wait();
-					
-					while (!visionUpdated)
+					while (!entityUpdated || !visionUpdated)
 						wait();
 				}
 				
@@ -48,25 +46,33 @@ public abstract class AbstractRunningAI extends AbstractAI {
 	@Override
 	public final EntityAction makeTurn() {
 		synchronized (this) {
+			long remainingWaitTime = TURN_BLOCKING_DELAY;
+			while (action == null && remainingWaitTime > 0) {
+				try {
+					long waitStart = System.currentTimeMillis();
+					wait(remainingWaitTime);
+					long waitEnd = System.currentTimeMillis();
+					remainingWaitTime = remainingWaitTime - (waitEnd - waitStart);
+				} catch (InterruptedException e) {
+					return EntityAction.noAction();
+				}
+			}
+
 			if (action == null) {
 				LOG.warn("{} missed action for {} in game {}", getClass().getSimpleName(), getEntity().getName(), getGameId());
 				return EntityAction.noAction();
 			}
 		
-			EntityAction selectedAction = EntityAction.noAction();
-									
-			// clear flags and perform action
+			EntityAction selectedAction = action;
+
+			// clear flags for this turn
 			entityUpdated = false;
 			visionUpdated = false;
-			if (action != null)
-				selectedAction = action;
-			
 			action = null;
 			
 			// notify waiting threads
 			this.notifyAll();
-		
-			
+
 			return selectedAction;
 		}
 	}
@@ -123,8 +129,9 @@ public abstract class AbstractRunningAI extends AbstractAI {
 	
 	protected final void waitForAction(EntityAction action) throws InterruptedException {
 		synchronized (this) {
-			checkForInterrupt();			
+			checkForInterrupt();
 			this.action = action;
+			this.notifyAll();
 			
 			waitForActionCompletion();
 		}
@@ -132,24 +139,17 @@ public abstract class AbstractRunningAI extends AbstractAI {
 	
 	protected final void waitForActionCompletion() throws InterruptedException {
 		synchronized (this) {
-			checkForInterrupt();
-			
-			while (action != null)				
+			// if an action is set wait until it is cleared by makeTurn
+			while (action != null) {
+				checkForInterrupt();
 				wait();
-			
-			checkForInterrupt();
-			
+			}
+
 			// wait for updates in case we get a race
-			while (!entityUpdated)
+			while (!entityUpdated || !visionUpdated) {
+				checkForInterrupt();
 				wait();
-			
-			checkForInterrupt();
-			
-			// wait for updates in case we get a race
-			while (!visionUpdated)
-				wait();
-			
-			checkForInterrupt();
+			}
 		}
 	}
 	
